@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     init(id) {
+      this.loadCategory();
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -84,8 +85,7 @@ export default {
         params: this.$http.adornParams()
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.categories = data.data;
-          console.log(this.categories);
+          this.categories = data.data.filter(item=>item.pid == 0)
         }
       });
     },

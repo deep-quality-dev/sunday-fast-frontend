@@ -112,7 +112,19 @@ export default {
     },
     // 新增 / 修改
     addOrUpdateHandle(id) {
-      this.$router.push({ name: 'goods-add-or-update' })
+      this.$router.push({
+        path:'/app-goods/goods-add-or-update',
+        query:{
+          id:id
+        }
+      })
+
+      // this.$router.push({
+      //   name: "goods-add-or-update",
+      //   params: {
+      //     id: id
+      //   }
+      // });
       // this.addOrUpdateVisible = true;
       // this.$nextTick(() => {
       //   this.$refs.addOrUpdate.init(id);

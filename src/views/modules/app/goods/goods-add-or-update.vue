@@ -1,9 +1,5 @@
 <template>
   <div>
-    <el-image
-      style="width: 100px; height: 100px"
-      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-    ></el-image>
     <el-form
       :model="dataForm"
       :rules="dataRule"
@@ -17,11 +13,26 @@
       <el-form-item label="商品名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="商品名称"></el-input>
       </el-form-item>
-      <el-form-item label="商品分类" prop="cidOne">
-        <el-select v-model="dataForm.cidOne" placeholder="请选择商品分类">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
+      <el-form-item label="商品分类" prop="cateName">
+        <el-popover ref="cateListPopover" placement="bottom-start" trigger="click">
+          <el-tree
+            :data="cateList"
+            :props="cateListTreeProps"
+            node-key="id"
+            ref="cateListTree"
+            @current-change="cateListTreeCurrentChangeHandle"
+            :default-expand-all="true"
+            :highlight-current="true"
+            :expand-on-click-node="false"
+          ></el-tree>
+        </el-popover>
+        <el-input
+          v-model="dataForm.cateName"
+          v-popover:cateListPopover
+          :readonly="true"
+          placeholder="点击选择商品分类"
+          class="menu-list__input"
+        ></el-input>
       </el-form-item>
       <el-form-item label="商品图片" prop="img">
         <el-button type="primary">
@@ -106,9 +117,15 @@
 </template>
 
 <script>
+import { treeDataTranslate } from "@/utils";
 export default {
   data() {
     return {
+      cateList: [],
+      cateListTreeProps: {
+        label: "name",
+        children: "children"
+      },
       visible: false,
       dataForm: {
         id: 0,
@@ -116,6 +133,8 @@ export default {
         price: "",
         weight: "",
         specType: "",
+        categoryId: 0,
+        cateName: "",
         content: "",
         img: "",
         sort: ""
@@ -187,28 +206,57 @@ export default {
       currentType: "" // 要批量设置的类型
     };
   },
+  activated() {
+    this.init(this.$route.query.id);
+  },
   methods: {
-    init(id) {
+    async init(id) {
+      await this.loadCategory();
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
           this.$http({
-            url: this.$http.adornUrl(`/app/goods/info/${this.dataForm.id}`),
+            url: this.$http.adornUrl(`/admin/goods/info/${this.dataForm.id}`),
             method: "get",
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.name = data.goods.name;
-              this.dataForm.price = data.goods.price;
-              this.dataForm.weight = data.goods.weight;
-              this.dataForm.specType = data.goods.specType;
-              this.dataForm.content = data.goods.content;
-              this.dataForm.img = data.goods.img;
-              this.dataForm.sort = data.goods.sort;
+              this.dataForm.name = data.data.name;
+              this.dataForm.price = data.data.price;
+              this.dataForm.weight = data.data.weight;
+              this.dataForm.categoryId = data.data.categoryId;
+              this.dataForm.specType = data.data.specType;
+              this.dataForm.content = data.data.content;
+              this.dataForm.img = data.data.img;
+              this.dataForm.sort = data.data.sort;
+              this.cateListTreeSetCurrentNode();
             }
           });
+        }
+      });
+    },
+    // 分类树选中
+    cateListTreeCurrentChangeHandle(data, node) {
+      this.dataForm.categoryId = data.id;
+      this.dataForm.cateName = data.name;
+    },
+    // 分类输设置当前选中节点
+    cateListTreeSetCurrentNode() {
+      this.$refs.cateListTree.setCurrentKey(this.dataForm.categoryId);
+      this.dataForm.cateName = (this.$refs.cateListTree.getCurrentNode() ||
+        {})["name"];
+    },
+    //加载商品分类
+    async loadCategory() {
+      this.$http({
+        url: this.$http.adornUrl(`/admin/category/list`),
+        method: "get",
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.cateList = treeDataTranslate(data.data, "id", "pid");
         }
       });
     },
@@ -218,7 +266,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/app/goods/${!this.dataForm.id ? "save" : "update"}`
+              `/admin/goods/${!this.dataForm.id ? "save" : "update"}`
             ),
             method: "post",
             data: this.$http.adornData({
@@ -504,7 +552,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="less">
 .widget-head {
