@@ -4,7 +4,6 @@
       :model="dataForm"
       :rules="dataRule"
       ref="dataForm"
-      @keyup.enter.native="dataFormSubmit()"
       label-width="200px"
     >
       <div class="widget-head am-cf">
@@ -52,8 +51,8 @@
       </el-form-item>
       <el-form-item>
         <div class="specification">
-          <div class="title">产品规格设置</div>
-          <ul class="spec-list">
+          <div class="spec-list">
+          <ul>
             <li class="item" v-for="(item, index) in specification" :key="index">
               <div class="name">
                 <el-input size="small" v-model="item.name" placeholder="输入产品规格"></el-input>
@@ -77,14 +76,103 @@
               </div>
             </li>
           </ul>
-          <div class="add-spec">
+           <div class="add-spec">
             <el-button
               size="small"
               type="info"
               :disabled="specification.length >= 5"
               @click="addSpec"
-            >添加规格项目</el-button>
+            >添加规格</el-button>
           </div>
+           </div>
+      <table class="stock-table" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th
+            v-for="(item, index) in specification"
+            :key="index">
+            {{item.name}}
+            </th>
+            <th>规格图片</th>
+            <th>规格编码</th>
+            <th>成本价（元）</th>
+            <th>库存</th>
+            <th>销售价（元）</th>
+          </tr>
+        </thead>
+        <tbody v-if="specification[0] && specification[0].value.length">
+          <tr
+            :key="index"
+            v-for="(item, index) in countSum(0)">
+            <td
+              v-for="(n, specIndex) in specification.length"
+              v-if="showTd(specIndex, index)"
+              :key="n"
+              :rowspan="countSum(n)">
+              {{getSpecAttr(specIndex, index)}}
+            </td>
+            <td class="sku-img-warp">
+              <div tabindex="0" class="el-upload el-upload--picture-card"><i class="el-icon-plus"></i></div>
+               <el-input
+                style="display: none;"
+                type="hidden"
+                v-model="childProductArray[index].skuImg">
+              </el-input>
+            </td>
+            <td>
+              <el-input
+                size="small"
+                type="text"
+                v-model="childProductArray[index].childProductNo"
+                @blur="handleNo(index)"
+                placeholder="输入商品规格编号">
+              </el-input>
+            </td>
+            <td>
+              <el-input
+                size="small"
+                type="text"
+                v-model.number="childProductArray[index].childProductCost"
+                placeholder="输入成本价"
+                >
+              </el-input>
+            </td>
+            <td>
+              <el-input
+                size="small"
+                type="text"
+                v-model.number="childProductArray[index].childProductStock"
+                placeholder="输入库存"
+                >
+              </el-input>
+            </td>
+            <td>
+              <el-input
+              size="small"
+              type="text"
+              v-model.number="childProductArray[index].childProductPrice"
+              placeholder="输入销售价"
+              >
+            </el-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8" class="wh-foot">
+              <span class="label">批量设置：</span>
+              <ul class="set-list" v-if="isSetListShow">
+                <li class="set-item" @click="openBatch('childProductCost')">成本价</li>
+                <li class="set-item" @click="openBatch('childProductStock')">库存</li>
+                <li class="set-item" @click="openBatch('childProductPrice')">销售价</li>
+              </ul>
+              <div class="set-form" v-else>
+                <el-input size="mini" v-model.number="batchValue" placeholder="输入要设置的数量"></el-input>
+                <i class="set-btn blue el-icon-check" @click="setBatch"></i>
+                <i class="set-btn red el-icon-close" @click="cancelBatch"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
         </div>
       </el-form-item>
       <el-form-item label="库存数量" prop="store">
@@ -117,6 +205,62 @@
 </template>
 
 <script>
+// 为Object添加一个原型方法，判断两个对象是否相等
+function objEquals(object1, object2) {
+  // For the first loop, we only check for types
+  for (let propName in object1) {
+    // Check for inherited methods and properties - like .equals itself
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty
+    // Return false if the return value is different
+    if (object1.hasOwnProperty(propName) !== object2.hasOwnProperty(propName)) {
+      return false;
+      // Check instance type
+    } else if (typeof object1[propName] !== typeof object2[propName]) {
+      // Different types => not equal
+      return false;
+    }
+  }
+  // Now a deeper check using other objects property names
+  for (let propName in object2) {
+    // We must check instances anyway, there may be a property that only exists in object2
+    // I wonder, if remembering the checked values from the first loop would be faster or not
+    if (object1.hasOwnProperty(propName) !== object2.hasOwnProperty(propName)) {
+      return false;
+    } else if (typeof object1[propName] !== typeof object2[propName]) {
+      return false;
+    }
+    // If the property is inherited, do not check any more (it must be equa if both objects inherit it)
+    if (!object1.hasOwnProperty(propName)) {
+      continue;
+    }
+    // Now the detail check and recursion
+    // This returns the script back to the array comparing
+    /** REQUIRES Array.equals**/
+    if (
+      object1[propName] instanceof Array &&
+      object2[propName] instanceof Array
+    ) {
+      // recurse into the nested arrays
+      if (objEquals(!object1[propName], object2[propName])) {
+        return false;
+      }
+    } else if (
+      object1[propName] instanceof Object &&
+      object2[propName] instanceof Object
+    ) {
+      // recurse into another objects
+      // console.log("Recursing to compare ", this[propName],"with",object2[propName], " both named \""+propName+"\"");
+      if (objEquals(!object1[propName], object2[propName])) {
+        return false;
+      }
+      // Normal value comparison for strings and numbers
+    } else if (object1[propName] !== object2[propName]) {
+      return false;
+    }
+  }
+  // If everything passed, let's say YES
+  return true;
+}
 import { treeDataTranslate } from "@/utils";
 export default {
   data() {
@@ -162,8 +306,9 @@ export default {
       },
       specification: [
         {
+          id: 1,
           name: "颜色",
-          value: ["黑色", "白色", "蓝色"]
+          value: ["黑色"]
         }
       ],
       // 子规格
@@ -172,28 +317,10 @@ export default {
           childProductId: 0,
           childProductSpec: { 颜色: "黑色" },
           childProductNo: "PRODUCTNO_0",
+          skuImg: "",
           childProductStock: 0,
           childProductPrice: 0,
-          childProductCost: 0,
-          isUse: true
-        },
-        {
-          childProductId: 0,
-          childProductSpec: { 颜色: "白色" },
-          childProductNo: "PRODUCTNO_1",
-          childProductStock: 0,
-          childProductPrice: 0,
-          childProductCost: 0,
-          isUse: true
-        },
-        {
-          childProductId: 0,
-          childProductSpec: { 颜色: "蓝色" },
-          childProductNo: "PRODUCTNO_2",
-          childProductStock: 0,
-          childProductPrice: 0,
-          childProductCost: 0,
-          isUse: true
+          childProductCost: 0
         }
       ],
       // 用来存储要添加的规格属性
@@ -208,6 +335,12 @@ export default {
   },
   activated() {
     this.init(this.$route.query.id);
+  },
+  computed: {
+    // 所有sku的id
+    stockSpecArr() {
+      return this.childProductArray.map(item => item.childProductSpec);
+    }
   },
   methods: {
     async init(id) {
@@ -245,8 +378,9 @@ export default {
     // 分类输设置当前选中节点
     cateListTreeSetCurrentNode() {
       this.$refs.cateListTree.setCurrentKey(this.dataForm.categoryId);
-      this.dataForm.cateName = (this.$refs.cateListTree.getCurrentNode() ||
-        {})["name"];
+      this.dataForm.cateName = (this.$refs.cateListTree.getCurrentNode() || {})[
+        "name"
+      ];
     },
     //加载商品分类
     async loadCategory() {
@@ -262,6 +396,10 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
+      console.log(JSON.stringify(this.childProductArray));
+      console.log("-------------------------------------------------------");
+      console.log(JSON.stringify(this.specification));
+      return;
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
@@ -431,7 +569,7 @@ export default {
         childProductStock: 0,
         childProductPrice: 0,
         childProductCost: 0,
-        isUse: true
+        skuImg: ""
       };
 
       const spec = childProduct.childProductSpec;
@@ -534,12 +672,6 @@ export default {
         });
         return;
       }
-      this.childProductArray.forEach(item => {
-        if (item.isUse) {
-          item[this.currentType] = this.batchValue;
-        }
-      });
-
       this.cancelBatch();
     },
 
@@ -554,6 +686,11 @@ export default {
 </script>
 
 <style lang="less">
+* {
+  list-style: none;
+  padding: 0;
+  border: 0;
+}
 .widget-head {
   width: 100%;
   padding: 12px 20px;
@@ -599,6 +736,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   width: 480px;
+  width: 100%;
   .spec-list {
     background-color: #fff;
     border: 1px solid #d8d8d8;
@@ -609,20 +747,19 @@ export default {
         margin-top: 0;
       }
       .name {
-        background: #f3f6fb;
         padding: 2px 8px;
         text-align: right;
         overflow: hidden;
+        width: 200px;
         .el-input {
           float: left;
           width: 150px;
         }
         .icon {
-          display: none;
           color: #929292;
           cursor: pointer;
           &:hover {
-            color: #880000;
+            color: #e54346;
           }
         }
         &:hover {
@@ -648,17 +785,31 @@ export default {
     }
     .add-spec {
       font-size: 13px;
+      margin-left: 10px;
     }
   }
 }
 .stock-table {
-  width: 740px;
+  margin-top: 20px;
+  width: 100%;
   padding: 0;
   border-collapse: separate;
   border-color: #dfe6ec;
   border-style: solid;
   border-width: 1px 0 0 1px;
   background-color: #fff;
+  .sku-img-warp {
+    text-align: center;
+    div {
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      font-size: 15px;
+      i {
+        font-size: 15px;
+      }
+    }
+  }
   td,
   th {
     padding: 4px 10px;
@@ -667,7 +818,6 @@ export default {
   }
   th {
     line-height: 30px;
-    background-color: #eef1f6;
   }
   .link {
     cursor: pointer;
