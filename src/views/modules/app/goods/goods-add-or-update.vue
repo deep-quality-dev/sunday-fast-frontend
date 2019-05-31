@@ -34,7 +34,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="商品图片" prop="img">
-        <el-button type="primary">
+        <el-button type="primary" @click="showUploadModal(true)">
           上传
           <i class="el-icon-upload el-icon--right"></i>
         </el-button>
@@ -201,6 +201,8 @@
       <el-button @click="$router.go(-1)">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
+
+    <UploadModal :visible="uploadVisible" @changeVisible="showUploadModal" @chooseImg="chooseImg" />
   </div>
 </template>
 
@@ -261,10 +263,18 @@ function objEquals(object1, object2) {
   // If everything passed, let's say YES
   return true;
 }
+
 import { treeDataTranslate } from "@/utils";
+import UploadModal from '@/components/uploadModal'
+
 export default {
+  components: {
+    UploadModal
+  },
   data() {
     return {
+      uploadVisible: false, // 上传文件弹窗
+
       cateList: [],
       cateListTreeProps: {
         label: "name",
@@ -370,6 +380,14 @@ export default {
         }
       });
     },
+
+    showUploadModal(visible) {
+      this.uploadVisible = !!visible;
+    },
+    chooseImg(data) {
+      console.log(data);
+    },
+
     // 分类树选中
     cateListTreeCurrentChangeHandle(data, node) {
       this.dataForm.categoryId = data.id;
