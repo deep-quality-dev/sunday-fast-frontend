@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-form
-      :model="dataForm"
-      :rules="dataRule"
-      ref="dataForm"
-      label-width="200px"
-    >
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" label-width="200px">
       <div class="widget-head am-cf">
         <div class="widget-title am-fl">基本信息</div>
       </div>
@@ -52,127 +47,119 @@
       <el-form-item>
         <div class="specification">
           <div class="spec-list">
-          <ul>
-            <li class="item" v-for="(item, index) in specification" :key="index">
-              <div class="name">
-                <el-input size="small" v-model="item.name" placeholder="输入产品规格"></el-input>
-                <i class="icon el-icon-circle-close" @click="delSpec(index)"></i>
-              </div>
-              <div class="values">
-                <span class="el-tag" v-for="(tag, num) in item.value" :key="tag">
-                  <span class="el-select__tags-text">{{tag}}</span>
-                  <i class="el-tag__close el-icon-close" @click="delSpecTag(index, num)"></i>
-                </span>
-                <div class="add-attr">
+            <ul>
+              <li class="item" v-for="(item, index) in specification" :key="index">
+                <div class="name">
+                  <el-input size="small" v-model="item.name" placeholder="输入产品规格"></el-input>
+                  <i class="icon el-icon-circle-close" @click="delSpec(index)"></i>
+                </div>
+                <div class="values">
+                  <span class="el-tag" v-for="(tag, num) in item.value" :key="tag">
+                    <span class="el-select__tags-text">{{tag}}</span>
+                    <i class="el-tag__close el-icon-close" @click="delSpecTag(index, num)"></i>
+                  </span>
+                  <div class="add-attr">
+                    <el-input
+                      size="small"
+                      v-model="addValues[index]"
+                      placeholder="多个产品属性以空格隔开"
+                      icon="plus"
+                      @click="addSpecTag(index)"
+                      @keyup.native.enter="addSpecTag(index)"
+                    ></el-input>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="add-spec">
+              <el-button
+                size="small"
+                type="info"
+                :disabled="specification.length >= 5"
+                @click="addSpec"
+              >添加规格</el-button>
+            </div>
+          </div>
+          <table class="stock-table" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr>
+                <th v-for="(item, index) in specification" :key="index">{{item.name}}</th>
+                <th>规格图片</th>
+                <th>规格编码</th>
+                <th>成本价（元）</th>
+                <th>库存</th>
+                <th>销售价（元）</th>
+              </tr>
+            </thead>
+            <tbody v-if="specification[0] && specification[0].value.length">
+              <tr :key="index" v-for="(item, index) in countSum(0)">
+                <td
+                  v-for="(n, specIndex) in specification.length"
+                  v-if="showTd(specIndex, index)"
+                  :key="n"
+                  :rowspan="countSum(n)"
+                >{{getSpecAttr(specIndex, index)}}</td>
+                <td class="sku-img-warp">
+                  <div tabindex="0" class="el-upload el-upload--picture-card">
+                    <i class="el-icon-plus"></i>
+                  </div>
+                  <el-input
+                    style="display: none;"
+                    type="hidden"
+                    v-model="childProductArray[index].skuImg"
+                  ></el-input>
+                </td>
+                <td>
                   <el-input
                     size="small"
-                    v-model="addValues[index]"
-                    placeholder="多个产品属性以空格隔开"
-                    icon="plus"
-                    @click="addSpecTag(index)"
-                    @keyup.native.enter="addSpecTag(index)"
+                    type="text"
+                    v-model="childProductArray[index].childProductNo"
+                    @blur="handleNo(index)"
+                    placeholder="输入商品规格编号"
                   ></el-input>
-                </div>
-              </div>
-            </li>
-          </ul>
-           <div class="add-spec">
-            <el-button
-              size="small"
-              type="info"
-              :disabled="specification.length >= 5"
-              @click="addSpec"
-            >添加规格</el-button>
-          </div>
-           </div>
-      <table class="stock-table" cellspacing="0" cellpadding="0">
-        <thead>
-          <tr>
-            <th
-            v-for="(item, index) in specification"
-            :key="index">
-            {{item.name}}
-            </th>
-            <th>规格图片</th>
-            <th>规格编码</th>
-            <th>成本价（元）</th>
-            <th>库存</th>
-            <th>销售价（元）</th>
-          </tr>
-        </thead>
-        <tbody v-if="specification[0] && specification[0].value.length">
-          <tr
-            :key="index"
-            v-for="(item, index) in countSum(0)">
-            <td
-              v-for="(n, specIndex) in specification.length"
-              v-if="showTd(specIndex, index)"
-              :key="n"
-              :rowspan="countSum(n)">
-              {{getSpecAttr(specIndex, index)}}
-            </td>
-            <td class="sku-img-warp">
-              <div tabindex="0" class="el-upload el-upload--picture-card"><i class="el-icon-plus"></i></div>
-               <el-input
-                style="display: none;"
-                type="hidden"
-                v-model="childProductArray[index].skuImg">
-              </el-input>
-            </td>
-            <td>
-              <el-input
-                size="small"
-                type="text"
-                v-model="childProductArray[index].childProductNo"
-                @blur="handleNo(index)"
-                placeholder="输入商品规格编号">
-              </el-input>
-            </td>
-            <td>
-              <el-input
-                size="small"
-                type="text"
-                v-model.number="childProductArray[index].childProductCost"
-                placeholder="输入成本价"
-                >
-              </el-input>
-            </td>
-            <td>
-              <el-input
-                size="small"
-                type="text"
-                v-model.number="childProductArray[index].childProductStock"
-                placeholder="输入库存"
-                >
-              </el-input>
-            </td>
-            <td>
-              <el-input
-              size="small"
-              type="text"
-              v-model.number="childProductArray[index].childProductPrice"
-              placeholder="输入销售价"
-              >
-            </el-input>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="8" class="wh-foot">
-              <span class="label">批量设置：</span>
-              <ul class="set-list" v-if="isSetListShow">
-                <li class="set-item" @click="openBatch('childProductCost')">成本价</li>
-                <li class="set-item" @click="openBatch('childProductStock')">库存</li>
-                <li class="set-item" @click="openBatch('childProductPrice')">销售价</li>
-              </ul>
-              <div class="set-form" v-else>
-                <el-input size="mini" v-model.number="batchValue" placeholder="输入要设置的数量"></el-input>
-                <i class="set-btn blue el-icon-check" @click="setBatch"></i>
-                <i class="set-btn red el-icon-close" @click="cancelBatch"></i>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                </td>
+                <td>
+                  <el-input
+                    size="small"
+                    type="text"
+                    v-model.number="childProductArray[index].childProductCost"
+                    placeholder="输入成本价"
+                  ></el-input>
+                </td>
+                <td>
+                  <el-input
+                    size="small"
+                    type="text"
+                    v-model.number="childProductArray[index].childProductStock"
+                    placeholder="输入库存"
+                  ></el-input>
+                </td>
+                <td>
+                  <el-input
+                    size="small"
+                    type="text"
+                    v-model.number="childProductArray[index].childProductPrice"
+                    placeholder="输入销售价"
+                  ></el-input>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="8" class="wh-foot">
+                  <span class="label">批量设置：</span>
+                  <ul class="set-list" v-if="isSetListShow">
+                    <li class="set-item" @click="openBatch('childProductCost')">成本价</li>
+                    <li class="set-item" @click="openBatch('childProductStock')">库存</li>
+                    <li class="set-item" @click="openBatch('childProductPrice')">销售价</li>
+                  </ul>
+                  <div class="set-form" v-else>
+                    <el-input size="mini" v-model.number="batchValue" placeholder="输入要设置的数量"></el-input>
+                    <i class="set-btn blue el-icon-check" @click="setBatch"></i>
+                    <i class="set-btn red el-icon-close" @click="cancelBatch"></i>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </el-form-item>
       <el-form-item label="库存数量" prop="store">
@@ -187,8 +174,18 @@
       <div class="widget-head am-cf">
         <div class="widget-title am-fl">基本信息</div>
       </div>
-      <el-form-item label="商品描述" prop="content">
-        <el-input v-model="dataForm.content" placeholder="商品描述"></el-input>
+      <el-form-item label="商品描述">
+        <div>
+          <quill-editor
+            v-model="dataForm.content"
+            ref="myQuillEditor"
+            :options="editorOption"
+            @blur="onEditorBlur($event)"
+            @focus="onEditorFocus($event)"
+            @change="onEditorChange($event)"
+            style="height:200px"
+          ></quill-editor>
+        </div>
       </el-form-item>
       <div class="widget-head am-cf">
         <div class="widget-title am-fl">其他设置</div>
@@ -202,7 +199,7 @@
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
 
-    <UploadModal :visible="uploadVisible" @changeVisible="showUploadModal" @chooseImg="chooseImg" />
+    <UploadModal :visible="uploadVisible" @changeVisible="showUploadModal" @chooseImg="chooseImg"/>
   </div>
 </template>
 
@@ -263,9 +260,20 @@ function objEquals(object1, object2) {
   // If everything passed, let's say YES
   return true;
 }
+// 工具栏配置
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["blockquote", "code-block"],
+
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: "ordered" }, { list: "bullet" }],
+
+
+  ["link", "image", "video"],
+];
 
 import { treeDataTranslate } from "@/utils";
-import UploadModal from '@/components/uploadModal'
+import UploadModal from "@/components/uploadModal";
 
 export default {
   components: {
@@ -292,6 +300,22 @@ export default {
         content: "",
         img: "",
         sort: ""
+      },
+      editorOption: {
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              image: function(value) {
+                if (value) {
+                  this.uploadVisible = true;
+                } else {
+                  this.quill.format("image", false);
+                }
+              }
+            }
+          }
+        }
       },
       dataRule: {
         name: [
@@ -350,6 +374,9 @@ export default {
     // 所有sku的id
     stockSpecArr() {
       return this.childProductArray.map(item => item.childProductSpec);
+    },
+    editor() {
+      return this.$refs.myQuillEditor.quill;
     }
   },
   methods: {
@@ -380,7 +407,15 @@ export default {
         }
       });
     },
-
+    onEditorReady(editor) {
+      // 准备编辑器
+    },
+    onEditorBlur() {}, // 失去焦点事件
+    onEditorFocus() {}, // 获得焦点事件
+    onEditorChange() {}, // 内容改变事件
+    saveHtml: function(event) {
+      alert(this.content);
+    },
     showUploadModal(visible) {
       this.uploadVisible = !!visible;
     },
