@@ -59,25 +59,53 @@
                     <i class="el-tag__close el-icon-close" @click="delSpecTag(index, num)"></i>
                   </span>
                   <div class="add-attr">
-                    <el-input
+                    <el-input placeholder="输入属性值" v-model="addValues[index]">
+                      <template slot="append" v-if="item.value.length>0||item.id">
+                        <el-button type="primary" @click="addSpecTag(index)" size="small">添加</el-button>
+                      </template>
+                    </el-input>
+                    <!-- <el-input
                       size="small"
                       v-model="addValues[index]"
-                      placeholder="多个产品属性以空格隔开"
+                      placeholder="输入属性值"
                       icon="plus"
                       @click="addSpecTag(index)"
                       @keyup.native.enter="addSpecTag(index)"
-                    ></el-input>
+                    ></el-input> -->
+                  </div>
+                </div>
+              </li>
+              <li class="item" v-if="addSpecVisible">
+                <div class="name">
+                  <el-input size="small" v-model="addSpecTemp.name" placeholder="输入产品规格"></el-input>
+                </div>
+                <div class="values">
+                  <div class="add-attr">
+                    <el-input v-model="addSpecTemp.value[0]" placeholder="输入属性值">
+                    </el-input>
+                    <!-- <el-input
+                      size="small"
+                      v-model="addValues[index]"
+                      placeholder="输入属性值"
+                      icon="plus"
+                      @click="addSpecTag(index)"
+                      @keyup.native.enter="addSpecTag(index)"
+                    ></el-input> -->
                   </div>
                 </div>
               </li>
             </ul>
             <div class="add-spec">
               <el-button
+                v-if="!addSpecVisible"
                 size="small"
                 type="info"
                 :disabled="specification.length >= 5"
-                @click="addSpec"
+                @click="showAddBtn(true)"
               >添加规格</el-button>
+
+              <el-button  v-if="addSpecVisible" type="primary" @click="saveSpec()" size="small">确定</el-button>
+              <el-button  v-if="addSpecVisible" type="danger" @click="showAddBtn(false)" size="small">取消</el-button>
             </div>
           </div>
           <table class="stock-table" cellspacing="0" cellpadding="0">
@@ -183,7 +211,6 @@
             @blur="onEditorBlur($event)"
             @focus="onEditorFocus($event)"
             @change="onEditorChange($event)"
-            style="height:200px"
           ></quill-editor>
         </div>
       </el-form-item>
@@ -268,8 +295,7 @@ const toolbarOptions = [
   [{ header: 1 }, { header: 2 }], // custom button values
   [{ list: "ordered" }, { list: "bullet" }],
 
-
-  ["link", "image", "video"],
+  ["link", "image", "video"]
 ];
 
 import { treeDataTranslate } from "@/utils";
@@ -282,11 +308,15 @@ export default {
   data() {
     return {
       uploadVisible: false, // 上传文件弹窗
-
+      addSpecVisible: false,
       cateList: [],
       cateListTreeProps: {
         label: "name",
         children: "children"
+      },
+      addSpecTemp: {
+        name: "",
+        value: []
       },
       visible: false,
       dataForm: {
@@ -306,8 +336,9 @@ export default {
           toolbar: {
             container: toolbarOptions, // 工具栏
             handlers: {
-              image: function(value) {
+              image: value => {
                 if (value) {
+                  console.log(this);
                   this.uploadVisible = true;
                 } else {
                   this.quill.format("image", false);
@@ -407,6 +438,19 @@ export default {
         }
       });
     },
+    //保存规格
+    saveSpec() {
+      console.log(this.addSpecTemp);
+      this.specification.push({
+        name: this.addSpecTemp.name,
+        value: this.addSpecTemp.value
+      });
+      this.addSpecVisible = false;
+    },
+    //显示隐藏添加规格按钮
+    showAddBtn(visible) {
+      this.addSpecVisible = visible;
+    },
     onEditorReady(editor) {
       // 准备编辑器
     },
@@ -417,7 +461,7 @@ export default {
       alert(this.content);
     },
     showUploadModal(visible) {
-      this.uploadVisible = !!visible;
+      this.addSpecVisible = !!visible;
     },
     chooseImg(data) {
       console.log(data);
@@ -490,24 +534,25 @@ export default {
     },
     // 添加规格项目
     addSpec() {
-      if (this.specification.length < 5) {
-        this.specification.push({
-          name: "",
-          value: []
-        });
-      }
+      this.addSpecVisible = false;
+      // if (this.specification.length < 5) {
+      //   this.specification.push({
+      //     name: "",
+      //     value: []
+      //   });
+      // }
     },
 
     // 删除规格项目
     delSpec(index) {
+      this.addSpecVisible = true;
       this.specification.splice(index, 1);
-
       this.handleSpecChange("del");
     },
 
     // 添加规格属性
     addSpecTag(index) {
-      let str = this.addValues[index] || "";
+      let str = this.addValues[index].trim() || ""; //去除空格自动分割
       if (!str.trim()) return; // 判空
       str = str.trim();
       let arr = str.split(/\s+/); // 使用空格分割成数组
@@ -739,6 +784,9 @@ export default {
 </script>
 
 <style lang="less">
+.ql-container {
+  height: 200px;
+}
 * {
   list-style: none;
   padding: 0;
@@ -822,6 +870,8 @@ export default {
         }
       }
       .values {
+        padding: 2px 3px;
+        overflow: hidden;
         .el-tag {
           margin: 8px 0 0 8px;
         }
@@ -832,6 +882,9 @@ export default {
           .el-input {
             width: 200px;
             margin: 2px 0 0 4px;
+            input {
+              height: 32px;
+            }
           }
         }
       }
