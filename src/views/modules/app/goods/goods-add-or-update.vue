@@ -71,7 +71,7 @@
                       icon="plus"
                       @click="addSpecTag(index)"
                       @keyup.native.enter="addSpecTag(index)"
-                    ></el-input> -->
+                    ></el-input>-->
                   </div>
                 </div>
               </li>
@@ -81,8 +81,7 @@
                 </div>
                 <div class="values">
                   <div class="add-attr">
-                    <el-input v-model="addSpecTemp.value[0]" placeholder="输入属性值">
-                    </el-input>
+                    <el-input v-model="addSpecTemp.value[0]" placeholder="输入属性值"></el-input>
                     <!-- <el-input
                       size="small"
                       v-model="addValues[index]"
@@ -90,7 +89,7 @@
                       icon="plus"
                       @click="addSpecTag(index)"
                       @keyup.native.enter="addSpecTag(index)"
-                    ></el-input> -->
+                    ></el-input>-->
                   </div>
                 </div>
               </li>
@@ -104,8 +103,13 @@
                 @click="showAddBtn(true)"
               >添加规格</el-button>
 
-              <el-button  v-if="addSpecVisible" type="primary" @click="saveSpec()" size="small">确定</el-button>
-              <el-button  v-if="addSpecVisible" type="danger" @click="showAddBtn(false)" size="small">取消</el-button>
+              <el-button v-if="addSpecVisible" type="primary" @click="saveSpec()" size="small">确定</el-button>
+              <el-button
+                v-if="addSpecVisible"
+                type="danger"
+                @click="showAddBtn(false)"
+                size="small"
+              >取消</el-button>
             </div>
           </div>
           <table class="stock-table" cellspacing="0" cellpadding="0">
@@ -441,22 +445,26 @@ export default {
     //保存规格
     saveSpec() {
       this.$http({
-            url: this.$http.adornUrl(
-              `/admin/spec/save`
-            ),
-            method: "post",
-            data: this.$http.adornData({
-              ...this.addSpecTemp
-            })
-          }).then(({ data }) => {
-            console.log(data)
+        url: this.$http.adornUrl(`/admin/spec/save`),
+        method: "post",
+        data: this.$http.adornData({
+          ...this.addSpecTemp,
+          specItems: this.addSpecTemp.value.map(item => {
+            return {
+              item: item
+            };
           })
-      console.log(this.addSpecTemp);
-      this.specification.push({
-        name: this.addSpecTemp.name,
-        value: this.addSpecTemp.value
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.specification.push({
+            id:data.data.id,
+            name: data.data.name,
+            value: this.addSpecTemp.value
+          });
+          this.addSpecVisible = false;
+        }
       });
-      this.addSpecVisible = false;
     },
     //显示隐藏添加规格按钮
     showAddBtn(visible) {
