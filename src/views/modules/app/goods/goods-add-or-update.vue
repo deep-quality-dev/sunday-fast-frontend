@@ -54,8 +54,8 @@
                   <i class="icon el-icon-circle-close" @click="delSpec(index)"></i>
                 </div>
                 <div class="values">
-                  <span class="el-tag" v-for="(tag, num) in item.value" :key="tag">
-                    <span class="el-select__tags-text">{{tag}}</span>
+                  <span class="el-tag" v-for="(specItem, num) in item.value" :key="specItem.id">
+                    <span class="el-select__tags-text">{{specItem.name}}</span>
                     <i class="el-tag__close el-icon-close" @click="delSpecTag(index, num)"></i>
                   </span>
                   <div class="add-attr">
@@ -81,7 +81,7 @@
                 </div>
                 <div class="values">
                   <div class="add-attr">
-                    <el-input v-model="addSpecTemp.value[0]" placeholder="输入属性值"></el-input>
+                    <el-input v-model="addSpecTemp.value[0].name" placeholder="输入属性值"></el-input>
                     <!-- <el-input
                       size="small"
                       v-model="addValues[index]"
@@ -126,6 +126,7 @@
             <tbody v-if="specification[0] && specification[0].value.length">
               <tr :key="index" v-for="(item, index) in countSum(0)">
                 <td
+                  style="text-align: center;"
                   v-for="(n, specIndex) in specification.length"
                   v-if="showTd(specIndex, index)"
                   :key="n"
@@ -377,7 +378,7 @@ export default {
         {
           id: 1,
           name: "颜色",
-          value: ["黑色"]
+          value: [{id:1,name:'黑色'}]
         }
       ],
       // 子规格
@@ -575,7 +576,11 @@ export default {
       if (!str.trim()) return; // 判空
       str = str.trim();
       let arr = str.split(/\s+/); // 使用空格分割成数组
-
+      arr = arr.map(item=>{
+        return {
+          name:item
+        }
+      })
       let newArr = this.specification[index].value.concat(arr);
       newArr = Array.from(new Set(newArr)); // 去重
       this.$set(this.specification[index], "value", newArr);
@@ -621,7 +626,7 @@ export default {
       const i = Math.floor(indexCopy % currentValues.length);
 
       if (i.toString() !== "NaN") {
-        return currentValues[i];
+        return currentValues[i].name;
       } else {
         return "";
       }
