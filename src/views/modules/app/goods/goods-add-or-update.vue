@@ -440,6 +440,17 @@ export default {
     },
     //保存规格
     saveSpec() {
+      this.$http({
+            url: this.$http.adornUrl(
+              `/admin/spec/save`
+            ),
+            method: "post",
+            data: this.$http.adornData({
+              ...this.addSpecTemp
+            })
+          }).then(({ data }) => {
+            console.log(data)
+          })
       console.log(this.addSpecTemp);
       this.specification.push({
         name: this.addSpecTemp.name,
