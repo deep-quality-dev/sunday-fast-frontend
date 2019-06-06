@@ -81,7 +81,7 @@
                 </div>
                 <div class="values">
                   <div class="add-attr">
-                    <el-input v-model="addSpecTemp.value[0].name" placeholder="输入属性值"></el-input>
+                    <el-input v-model="addSpecTemp.value[0]" placeholder="输入属性值"></el-input>
                     <!-- <el-input
                       size="small"
                       v-model="addValues[index]"
@@ -102,7 +102,6 @@
                 :disabled="specification.length >= 5"
                 @click="showAddBtn(true)"
               >添加规格</el-button>
-
               <el-button v-if="addSpecVisible" type="primary" @click="saveSpec()" size="small">确定</el-button>
               <el-button
                 v-if="addSpecVisible"
@@ -230,12 +229,14 @@
       <el-button @click="$router.go(-1)">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
-
     <UploadModal :visible="uploadVisible" @changeVisible="showUploadModal" @chooseImg="chooseImg"/>
   </div>
 </template>
 
 <script>
+import { treeDataTranslate } from "@/utils";
+import UploadModal from "@/components/uploadModal";
+
 // 为Object添加一个原型方法，判断两个对象是否相等
 function objEquals(object1, object2) {
   // For the first loop, we only check for types
@@ -303,9 +304,6 @@ const toolbarOptions = [
   ["link", "image", "video"]
 ];
 
-import { treeDataTranslate } from "@/utils";
-import UploadModal from "@/components/uploadModal";
-
 export default {
   components: {
     UploadModal
@@ -321,7 +319,7 @@ export default {
       },
       addSpecTemp: {
         name: "",
-        value: []
+        value: [""]
       },
       visible: false,
       dataForm: {
@@ -378,7 +376,7 @@ export default {
         {
           id: 1,
           name: "颜色",
-          value: [{id:1,name:'黑色'}]
+          value: [{ id: 1, name: "黑色" }]
         }
       ],
       // 子规格
@@ -459,9 +457,14 @@ export default {
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.specification.push({
-            id:data.data.id,
+            id: data.data.id,
             name: data.data.name,
-            value: this.addSpecTemp.value
+            value: data.data.specItems.map(item => {
+              return {
+                id: item.id,
+                name: item.item
+              };
+            })
           });
           this.addSpecVisible = false;
         }
@@ -470,6 +473,10 @@ export default {
     //显示隐藏添加规格按钮
     showAddBtn(visible) {
       this.addSpecVisible = visible;
+      this.addSpecTemp = {
+        name: "",
+        value: [""]
+      };
     },
     onEditorReady(editor) {
       // 准备编辑器
@@ -481,7 +488,7 @@ export default {
       alert(this.content);
     },
     showUploadModal(visible) {
-      this.addSpecVisible = !!visible;
+      this.uploadVisible = !!visible;
     },
     chooseImg(data) {
       console.log(data);
@@ -495,6 +502,8 @@ export default {
     // 分类输设置当前选中节点
     cateListTreeSetCurrentNode() {
       this.$refs.cateListTree.setCurrentKey(this.dataForm.categoryId);
+
+      // eslint-disable-next-line
       this.dataForm.cateName = (this.$refs.cateListTree.getCurrentNode() || {})[
         "name"
       ];
@@ -565,36 +574,50 @@ export default {
 
     // 删除规格项目
     delSpec(index) {
-      this.addSpecVisible = true;
+      this.addSpecVisible = false;
       this.specification.splice(index, 1);
       this.handleSpecChange("del");
     },
 
     // 添加规格属性
     addSpecTag(index) {
-      let str = this.addValues[index].trim() || ""; //去除空格自动分割
-      if (!str.trim()) return; // 判空
-      str = str.trim();
-      let arr = str.split(/\s+/); // 使用空格分割成数组
-      arr = arr.map(item=>{
-        return {
-          name:item
+      let newSpec = this.specification[index].value.filter(
+        item =>{
+           return item.name === this.addValues[index]
         }
-      })
-      let newArr = this.specification[index].value.concat(arr);
-      newArr = Array.from(new Set(newArr)); // 去重
-      this.$set(this.specification[index], "value", newArr);
-
-      this.clearAddValues(index);
-
-      this.handleSpecChange("add");
+      );
+      console.log(newSpec)
+      if (newSpec.length>0) {
+        this.$message({
+          type: "error",
+          message: "规格值已存在"
+        });
+        return;
+      }
+      this.$http({
+        url: this.$http.adornUrl(`/admin/specitem/save`),
+        method: "post",
+        data: this.$http.adornData({
+          specId: this.specification[index].id,
+          item: this.addValues[index]
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.specification[index].value.push({
+            id: data.data.id,
+            name: data.data.item
+          });
+          this.clearAddValues(index);
+          this.handleSpecChange("add");
+        }
+      });
     },
 
     // 删除规格属性
     delSpecTag(index, num) {
-      this.specification[index].value.splice(num, 1);
+       this.specification[index].value.splice(num, 1);
+       this.handleSpecChange("del");
 
-      this.handleSpecChange("del");
     },
 
     // 清空 addValues
