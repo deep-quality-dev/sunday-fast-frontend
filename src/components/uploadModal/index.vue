@@ -41,57 +41,33 @@
           <el-container>
             <el-aside style="width:150px">
               <ul class="nav-new">
-                <li>全部</li>
-                <li class="active">未分组</li>
-                <li>分组1</li>
-                <li>新增分组</li>
+                <li class="active">全部</li>
+                <li v-for="(item, index) in dataList" :key="index">{{item.groupName}}</li>
+                <li @click="addGroup">新增分组</li>
               </ul>
             </el-aside>
             <el-main>
               <div class="file-list-body">
                 <ul class="file-list-item">
-                  <li>
+                   <li v-for="(item, index) in fileData" :key="index" :data-index="index" @click="setListCheck(index)">
                     <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <div class="img-cover" style="background-image: url('http://static.yoshop.xany6.com/20180928170741995264498.png')"></div>
-                      <p class="file-name">20180928170102df8a59578.png</p> 
+                      <div class="img-cover"  :style="{backgroundImage:'url('+ossServer+item.fileName+')'}"></div>
+                      <p class="file-name">{{item.fileName}}</p> 
+                      <div class="select-mask" v-if="item.check">
+                          <img :src="require('../../assets/img/chose.png')">
+                      </div>
                     </div>
                   </li>
                 </ul>
               </div>
               <el-pagination
+                @size-change="sizeChangeHandle"
+                @current-change="currentChangeHandle"
+                :current-page="pageIndex"
+                :page-size="pageSize"
+                :total="totalPage"
                 small
-                layout="prev, pager, next"
-                :total="50">
+                layout="prev, pager, next">
               </el-pagination>
             </el-main>
           </el-container>
@@ -108,8 +84,15 @@ export default {
   name: "upload-modal",
   data() {
     return {
+      ossServer:this.$http.adornUrl('/file/'),
       fileList: [],
-      chooseImgList: ["111"]
+      chooseImgList: [],
+      dataList: [],
+      dataListLoading: false,
+      fileData:[],
+      pageIndex: 1,
+      pageSize: 10,
+      totalPage: 0,
     };
   },
   props: {
@@ -118,11 +101,75 @@ export default {
     }
   },
   methods: {
+     init() {
+       this.getFileList()
+      this.dataListLoading = true;
+      this.$http({
+        url: this.$http.adornUrl("/admin/uploadgroup/list"),
+        method: "get",
+        params: this.$http.adornParams({
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.dataList = data.data;
+        } else {
+          this.dataList = [];
+        }
+        this.dataListLoading = false;
+      });
+    },
+     // 获取文件数据
+    getFileList() {
+      this.dataListLoading = true;
+      this.$http({
+        url: this.$http.adornUrl("/admin/uploadfile/list"),
+        method: "get",
+        params: this.$http.adornParams({
+          page: this.pageIndex,
+          limit: this.pageSize,
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.fileData = data.data.records;
+          this.fileData = this.fileData.map(item=>{
+            return {
+              ...item,
+              check:false
+            }
+          })
+          this.totalPage = data.data.total;
+        } else {
+          this.fileData = [];
+          this.totalPage = 0;
+        }
+        this.dataListLoading = false;
+      });
+    },
+    // 每页数
+    sizeChangeHandle(val) {
+      this.pageSize = val;
+      this.pageIndex = 1;
+      this.getDataList();
+    },
+    // 当前页
+    currentChangeHandle(val) {
+      this.pageIndex = val;
+      this.getDataList();
+    },
+    addGroup(){
+      alert('添加分组')
+    },
     hideDialog() {
       this.$emit("changeVisible", false);
     },
-
+    setListCheck: function(idx) {
+          var check = this.fileData[idx].check;
+          this.fileData[idx].check = check === true ? false : true; 
+    },
     submit() {
+      this.chooseImgList = this.fileData.filter(item =>{
+        return item.check === true;
+      })
       this.$emit("chooseImg", this.chooseImgList);
       this.hideDialog();
     },
@@ -150,6 +197,7 @@ export default {
   overflow-y: auto;
   max-height: 340px;
   li {
+    cursor: pointer;
     position: relative;
     margin: 0.3rem 0;
     padding: 0.8rem 2.3rem;
@@ -186,6 +234,25 @@ export default {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+      }
+      .select-mask {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        text-align: center;
+        border-radius: 6px;
+        img{
+          position: absolute;
+          top: 50px;
+          left: 45px;
+          box-sizing: border-box;
+          vertical-align: middle;
+          border: 0;
+        }
       }
     }
   }

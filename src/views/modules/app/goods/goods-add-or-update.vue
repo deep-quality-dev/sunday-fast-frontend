@@ -33,6 +33,19 @@
           上传
           <i class="el-icon-upload el-icon--right"></i>
         </el-button>
+        <div class="uploader-list am-cf">
+          <div
+            v-for="(item, index) in goodsImages"
+            :key="index"
+            :data-index="index"
+            class="file-item"
+            @mouseover="showDelImg(index)"
+            @mouseout="hiddDelImg(index)"
+          >
+            <img :src="item.url">
+            <i class="icon el-icon-circle-close file-item-delete" v-show="item.showDel" @click="delGoodsImg(index)"></i>
+          </div>
+        </div>
         <!-- <el-input v-model="dataForm.img" placeholder="商品图片"></el-input> -->
       </el-form-item>
       <div class="widget-head am-cf">
@@ -40,11 +53,11 @@
       </div>
       <el-form-item label="商品规格" prop="specType">
         <el-radio-group v-model="dataForm.specType">
-          <el-radio label="单规格"></el-radio>
-          <el-radio label="多规格"></el-radio>
+          <el-radio :label=1>单规格</el-radio>
+          <el-radio :label=2>多规格</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="dataForm.specType === 2">
         <div class="specification">
           <div class="spec-list">
             <ul>
@@ -130,7 +143,7 @@
                   v-if="showTd(specIndex, index)"
                   :key="n"
                   :rowspan="countSum(n)"
-                >{{getSpecAttr(specIndex, index)}}</td>
+                >{{getSpecAttr(specIndex, index).name}}</td>
                 <td class="sku-img-warp">
                   <div tabindex="0" class="el-upload el-upload--picture-card">
                     <i class="el-icon-plus"></i>
@@ -145,7 +158,7 @@
                   <el-input
                     size="small"
                     type="text"
-                    v-model="childProductArray[index].childProductNo"
+                    v-model="childProductArray[index].goodsNo"
                     @blur="handleNo(index)"
                     placeholder="输入商品规格编号"
                   ></el-input>
@@ -154,7 +167,7 @@
                   <el-input
                     size="small"
                     type="text"
-                    v-model.number="childProductArray[index].childProductCost"
+                    v-model.number="childProductArray[index].linePrice"
                     placeholder="输入成本价"
                   ></el-input>
                 </td>
@@ -162,7 +175,7 @@
                   <el-input
                     size="small"
                     type="text"
-                    v-model.number="childProductArray[index].childProductStock"
+                    v-model.number="childProductArray[index].stock"
                     placeholder="输入库存"
                   ></el-input>
                 </td>
@@ -170,7 +183,7 @@
                   <el-input
                     size="small"
                     type="text"
-                    v-model.number="childProductArray[index].childProductPrice"
+                    v-model.number="childProductArray[index].sellPrice"
                     placeholder="输入销售价"
                   ></el-input>
                 </td>
@@ -179,9 +192,9 @@
                 <td colspan="8" class="wh-foot">
                   <span class="label">批量设置：</span>
                   <ul class="set-list" v-if="isSetListShow">
-                    <li class="set-item" @click="openBatch('childProductCost')">成本价</li>
-                    <li class="set-item" @click="openBatch('childProductStock')">库存</li>
-                    <li class="set-item" @click="openBatch('childProductPrice')">销售价</li>
+                    <li class="set-item" @click="openBatch('linePrice')">成本价</li>
+                    <li class="set-item" @click="openBatch('stock')">库存</li>
+                    <li class="set-item" @click="openBatch('sellPrice')">销售价</li>
                   </ul>
                   <div class="set-form" v-else>
                     <el-input size="mini" v-model.number="batchValue" placeholder="输入要设置的数量"></el-input>
@@ -229,7 +242,12 @@
       <el-button @click="$router.go(-1)">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
-    <UploadModal :visible="uploadVisible" @changeVisible="showUploadModal" @chooseImg="chooseImg"/>
+    <UploadModal
+      :visible="uploadVisible"
+      ref="uploadModal"
+      @changeVisible="showUploadModal"
+      @chooseImg="chooseImg"
+    />
   </div>
 </template>
 
@@ -313,6 +331,7 @@ export default {
       uploadVisible: false, // 上传文件弹窗
       addSpecVisible: false,
       cateList: [],
+      goodsImages: [],
       cateListTreeProps: {
         label: "name",
         children: "children"
@@ -327,11 +346,11 @@ export default {
         name: "",
         price: "",
         weight: "",
-        specType: "",
+        specType: 1,
         categoryId: 0,
         cateName: "",
         content: "",
-        img: "",
+        img: [],
         sort: ""
       },
       editorOption: {
@@ -382,13 +401,14 @@ export default {
       // 子规格
       childProductArray: [
         {
-          childProductId: 0,
+          goodsId: 0,
           childProductSpec: { 颜色: "黑色" },
-          childProductNo: "PRODUCTNO_0",
+          childProductSpecKey:{},
+          goodsNo: "PRODUCTNO_0",
           skuImg: "",
-          childProductStock: 0,
-          childProductPrice: 0,
-          childProductCost: 0
+          stock: 0,
+          sellPrice: 0,
+          linePrice: 0
         }
       ],
       // 用来存储要添加的规格属性
@@ -441,6 +461,20 @@ export default {
         }
       });
     },
+    //显示图片删除
+    showDelImg(index) {
+      var showDel = this.goodsImages[index].showDel;
+      this.goodsImages[index].showDel = showDel === true ? false : true;
+    },
+    //隐藏图片删除
+    hiddDelImg(index) {
+      var showDel = this.goodsImages[index].showDel;
+      this.goodsImages[index].showDel = showDel === true ? false : true;
+    },
+    //删除商品图片
+    delGoodsImg(index){
+      this.goodsImages.splice(index,1);
+    },
     //保存规格
     saveSpec() {
       this.$http({
@@ -488,10 +522,23 @@ export default {
       alert(this.content);
     },
     showUploadModal(visible) {
+      if (visible) {
+        this.$nextTick(() => {
+          this.$refs.uploadModal.init();
+        });
+      }
       this.uploadVisible = !!visible;
     },
     chooseImg(data) {
-      console.log(data);
+      if (data.length > 0) {
+        this.goodsImages = data.map(item => {
+          return {
+            url: this.$http.adornUrl("/file/") + item.fileName,
+            name:item.fileName,
+            showDel: false
+          };
+        });
+      }
     },
 
     // 分类树选中
@@ -525,6 +572,8 @@ export default {
       console.log(JSON.stringify(this.childProductArray));
       console.log("-------------------------------------------------------");
       console.log(JSON.stringify(this.specification));
+      console.log("-------------------------------------------------------");
+      console.log(this.dataForm);
       return;
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
@@ -581,13 +630,11 @@ export default {
 
     // 添加规格属性
     addSpecTag(index) {
-      let newSpec = this.specification[index].value.filter(
-        item =>{
-           return item.name === this.addValues[index]
-        }
-      );
-      console.log(newSpec)
-      if (newSpec.length>0) {
+      let newSpec = this.specification[index].value.filter(item => {
+        return item.name === this.addValues[index];
+      });
+      console.log(newSpec);
+      if (newSpec.length > 0) {
         this.$message({
           type: "error",
           message: "规格值已存在"
@@ -615,9 +662,8 @@ export default {
 
     // 删除规格属性
     delSpecTag(index, num) {
-       this.specification[index].value.splice(num, 1);
-       this.handleSpecChange("del");
-
+      this.specification[index].value.splice(num, 1);
+      this.handleSpecChange("del");
     },
 
     // 清空 addValues
@@ -649,7 +695,7 @@ export default {
       const i = Math.floor(indexCopy % currentValues.length);
 
       if (i.toString() !== "NaN") {
-        return currentValues[i].name;
+        return currentValues[i];
       } else {
         return "";
       }
@@ -708,12 +754,13 @@ export default {
      */
     changeStock(option, index, stockCopy) {
       let childProduct = {
-        childProductId: 0,
+        goodsId: 0,
         childProductSpec: this.getChildProductSpec(index),
-        childProductNo: this.defaultProductNo + index,
-        childProductStock: 0,
-        childProductPrice: 0,
-        childProductCost: 0,
+        childProductSpecKey:this.getChildProductSpecKey(index),
+        goodsNo: this.defaultProductNo + index,
+        stock: 0,
+        sellPrice: 0,
+        linePrice: 0,
         skuImg: ""
       };
 
@@ -740,30 +787,38 @@ export default {
     getChildProductSpec(index) {
       let obj = {};
       this.specification.forEach((item, specIndex) => {
-        obj[item.name] = this.getSpecAttr(specIndex, index);
+        obj[item.name] = this.getSpecAttr(specIndex, index).name;
       });
       return obj;
     },
-
+    //获取spec key
+    getChildProductSpecKey(index) {
+      let specKey={};
+      this.specification.forEach((item, specIndex) => {
+        specKey[item.id] = this.getSpecAttr(specIndex, index).id;
+      });
+      return specKey
+      ;
+    },
     // 监听规格启用操作
     handleUserChange(index, value) {
       // 启用规格时，生成不重复的商品编号；关闭规格时，清空商品编号
       if (value) {
         let No = this.makeProductNoNotRepet(index);
-        this.$set(this.childProductArray[index], "childProductNo", No);
+        this.$set(this.childProductArray[index], "goodsNo", No);
       } else {
-        this.$set(this.childProductArray[index], "childProductNo", "");
+        this.$set(this.childProductArray[index], "goodsNo", "");
       }
     },
 
     // 监听商品编号的blur事件
     handleNo(index, attr) {
       // 1.当用户输入完商品编号时，判断是否重复，如有重复，则提示客户并自动修改为不重复的商品编号
-      const value = this.childProductArray[index].childProductNo;
+      const value = this.childProductArray[index].goodsNo;
       let isRepet;
 
       this.childProductArray.forEach((item, i) => {
-        if (item.childProductNo === value && i !== index) {
+        if (item.goodsNo === value && i !== index) {
           isRepet = true;
         }
       });
@@ -775,7 +830,7 @@ export default {
         });
         this.$set(
           this.childProductArray[index],
-          "childProductNo",
+          "goodsNo",
           this.makeProductNoNotRepet(index)
         );
       }
@@ -797,7 +852,7 @@ export default {
     // 商品编号判重
     isProductNoRepet(No) {
       const result = this.childProductArray.findIndex(item => {
-        return item.childProductNo === No;
+        return item.goodsNo === No;
       });
       return result > -1;
     },
@@ -831,6 +886,34 @@ export default {
 </script>
 
 <style lang="less">
+.uploader-list {
+  .file-item {
+    float: left;
+    min-width: 110px;
+    position: relative;
+    margin: 20px 25px 0 0;
+    padding: 4px;
+    border: 1px solid #ddd;
+    background: #fff;
+    img {
+      width: 110px;
+      height: 100px;
+    }
+    .file-item-delete {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      cursor: pointer;
+      height: 22px;
+      width: 22px;
+      line-height: 22px;
+      background: rgba(153, 153, 153, 0.7);
+      border-radius: 50%;
+      text-align: center;
+      color: #fff !important;
+    }
+  }
+}
 .ql-container {
   height: 200px;
 }

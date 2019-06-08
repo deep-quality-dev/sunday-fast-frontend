@@ -28,14 +28,11 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" header-align="center" align="center" label="文件id"></el-table-column>
-      <el-table-column prop="storage" header-align="center" align="center" label="存储方式"></el-table-column>
-      <el-table-column prop="groupId" header-align="center" align="center" label="文件分组id"></el-table-column>
       <el-table-column prop="fileUrl" header-align="center" align="center" label="存储域名"></el-table-column>
       <el-table-column prop="fileName" header-align="center" align="center" label="文件路径"></el-table-column>
       <el-table-column prop="fileSize" header-align="center" align="center" label="文件大小(字节)"></el-table-column>
       <el-table-column prop="fileType" header-align="center" align="center" label="文件类型"></el-table-column>
       <el-table-column prop="extension" header-align="center" align="center" label="文件扩展名"></el-table-column>
-      <el-table-column prop="isDelete" header-align="center" align="center" label="软删除"></el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
@@ -95,8 +92,8 @@ export default {
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
+          this.dataList = data.data.records;
+          this.totalPage = data.data.totalCount;
         } else {
           this.dataList = [];
           this.totalPage = 0;
