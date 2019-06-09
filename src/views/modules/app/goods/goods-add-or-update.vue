@@ -234,6 +234,12 @@
       <div class="widget-head am-cf">
         <div class="widget-title am-fl">其他设置</div>
       </div>
+      <el-form-item label="上架状态" prop="goodsStatus">
+        <el-radio-group v-model="dataForm.goodsStatus">
+          <el-radio :label=10>上架</el-radio>
+          <el-radio :label=20>下架</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="商品排序" prop="sort">
         <el-input v-model="dataForm.sort" placeholder="商品排序"></el-input>
       </el-form-item>
@@ -348,9 +354,13 @@ export default {
         weight: "",
         specType: 1,
         categoryId: 0,
+        goodsStatus:10,
+        goodsSkus:[],
+        specs:[],
         cateName: "",
         content: "",
-        img: [],
+        imgs: [],
+        store:0,
         sort: ""
       },
       editorOption: {
@@ -375,21 +385,6 @@ export default {
           { required: true, message: "商品名称不能为空", trigger: "blur" }
         ],
         price: [{ required: true, message: "价格不能为空", trigger: "blur" }],
-        weight: [
-          { required: true, message: "重量(kg)不能为空", trigger: "blur" }
-        ],
-        specType: [
-          {
-            required: true,
-            message: "商品规格",
-            trigger: "blur"
-          }
-        ],
-        content: [
-          { required: true, message: "商品描述不能为空", trigger: "blur" }
-        ],
-        img: [{ required: true, message: "商品图片不能为空", trigger: "blur" }],
-        sort: [{ required: true, message: "商品排序不能为空", trigger: "blur" }]
       },
       specification: [
         {
@@ -402,9 +397,9 @@ export default {
       childProductArray: [
         {
           goodsId: 0,
-          childProductSpec: { 颜色: "黑色" },
-          childProductSpecKey:{},
-          goodsNo: "PRODUCTNO_0",
+          goodsSkuValue: { 颜色: "黑色" },
+          goodsSkuKey:{},
+          goodsNo: "",
           skuImg: "",
           stock: 0,
           sellPrice: 0,
@@ -414,7 +409,7 @@ export default {
       // 用来存储要添加的规格属性
       addValues: [],
       // 默认商品编号
-      defaultProductNo: "PRODUCTNO_",
+      defaultProductNo: "",
       // 批量设置相关
       isSetListShow: true,
       batchValue: "", // 批量设置所绑定的值
@@ -427,7 +422,7 @@ export default {
   computed: {
     // 所有sku的id
     stockSpecArr() {
-      return this.childProductArray.map(item => item.childProductSpec);
+      return this.childProductArray.map(item => item.goodsSkuValue);
     },
     editor() {
       return this.$refs.myQuillEditor.quill;
@@ -447,15 +442,33 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
+              this.childProductArray=data.data.goodsSkus;
+              // 初始化规格
+              this.specification = data.data.specs.map(item=>{
+                return {
+                  id:item.id,
+                  name:item.name,
+                  value:item.specItems.map(sitem=>{
+                    return {
+                      id:sitem.id,
+                      name:sitem.item,
+                    }
+                  })
+                }
+              });
               this.dataForm.name = data.data.name;
               this.dataForm.price = data.data.price;
               this.dataForm.weight = data.data.weight;
               this.dataForm.categoryId = data.data.categoryId;
               this.dataForm.specType = data.data.specType;
               this.dataForm.content = data.data.content;
-              this.dataForm.img = data.data.img;
+              this.dataForm.imgs = data.data.imgs;
+              this.dataForm.goodsStatus = data.data.goodsStatus;
               this.dataForm.sort = data.data.sort;
+              this.dataForm.store = data.data.store;
               this.cateListTreeSetCurrentNode();
+              console.log(this.specification)
+              // this.childProductArray=data.da.goodsSkus;
             }
           });
         }
@@ -501,6 +514,7 @@ export default {
             })
           });
           this.addSpecVisible = false;
+          this.handleSpecChange("add");
         }
       });
     },
@@ -573,8 +587,29 @@ export default {
       console.log("-------------------------------------------------------");
       console.log(JSON.stringify(this.specification));
       console.log("-------------------------------------------------------");
-      console.log(this.dataForm);
-      return;
+      console.log(JSON.stringify(this.dataForm));
+      if(this.dataForm.specType == 2){
+        this.dataForm.goodsSkus = this.childProductArray.map(item => {
+          return {
+            ...item,
+            goodsSkuKey:JSON.stringify(item.goodsSkuKey),
+            goodsSkuValue:JSON.stringify(item.goodsSkuValue),
+          }
+        });
+        this.dataForm.specs = this.specification.map(item=>{
+          return {
+            ...item,
+            specItems:item.value.map(vitem =>{
+              return {
+                id:vitem.id,
+                item:vitem.name,
+                specId:item.id
+              }
+            })
+          }
+        })
+      }
+      console.log(JSON.stringify(this.dataForm));
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
@@ -587,9 +622,13 @@ export default {
               name: this.dataForm.name,
               price: this.dataForm.price,
               weight: this.dataForm.weight,
+              goodsSkus:this.dataForm.goodsSkus,
+              specs:this.dataForm.specs,
               specType: this.dataForm.specType,
               content: this.dataForm.content,
-              img: this.dataForm.img,
+              imgs: this.goodsImages.map(item=>{
+                return item.name;
+              }),
               sort: this.dataForm.sort
             })
           }).then(({ data }) => {
@@ -755,16 +794,16 @@ export default {
     changeStock(option, index, stockCopy) {
       let childProduct = {
         goodsId: 0,
-        childProductSpec: this.getChildProductSpec(index),
-        childProductSpecKey:this.getChildProductSpecKey(index),
-        goodsNo: this.defaultProductNo + index,
+        goodsSkuValue: this.getChildProductSpec(index),
+        goodsSkuKey:this.getChildProductSpecKey(index),
+        goodsNo: this.defaultProductNo,
         stock: 0,
         sellPrice: 0,
         linePrice: 0,
         skuImg: ""
       };
 
-      const spec = childProduct.childProductSpec;
+      const spec = childProduct.goodsSkuValue;
       if (option === "add") {
         // 如果此id不存在，说明为新增属性，则向 childProductArray 中添加一条数据
         if (this.stockSpecArr.findIndex(item => objEquals(spec, item)) === -1) {
@@ -774,7 +813,7 @@ export default {
         // 因为是删除操作，理论上所有数据都能从stockCopy中获取到
         let origin = "";
         stockCopy.forEach(item => {
-          if (objEquals(spec, item.childProductSpec)) {
+          if (objEquals(spec, item.goodsSkuValue)) {
             origin = item;
             return false;
           }
