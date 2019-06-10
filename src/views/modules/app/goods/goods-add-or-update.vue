@@ -145,8 +145,9 @@
                   :rowspan="countSum(n)"
                 >{{getSpecAttr(specIndex, index).name}}</td>
                 <td class="sku-img-warp">
-                  <div tabindex="0" class="el-upload el-upload--picture-card">
-                    <i class="el-icon-plus"></i>
+                  <div tabindex="0" class="el-upload el-upload--picture-card" @click="selectSkuImng(true,index)">
+                    <i v-if="!childProductArray[index].skuImg" class="el-icon-plus"></i>
+                    <img class="skuImg" v-else :src="$http.adornUrl('/file/')+childProductArray[index].skuImg">
                   </div>
                   <el-input
                     style="display: none;"
@@ -249,7 +250,10 @@
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
     <UploadModal
+      :type="uploadCallbackType"
       :visible="uploadVisible"
+      :extParams="uploadExtParams"
+      :multiple="uploadMultiple"
       ref="uploadModal"
       @changeVisible="showUploadModal"
       @chooseImg="chooseImg"
@@ -370,8 +374,7 @@ export default {
             handlers: {
               image: value => {
                 if (value) {
-                  console.log(this);
-                  this.uploadVisible = true;
+                  this.selectGoodsDetailImg(true,3)
                 } else {
                   this.quill.format("image", false);
                 }
@@ -413,7 +416,10 @@ export default {
       // 批量设置相关
       isSetListShow: true,
       batchValue: "", // 批量设置所绑定的值
-      currentType: "" // 要批量设置的类型
+      currentType: "", // 要批量设置的类型
+      uploadCallbackType: 1,
+      uploadExtParams:0,
+      uploadMultiple:true
     };
   },
   activated() {
@@ -535,6 +541,7 @@ export default {
     saveHtml: function(event) {
       alert(this.content);
     },
+    //选择商品图片
     showUploadModal(visible) {
       if (visible) {
         this.$nextTick(() => {
@@ -542,16 +549,59 @@ export default {
         });
       }
       this.uploadVisible = !!visible;
+      this.uploadCallbackType = 1;
+      this.uploadMultiple = true;
     },
-    chooseImg(data) {
-      if (data.length > 0) {
-        this.goodsImages = data.map(item => {
-          return {
-            url: this.$http.adornUrl("/file/") + item.fileName,
-            name:item.fileName,
-            showDel: false
-          };
+    //  选择sku图片
+    selectSkuImng(visible,index) {
+      if (visible) {
+        this.$nextTick(() => {
+          this.$refs.uploadModal.init();
         });
+      }
+      this.uploadVisible = !!visible;
+      this.uploadCallbackType = 2;
+      this.uploadExtParams = index;
+      this.uploadMultiple = false;
+    },
+    //详情图片选择
+    selectGoodsDetailImg(visible){
+       if (visible) {
+        this.$nextTick(() => {
+          this.$refs.uploadModal.init();
+        });
+      }
+      this.uploadVisible = !!visible;
+      this.uploadCallbackType = 3;
+      this.uploadMultiple = true;
+    },
+    //图片选择回调
+    chooseImg(data, type,uploadExtParams) {
+      if (data.length > 0) {
+        if(type === 1){
+          this.goodsImages = data.map(item => {
+            return {
+              url: this.$http.adornUrl("/file/") + item.fileName,
+              name:item.fileName,
+              showDel: false
+            };
+          });
+        }
+        if(type === 2){
+          this.childProductArray[uploadExtParams].skuImg = data[0].fileName
+        }
+        if(type === 3){
+          let quill = this.$refs.myQuillEditor.quill;
+          console.log(quill.selection)
+          // 获取光标所在位置
+          // let length = quill.getSelection().index;
+          // 插入图片  res.url为服务器返回的图片地址
+          data.forEach(item=>{
+            quill.insertEmbed(0, 'image', this.$http.adornUrl("/file/") + item.fileName)
+          })
+          // 调整光标到最后
+          // quill.setSelection(length + 1);
+        }
       }
     },
 
@@ -954,7 +1004,7 @@ export default {
   }
 }
 .ql-container {
-  height: 200px;
+  height: 500px;
 }
 * {
   list-style: none;
@@ -1075,6 +1125,10 @@ export default {
   background-color: #fff;
   .sku-img-warp {
     text-align: center;
+    .skuImg{
+      width: 100%;
+      height: 100%;
+    }
     div {
       height: 40px;
       width: 40px;

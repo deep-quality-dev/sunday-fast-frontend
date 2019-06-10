@@ -84,7 +84,7 @@ export default {
   name: "upload-modal",
   data() {
     return {
-      ossServer:this.$http.adornUrl('/file/'),
+      ossServer: this.$http.adornUrl('/file/'),
       fileList: [],
       chooseImgList: [],
       dataList: [],
@@ -98,11 +98,20 @@ export default {
   props: {
     visible: {
       type: Boolean
+    },
+    type: {
+      type: Number,
+    },
+    extParams:{
+      type:Number,
+    },
+    multiple:{
+      type: Boolean
     }
   },
   methods: {
      init() {
-       this.getFileList()
+      this.getFileList()
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl("/admin/uploadgroup/list"),
@@ -164,13 +173,18 @@ export default {
     },
     setListCheck: function(idx) {
           var check = this.fileData[idx].check;
+          if(!this.multiple){
+            this.fileData.forEach((item,index)=>{
+              this.fileData[index].check = false; 
+            })
+          }
           this.fileData[idx].check = check === true ? false : true; 
     },
     submit() {
       this.chooseImgList = this.fileData.filter(item =>{
         return item.check === true;
       })
-      this.$emit("chooseImg", this.chooseImgList);
+      this.$emit("chooseImg", this.chooseImgList, this.type,this.extParams);
       this.hideDialog();
     },
     handleRemove(file, fileList) {
