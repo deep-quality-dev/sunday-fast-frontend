@@ -448,7 +448,14 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.childProductArray=data.data.goodsSkus;
+              console.log(data.data.goodsSkus)
+              this.childProductArray=data.data.goodsSkus.map(item=>{
+                return {
+                  ...item,
+                  goodsSkuKey:item.goodsSkuKey,
+                  goodsSkuValue:JSON.parse(item.goodsSkuValue),
+                }
+              })
               // 初始化规格
               this.specification = data.data.specs.map(item=>{
                 return {
@@ -642,7 +649,7 @@ export default {
         this.dataForm.goodsSkus = this.childProductArray.map(item => {
           return {
             ...item,
-            goodsSkuKey:JSON.stringify(item.goodsSkuKey),
+            goodsSkuKey:item.goodsSkuKey,
             goodsSkuValue:JSON.stringify(item.goodsSkuValue),
           }
         });
@@ -675,6 +682,7 @@ export default {
               goodsSkus:this.dataForm.goodsSkus,
               specs:this.dataForm.specs,
               specType: this.dataForm.specType,
+              goodsStatus:this.dataForm.goodsStatus,
               content: this.dataForm.content,
               imgs: this.goodsImages.map(item=>{
                 return item.name;
@@ -882,11 +890,13 @@ export default {
     },
     //获取spec key
     getChildProductSpecKey(index) {
-      let specKey={};
+      let specKey=[];
       this.specification.forEach((item, specIndex) => {
-        specKey[item.id] = this.getSpecAttr(specIndex, index).id;
+        specKey.push(this.getSpecAttr(specIndex, index).id);
       });
-      return specKey
+      //获取value 值，以 ‘-’ 从小到大拼接
+      specKey.sort(function(a,b){ return a-b})
+      return specKey.join("-")
       ;
     },
     // 监听规格启用操作
