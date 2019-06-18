@@ -147,7 +147,7 @@
                 <td class="sku-img-warp">
                   <div tabindex="0" class="el-upload el-upload--picture-card" @click="selectSkuImng(true,index)">
                     <i v-if="!childProductArray[index].skuImg" class="el-icon-plus"></i>
-                    <img class="skuImg" v-else :src="$http.adornUrl('/file/')+childProductArray[index].skuImg">
+                    <img class="skuImg" v-else :src="childProductArray[index].skuImg">
                   </div>
                   <el-input
                     style="display: none;"
@@ -448,7 +448,13 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              console.log(data.data.goodsSkus)
+              this.goodsImages = this.goodsImages = data.data.imgs.map(item => {
+                return {
+                  url: item,
+                  name:item,
+                  showDel: false
+                };
+              });
               this.childProductArray=data.data.goodsSkus.map(item=>{
                 return {
                   ...item,
@@ -588,14 +594,14 @@ export default {
         if(type === 1){
           this.goodsImages = data.map(item => {
             return {
-              url: this.$http.adornUrl("/file/") + item.fileName,
-              name:item.fileName,
+              url: item.url,
+              name:item.url,
               showDel: false
             };
           });
         }
         if(type === 2){
-          this.childProductArray[uploadExtParams].skuImg = data[0].fileName
+          this.childProductArray[uploadExtParams].skuImg = data[0].url
         }
         if(type === 3){
           let quill = this.$refs.myQuillEditor.quill;
@@ -604,7 +610,7 @@ export default {
           // let length = quill.getSelection().index;
           // 插入图片  res.url为服务器返回的图片地址
           data.forEach(item=>{
-            quill.insertEmbed(0, 'image', this.$http.adornUrl("/file/") + item.fileName)
+            quill.insertEmbed(0, 'image',item.url)
           })
           // 调整光标到最后
           // quill.setSelection(length + 1);

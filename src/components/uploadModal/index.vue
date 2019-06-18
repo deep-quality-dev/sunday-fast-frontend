@@ -1,82 +1,89 @@
 <template>
-    <el-dialog
-        title="图片库"
-        :visible.sync="visible"
-        :close-on-click-modal="false"
-        width="840px"
-        style="padding-bottom: 0;"
-        :before-close="hideDialog">
-        <el-container>
-          <el-header style="height: 35px;">
-              <el-row>
-                <el-dropdown>
-                  <el-button type="primary" size="small">
-                    移动至<i class="el-icon-arrow-down el-icon--right"></i>
-                  </el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>黄金糕</el-dropdown-item>
-                    <el-dropdown-item>狮子头</el-dropdown-item>
-                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                    <el-dropdown-item>双皮奶</el-dropdown-item>
-                    <el-dropdown-item>蚵仔煎</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-button type="danger" size="small" icon="el-icon-delete" plain>删除</el-button>
-                <el-upload
-                  style="float: right;"
-                  class="upload-demo"
-                  :action='this.$http.adornUrl("/file/upload")'
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :before-remove="beforeRemove"
-                  multiple
-                  :limit="3"
-                  :on-exceed="handleExceed"
-                  :show-file-list="false"
-                  :file-list="fileList">
-                  <el-button size="small" type="primary" icon="el-icon-plus">上传文件</el-button>
-                </el-upload>
-              </el-row>
-          </el-header>
-          <el-container>
-            <el-aside style="width:150px">
-              <ul class="nav-new">
-                <li class="active">全部</li>
-                <li v-for="(item, index) in dataList" :key="index">{{item.groupName}}</li>
-                <li @click="addGroup">新增分组</li>
-              </ul>
-            </el-aside>
-            <el-main>
-              <div class="file-list-body">
-                <ul class="file-list-item">
-                   <li v-for="(item, index) in fileData" :key="index" :data-index="index" @click="setListCheck(index)">
-                    <div>
-                      <div class="img-cover"  :style="{backgroundImage:'url('+ossServer+item.fileName+')'}"></div>
-                      <p class="file-name">{{item.fileName}}</p> 
-                      <div class="select-mask" v-if="item.check">
-                          <img :src="require('../../assets/img/chose.png')">
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <el-pagination
-                @size-change="sizeChangeHandle"
-                @current-change="currentChangeHandle"
-                :current-page="pageIndex"
-                :page-size="pageSize"
-                :total="totalPage"
-                small
-                layout="prev, pager, next">
-              </el-pagination>
-            </el-main>
-          </el-container>
-        </el-container>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="hideDialog">取 消</el-button>
-            <el-button type="primary" @click="submit">确 定</el-button>
-        </span>
-    </el-dialog>
+  <el-dialog
+    title="图片库"
+    :visible.sync="visible"
+    :close-on-click-modal="false"
+    width="840px"
+    style="padding-bottom: 0;"
+    :before-close="hideDialog"
+  >
+    <el-container>
+      <el-header style="height: 35px;">
+        <el-row>
+          <el-dropdown>
+            <el-button type="primary" size="small">移动至
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>黄金糕</el-dropdown-item>
+              <el-dropdown-item>狮子头</el-dropdown-item>
+              <el-dropdown-item>螺蛳粉</el-dropdown-item>
+              <el-dropdown-item>双皮奶</el-dropdown-item>
+              <el-dropdown-item>蚵仔煎</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-button type="danger" size="small" icon="el-icon-delete" plain>删除</el-button>
+          <el-upload
+            style="float: right;"
+            class="upload-demo"
+            :action="actionUrl"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            multiple
+            :limit="3"
+            :on-exceed="handleExceed"
+            :show-file-list="false"
+            :file-list="fileList"
+          >
+            <el-button size="small" type="primary" icon="el-icon-plus">上传文件</el-button>
+          </el-upload>
+        </el-row>
+      </el-header>
+      <el-container>
+        <el-aside style="width:150px">
+          <ul class="nav-new">
+            <li class="active">全部</li>
+            <li v-for="(item, index) in dataList" :key="index">{{item.groupName}}</li>
+            <li @click="addGroup">新增分组</li>
+          </ul>
+        </el-aside>
+        <el-main>
+          <div class="file-list-body">
+            <ul class="file-list-item">
+              <li
+                v-for="(item, index) in fileData"
+                :key="index"
+                :data-index="index"
+                @click="setListCheck(index)"
+              >
+                <div>
+                  <div class="img-cover" :style="{backgroundImage:'url('+item.url+')'}"></div>
+                  <p class="file-name">{{item.url}}</p>
+                  <div class="select-mask" v-if="item.check">
+                    <img :src="require('../../assets/img/chose.png')">
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <el-pagination
+            @size-change="sizeChangeHandle"
+            @current-change="currentChangeHandle"
+            :current-page="pageIndex"
+            :page-size="pageSize"
+            :total="totalPage"
+            small
+            layout="prev, pager, next"
+          ></el-pagination>
+        </el-main>
+      </el-container>
+    </el-container>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="hideDialog">取 消</el-button>
+      <el-button type="primary" @click="submit">确 定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
@@ -84,15 +91,17 @@ export default {
   name: "upload-modal",
   data() {
     return {
-      ossServer: this.$http.adornUrl('/file/'),
       fileList: [],
       chooseImgList: [],
       dataList: [],
       dataListLoading: false,
-      fileData:[],
+      fileData: [],
+      actionUrl: this.$http.adornUrl(
+        `/sys/oss/upload?token=${this.$cookie.get("token")}`
+      ),
       pageIndex: 1,
       pageSize: 10,
-      totalPage: 0,
+      totalPage: 0
     };
   },
   props: {
@@ -100,24 +109,23 @@ export default {
       type: Boolean
     },
     type: {
-      type: Number,
+      type: Number
     },
-    extParams:{
-      type:Number,
+    extParams: {
+      type: Number
     },
-    multiple:{
+    multiple: {
       type: Boolean
     }
   },
   methods: {
-     init() {
-      this.getFileList()
+    init() {
+      this.getFileList();
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl("/admin/uploadgroup/list"),
         method: "get",
-        params: this.$http.adornParams({
-        })
+        params: this.$http.adornParams({})
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.dataList = data.data;
@@ -127,28 +135,28 @@ export default {
         this.dataListLoading = false;
       });
     },
-     // 获取文件数据
+    // 获取文件数据
     getFileList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/admin/uploadfile/list"),
+        url: this.$http.adornUrl("/sys/oss/list"),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
-          limit: this.pageSize,
+          limit: this.pageSize
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.fileData = data.data.records;
-          this.fileData = this.fileData.map(item=>{
+          this.fileData = data.page.list;
+          this.fileData = this.fileData.map(item => {
             return {
               ...item,
-              check:false
-            }
-          })
-          this.totalPage = data.data.total;
+              check: false
+            };
+          });
+          this.totalPage = data.page.totalCount;
         } else {
-          this.fileData = [];
+          this.dataList = [];
           this.totalPage = 0;
         }
         this.dataListLoading = false;
@@ -165,26 +173,26 @@ export default {
       this.pageIndex = val;
       this.getDataList();
     },
-    addGroup(){
-      alert('添加分组')
+    addGroup() {
+      alert("添加分组");
     },
     hideDialog() {
       this.$emit("changeVisible", false);
     },
     setListCheck: function(idx) {
-          var check = this.fileData[idx].check;
-          if(!this.multiple){
-            this.fileData.forEach((item,index)=>{
-              this.fileData[index].check = false; 
-            })
-          }
-          this.fileData[idx].check = check === true ? false : true; 
+      var check = this.fileData[idx].check;
+      if (!this.multiple) {
+        this.fileData.forEach((item, index) => {
+          this.fileData[index].check = false;
+        });
+      }
+      this.fileData[idx].check = check === true ? false : true;
     },
     submit() {
-      this.chooseImgList = this.fileData.filter(item =>{
+      this.chooseImgList = this.fileData.filter(item => {
         return item.check === true;
-      })
-      this.$emit("chooseImg", this.chooseImgList, this.type,this.extParams);
+      });
+      this.$emit("chooseImg", this.chooseImgList, this.type, this.extParams);
       this.hideDialog();
     },
     handleRemove(file, fileList) {
@@ -259,7 +267,7 @@ export default {
         background: rgba(0, 0, 0, 0.5);
         text-align: center;
         border-radius: 6px;
-        img{
+        img {
           position: absolute;
           top: 50px;
           left: 45px;

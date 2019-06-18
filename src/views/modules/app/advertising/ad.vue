@@ -6,9 +6,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('app:goods:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('app:ad:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button
-          v-if="isAuth('app:goods:delete')"
+          v-if="isAuth('app:ad:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
@@ -23,15 +23,10 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label="商品id"></el-table-column>
-      <el-table-column prop="categoryName" header-align="center" align="center" label="分类"></el-table-column>
-      <el-table-column prop="img" header-align="center" align="center" label="商品图片">
-        <template slot-scope="scope">
-          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
-        </template>
-      </el-table-column>
-      <el-table-column prop="sales" header-align="center" align="center" label="销量"></el-table-column>
-      <el-table-column prop="sort" header-align="center" align="center" label="商品排序"></el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="类型"></el-table-column>
+      <el-table-column prop="title" header-align="center" align="center" label="标题"></el-table-column>
+      <el-table-column prop="img" header-align="center" align="center" label="图片"></el-table-column>
+      <el-table-column prop="sort" header-align="center" align="center" label="排序"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
@@ -54,7 +49,7 @@
 </template>
 
 <script>
-import AddOrUpdate from "./goods-add-or-update";
+import AddOrUpdate from "./ad-add-or-update";
 export default {
   data() {
     return {
@@ -81,17 +76,17 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/admin/goods/list"),
+        url: this.$http.adornUrl("/app/ad/list"),
         method: "get",
         params: this.$http.adornParams({
-          current: this.pageIndex,
-          size: this.pageSize,
+          page: this.pageIndex,
+          limit: this.pageSize,
           key: this.dataForm.key
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.data.records;
-          this.totalPage = data.data.total;
+          this.dataList = data.page.list;
+          this.totalPage = data.page.totalCount;
         } else {
           this.dataList = [];
           this.totalPage = 0;
@@ -116,23 +111,10 @@ export default {
     },
     // 新增 / 修改
     addOrUpdateHandle(id) {
-      this.$router.push({
-        path: "/app-goods/goods-add-or-update",
-        query: {
-          id: id
-        }
+      this.addOrUpdateVisible = true;
+      this.$nextTick(() => {
+        this.$refs.addOrUpdate.init(id);
       });
-
-      // this.$router.push({
-      //   name: "goods-add-or-update",
-      //   params: {
-      //     id: id
-      //   }
-      // });
-      // this.addOrUpdateVisible = true;
-      // this.$nextTick(() => {
-      //   this.$refs.addOrUpdate.init(id);
-      // });
     },
     // 删除
     deleteHandle(id) {
@@ -151,7 +133,7 @@ export default {
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/app/goods/delete"),
+          url: this.$http.adornUrl("/app/ad/delete"),
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {
