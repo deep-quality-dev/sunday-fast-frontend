@@ -11,18 +11,6 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="80px"
     >
-      <el-form-item label="商家ID" prop="sellerId">
-        <el-input v-model="dataForm.sellerId" placeholder="商家ID"></el-input>
-      </el-form-item>
-      <el-form-item label="房ID" prop="roomId">
-        <el-input v-model="dataForm.roomId" placeholder="房ID"></el-input>
-      </el-form-item>
-      <el-form-item label="用户ID" prop="userId">
-        <el-input v-model="dataForm.userId" placeholder="用户ID"></el-input>
-      </el-form-item>
-      <el-form-item label="优惠券ID" prop="couponsId">
-        <el-input v-model="dataForm.couponsId" placeholder="优惠券ID"></el-input>
-      </el-form-item>
       <el-form-item label="订单号" prop="orderNo">
         <el-input v-model="dataForm.orderNo" placeholder="订单号"></el-input>
       </el-form-item>
@@ -57,7 +45,19 @@
         <el-input v-model="dataForm.roomType" placeholder="房型"></el-input>
       </el-form-item>
       <el-form-item label="房间主图" prop="roomLogo">
-        <el-input v-model="dataForm.roomLogo" placeholder="房间主图"></el-input>
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="床型" prop="bedType">
         <el-input v-model="dataForm.bedType" placeholder="床型"></el-input>
@@ -68,14 +68,14 @@
       <el-form-item label="联系电话" prop="tel">
         <el-input v-model="dataForm.tel" placeholder="联系电话"></el-input>
       </el-form-item>
-      <el-form-item label="1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款" prop="status">
-        <el-input v-model="dataForm.status" placeholder="1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款"></el-input>
+      <el-form-item label="订单状态" prop="status">
+        <el-input v-model="dataForm.status" placeholder="订单状态"></el-input>
       </el-form-item>
       <el-form-item label="商户订单号" prop="outTradeNo">
         <el-input v-model="dataForm.outTradeNo" placeholder="商户订单号"></el-input>
       </el-form-item>
-      <el-form-item label="折扣后的价格" prop="disCost">
-        <el-input v-model="dataForm.disCost" placeholder="折扣后的价格"></el-input>
+      <el-form-item label="折后价格" prop="disCost">
+        <el-input v-model="dataForm.disCost" placeholder="折后价格"></el-input>
       </el-form-item>
       <el-form-item label="押金金额" prop="yjCost">
         <el-input v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
@@ -89,8 +89,8 @@
       <el-form-item label="总价格" prop="totalCost">
         <el-input v-model="dataForm.totalCost" placeholder="总价格"></el-input>
       </el-form-item>
-      <el-form-item label="是否删除,1删除" prop="enabled">
-        <el-input v-model="dataForm.enabled" placeholder="是否删除,1删除"></el-input>
+      <el-form-item label="是否删除" prop="enabled">
+        <el-input v-model="dataForm.enabled" placeholder="是否删除"></el-input>
       </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
         <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
@@ -98,33 +98,10 @@
       <el-form-item label="已退押金" prop="retreatCost">
         <el-input v-model="dataForm.retreatCost" placeholder="已退押金"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="hbCost">
-        <el-input v-model="dataForm.hbCost" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="hbId">
-        <el-input v-model="dataForm.hbId" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="fromId">
-        <el-input v-model="dataForm.fromId" placeholder=""></el-input>
-      </el-form-item>
       <el-form-item label="分类" prop="classify">
         <el-input v-model="dataForm.classify" placeholder="分类"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="code">
-        <el-input v-model="dataForm.code" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="jjTime">
-        <el-input v-model="dataForm.jjTime" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="voice">
-        <el-input v-model="dataForm.voice" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="qrFromid">
-        <el-input v-model="dataForm.qrFromid" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="订单快照" prop="orderInfo">
-        <el-input v-model="dataForm.orderInfo" placeholder="订单快照"></el-input>
-      </el-form-item>
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>

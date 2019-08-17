@@ -23,19 +23,21 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="昵称"></el-table-column>
       <el-table-column prop="joinTime" header-align="center" align="center" label="注册时间"></el-table-column>
-      <el-table-column prop="img" header-align="center" align="center" label="头像"></el-table-column>
+      <el-table-column prop="img" header-align="center" align="center" label="头像">
+        <template slot-scope="scope">
+          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+        </template>
+      </el-table-column>
       <el-table-column prop="openid" header-align="center" align="center" label="openID"></el-table-column>
       <el-table-column prop="sellerId" header-align="center" align="center" label="商家"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="手机号"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="1不是会员,2是会员"></el-table-column>
-      <el-table-column prop="levelId" header-align="center" align="center" label="会员等级id"></el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="是否会员"></el-table-column>
+      <el-table-column prop="levelId" header-align="center" align="center" label="会员等级"></el-table-column>
       <el-table-column prop="score" header-align="center" align="center" label="积分"></el-table-column>
-      <el-table-column prop="zsName" header-align="center" align="center" label="真是姓名"></el-table-column>
+      <el-table-column prop="zsName" header-align="center" align="center" label="真实姓名"></el-table-column>
       <el-table-column prop="number" header-align="center" align="center" label="会员卡号"></el-table-column>
-      <el-table-column prop="commission" header-align="center" align="center" label="佣金"></el-table-column>
       <el-table-column prop="balance" header-align="center" align="center" label="余额"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">

@@ -27,16 +27,19 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
+      <!--<el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>-->
       <el-table-column prop="title" header-align="center" align="center" label="轮播图标题"></el-table-column>
-      <el-table-column prop="logo" header-align="center" align="center" label="图片"></el-table-column>
-      <el-table-column prop="status" header-align="center" align="center" label="1.开启  2.关闭"></el-table-column>
+      <el-table-column prop="logo" header-align="center" align="center" label="图片">
+        <template slot-scope="scope">
+          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+        </template>
+      </el-table-column>
+      <!--1.开启  2.关闭-->
+      <el-table-column prop="status" header-align="center" align="center" label="状态"></el-table-column>
       <el-table-column prop="src" header-align="center" align="center" label="链接"></el-table-column>
       <el-table-column prop="orderby" header-align="center" align="center" label="排序"></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="商家ID"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="1开屏"></el-table-column>
       <el-table-column prop="wbSrc" header-align="center" align="center" label="外部链接"></el-table-column>
-      <el-table-column prop="state" header-align="center" align="center" label="1内部，2外部,3跳转"></el-table-column>
+      <!--<el-table-column prop="state" header-align="center" align="center" label="1内部，2外部,3跳转"></el-table-column>-->
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>

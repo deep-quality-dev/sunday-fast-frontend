@@ -11,11 +11,8 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="80px"
     >
-      <el-form-item label="门店ID" prop="sellerId">
-        <el-input v-model="dataForm.sellerId" placeholder="门店ID"></el-input>
-      </el-form-item>
-      <el-form-item label="优惠券名称" prop="name">
-        <el-input v-model="dataForm.name" placeholder="优惠券名称"></el-input>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="dataForm.name" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
         <el-input v-model="dataForm.startTime" placeholder="开始时间"></el-input>
@@ -32,20 +29,8 @@
       <el-form-item label="金额" prop="cost">
         <el-input v-model="dataForm.cost" placeholder="金额"></el-input>
       </el-form-item>
-      <el-form-item label="发布类型1,平台,2门店" prop="type">
-        <el-input v-model="dataForm.type" placeholder="发布类型1,平台,2门店"></el-input>
-      </el-form-item>
-      <el-form-item label="说明" prop="introduce">
-        <el-input v-model="dataForm.introduce" placeholder="说明"></el-input>
-      </el-form-item>
       <el-form-item label="领取数量" prop="lqNum">
         <el-input v-model="dataForm.lqNum" placeholder="领取数量"></el-input>
-      </el-form-item>
-      <el-form-item label="每人可领取张数" prop="klqzs">
-        <el-input v-model="dataForm.klqzs" placeholder="每人可领取张数"></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="time">
-        <el-input v-model="dataForm.time" placeholder=""></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

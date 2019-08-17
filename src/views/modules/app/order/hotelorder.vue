@@ -27,11 +27,6 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="商家ID"></el-table-column>
-      <el-table-column prop="roomId" header-align="center" align="center" label="房ID"></el-table-column>
-      <el-table-column prop="userId" header-align="center" align="center" label="用户ID"></el-table-column>
-      <el-table-column prop="couponsId" header-align="center" align="center" label="优惠券ID"></el-table-column>
       <el-table-column prop="orderNo" header-align="center" align="center" label="订单号"></el-table-column>
       <el-table-column prop="sellerName" header-align="center" align="center" label="商家名字"></el-table-column>
       <el-table-column prop="sellerAddress" header-align="center" align="center" label="商家地址"></el-table-column>
@@ -43,34 +38,31 @@
       <el-table-column prop="num" header-align="center" align="center" label="房间数量"></el-table-column>
       <el-table-column prop="days" header-align="center" align="center" label="入住天数"></el-table-column>
       <el-table-column prop="roomType" header-align="center" align="center" label="房型"></el-table-column>
-      <el-table-column prop="roomLogo" header-align="center" align="center" label="房间主图"></el-table-column>
+      <el-table-column prop="roomLogo" header-align="center" align="center" label="房间主图">
+        <template slot-scope="scope">
+          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+        </template>
+      </el-table-column>
       <el-table-column prop="bedType" header-align="center" align="center" label="床型"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="预定人"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="联系电话"></el-table-column>
+      <!--1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款-->
       <el-table-column
         prop="status"
         header-align="center"
         align="center"
-        label="1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款"
+        label="订单状态"
       ></el-table-column>
-      <el-table-column prop="outTradeNo" header-align="center" align="center" label="商户订单号"></el-table-column>
-      <el-table-column prop="disCost" header-align="center" align="center" label="折扣后的价格"></el-table-column>
+      <el-table-column prop="outTradeNo" header-align="center" align="center" label="商户单号"></el-table-column>
+      <el-table-column prop="disCost" header-align="center" align="center" label="折后价格"></el-table-column>
       <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column>
       <el-table-column prop="yhqCost" header-align="center" align="center" label="优惠券价格"></el-table-column>
       <el-table-column prop="yyzkCost" header-align="center" align="center" label="会员折扣金额"></el-table-column>
       <el-table-column prop="totalCost" header-align="center" align="center" label="总价格"></el-table-column>
-      <el-table-column prop="enabled" header-align="center" align="center" label="是否删除,1删除"></el-table-column>
+      <el-table-column prop="enabled" header-align="center" align="center" label="是否删除"></el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
       <el-table-column prop="retreatCost" header-align="center" align="center" label="已退押金"></el-table-column>
-      <el-table-column prop="hbCost" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="hbId" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="fromId" header-align="center" align="center" label=""></el-table-column>
       <el-table-column prop="classify" header-align="center" align="center" label="分类"></el-table-column>
-      <el-table-column prop="code" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="jjTime" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="voice" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="qrFromid" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="orderInfo" header-align="center" align="center" label="订单快照"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>

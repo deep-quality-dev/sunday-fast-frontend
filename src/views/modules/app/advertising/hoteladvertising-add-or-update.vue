@@ -11,14 +11,26 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="80px"
     >
-      <el-form-item label="轮播图标题" prop="title">
+      <el-form-item label="标题" prop="title">
         <el-input v-model="dataForm.title" placeholder="轮播图标题"></el-input>
       </el-form-item>
       <el-form-item label="图片" prop="logo">
-        <el-input v-model="dataForm.logo" placeholder="图片"></el-input>
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
       </el-form-item>
-      <el-form-item label="1.开启  2.关闭" prop="status">
-        <el-input v-model="dataForm.status" placeholder="1.开启  2.关闭"></el-input>
+      <el-form-item label="状态" prop="status">
+        <el-input v-model="dataForm.status" placeholder="状态"></el-input>
       </el-form-item>
       <el-form-item label="链接" prop="src">
         <el-input v-model="dataForm.src" placeholder="链接"></el-input>
@@ -26,17 +38,8 @@
       <el-form-item label="排序" prop="orderby">
         <el-input v-model="dataForm.orderby" placeholder="排序"></el-input>
       </el-form-item>
-      <el-form-item label="商家ID" prop="sellerId">
-        <el-input v-model="dataForm.sellerId" placeholder="商家ID"></el-input>
-      </el-form-item>
-      <el-form-item label="1开屏" prop="type">
-        <el-input v-model="dataForm.type" placeholder="1开屏"></el-input>
-      </el-form-item>
       <el-form-item label="外部链接" prop="wbSrc">
         <el-input v-model="dataForm.wbSrc" placeholder="外部链接"></el-input>
-      </el-form-item>
-      <el-form-item label="1内部，2外部,3跳转" prop="state">
-        <el-input v-model="dataForm.state" placeholder="1内部，2外部,3跳转"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

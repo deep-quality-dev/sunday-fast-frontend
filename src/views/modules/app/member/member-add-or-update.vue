@@ -18,7 +18,20 @@
         <el-input v-model="dataForm.joinTime" placeholder="注册时间"></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="img">
-        <el-input v-model="dataForm.img" placeholder="头像"></el-input>
+        <!--<el-input v-model="dataForm.img" placeholder="头像"></el-input>-->
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="openID" prop="openid">
         <el-input v-model="dataForm.openid" placeholder="openID"></el-input>
@@ -29,23 +42,20 @@
       <el-form-item label="手机号" prop="tel">
         <el-input v-model="dataForm.tel" placeholder="手机号"></el-input>
       </el-form-item>
-      <el-form-item label="1不是会员,2是会员" prop="type">
-        <el-input v-model="dataForm.type" placeholder="1不是会员,2是会员"></el-input>
+      <el-form-item label="是否会员" prop="type">
+        <el-input v-model="dataForm.type" placeholder="是否会员"></el-input>
       </el-form-item>
-      <el-form-item label="会员等级id" prop="levelId">
-        <el-input v-model="dataForm.levelId" placeholder="会员等级id"></el-input>
+      <el-form-item label="会员等级" prop="levelId">
+        <el-input v-model="dataForm.levelId" placeholder="会员等级"></el-input>
       </el-form-item>
       <el-form-item label="积分" prop="score">
         <el-input v-model="dataForm.score" placeholder="积分"></el-input>
       </el-form-item>
-      <el-form-item label="真是姓名" prop="zsName">
-        <el-input v-model="dataForm.zsName" placeholder="真是姓名"></el-input>
+      <el-form-item label="真实姓名" prop="zsName">
+        <el-input v-model="dataForm.zsName" placeholder="真实姓名"></el-input>
       </el-form-item>
       <el-form-item label="会员卡号" prop="number">
         <el-input v-model="dataForm.number" placeholder="会员卡号"></el-input>
-      </el-form-item>
-      <el-form-item label="佣金" prop="commission">
-        <el-input v-model="dataForm.commission" placeholder="佣金"></el-input>
       </el-form-item>
       <el-form-item label="余额" prop="balance">
         <el-input v-model="dataForm.balance" placeholder="余额"></el-input>

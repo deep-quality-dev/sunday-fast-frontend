@@ -27,19 +27,13 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="门店ID"></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="优惠券名称"></el-table-column>
+      <el-table-column prop="name" header-align="center" align="center" label="名称"></el-table-column>
       <el-table-column prop="startTime" header-align="center" align="center" label="开始时间"></el-table-column>
       <el-table-column prop="endTime" header-align="center" align="center" label="结束时间"></el-table-column>
       <el-table-column prop="conditions" header-align="center" align="center" label="优惠条件"></el-table-column>
       <el-table-column prop="number" header-align="center" align="center" label="发布数量"></el-table-column>
       <el-table-column prop="cost" header-align="center" align="center" label="金额"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="发布类型1,平台,2门店"></el-table-column>
-      <el-table-column prop="introduce" header-align="center" align="center" label="说明"></el-table-column>
       <el-table-column prop="lqNum" header-align="center" align="center" label="领取数量"></el-table-column>
-      <el-table-column prop="klqzs" header-align="center" align="center" label="每人可领取张数"></el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label=""></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
