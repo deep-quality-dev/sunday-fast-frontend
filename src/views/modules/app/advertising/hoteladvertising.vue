@@ -31,7 +31,7 @@
       <el-table-column prop="title" header-align="center" align="center" label="轮播图标题"></el-table-column>
       <el-table-column prop="logo" header-align="center" align="center" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+          <img :src="scope.row.logo" alt="" style="with:80px;height:80px">
         </template>
       </el-table-column>
       <!--1.开启  2.关闭-->

@@ -16,21 +16,14 @@
       </el-form-item>
       <el-form-item label="图片" prop="logo">
         <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="1"
-          :on-exceed="handleExceed"
-          :file-list="fileList">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="dataForm.logo" :src="dataForm.logo" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-input v-model="dataForm.status" placeholder="状态"></el-input>
       </el-form-item>
       <el-form-item label="链接" prop="src">
         <el-input v-model="dataForm.src" placeholder="链接"></el-input>
@@ -53,6 +46,7 @@
 export default {
   data() {
     return {
+      uploadAction:'',
       visible: false,
       dataForm: {
         id: 0,
@@ -71,30 +65,15 @@ export default {
           { required: true, message: "轮播图标题不能为空", trigger: "blur" }
         ],
         logo: [{ required: true, message: "图片不能为空", trigger: "blur" }],
-        status: [
-          { required: true, message: "1.开启  2.关闭不能为空", trigger: "blur" }
-        ],
         src: [{ required: true, message: "链接不能为空", trigger: "blur" }],
         orderby: [{ required: true, message: "排序不能为空", trigger: "blur" }],
-        sellerId: [
-          { required: true, message: "商家ID不能为空", trigger: "blur" }
-        ],
-        type: [{ required: true, message: "1开屏不能为空", trigger: "blur" }],
-        wbSrc: [
-          { required: true, message: "外部链接不能为空", trigger: "blur" }
-        ],
-        state: [
-          {
-            required: true,
-            message: "1内部，2外部,3跳转不能为空",
-            trigger: "blur"
-          }
-        ]
+        type: [{ required: true, message: "1开屏不能为空", trigger: "blur" }]
       }
     };
   },
   methods: {
     init(id) {
+      this.uploadAction = this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -108,15 +87,13 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.title = data.hoteladvertising.title;
-              this.dataForm.logo = data.hoteladvertising.logo;
-              this.dataForm.status = data.hoteladvertising.status;
-              this.dataForm.src = data.hoteladvertising.src;
-              this.dataForm.orderby = data.hoteladvertising.orderby;
-              this.dataForm.sellerId = data.hoteladvertising.sellerId;
-              this.dataForm.type = data.hoteladvertising.type;
-              this.dataForm.wbSrc = data.hoteladvertising.wbSrc;
-              this.dataForm.state = data.hoteladvertising.state;
+              this.dataForm.title = data.hotelAdvertising.title;
+              this.dataForm.logo = data.hotelAdvertising.logo;
+              this.dataForm.src = data.hotelAdvertising.src;
+              this.dataForm.orderby = data.hotelAdvertising.orderby;
+              this.dataForm.type = data.hotelAdvertising.type;
+              this.dataForm.wbSrc = data.hotelAdvertising.wbSrc;
+              this.dataForm.state = data.hotelAdvertising.state;
             }
           });
         }
@@ -135,13 +112,10 @@ export default {
               id: this.dataForm.id || undefined,
               title: this.dataForm.title,
               logo: this.dataForm.logo,
-              status: this.dataForm.status,
               src: this.dataForm.src,
               orderby: this.dataForm.orderby,
-              sellerId: this.dataForm.sellerId,
               type: this.dataForm.type,
-              wbSrc: this.dataForm.wbSrc,
-              state: this.dataForm.state
+              wbSrc: this.dataForm.wbSrc
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -160,7 +134,47 @@ export default {
           });
         }
       });
+    },
+    handleAvatarSuccess(res, file) {
+      this.dataForm.logo = res.url;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     }
   }
 };
 </script>
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 148px;
+    height: 148px;
+    line-height: 148px;
+    text-align: center;
+  }
+  .avatar {
+    width: 148px;
+    height: 148px;
+    display: block;
+  }
+</style>

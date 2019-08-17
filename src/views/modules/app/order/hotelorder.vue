@@ -40,7 +40,7 @@
       <el-table-column prop="roomType" header-align="center" align="center" label="房型"></el-table-column>
       <el-table-column prop="roomLogo" header-align="center" align="center" label="房间主图">
         <template slot-scope="scope">
-          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+          <img :src="scope.row.roomLogo" alt="" style="with:80px;height:80px">
         </template>
       </el-table-column>
       <el-table-column prop="bedType" header-align="center" align="center" label="床型"></el-table-column>
