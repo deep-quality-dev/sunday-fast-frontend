@@ -30,7 +30,6 @@
       <el-table-column prop="orderNo" header-align="center" align="center" label="订单号"></el-table-column>
       <el-table-column prop="sellerName" header-align="center" align="center" label="商家名字"></el-table-column>
       <el-table-column prop="sellerAddress" header-align="center" align="center" label="商家地址"></el-table-column>
-      <el-table-column prop="coordinates" header-align="center" align="center" label="经纬度"></el-table-column>
       <el-table-column prop="arrivalTime" header-align="center" align="center" label="入住时间"></el-table-column>
       <el-table-column prop="departureTime" header-align="center" align="center" label="离店时间"></el-table-column>
       <el-table-column prop="ddTime" header-align="center" align="center" label="到店时间"></el-table-column>
@@ -38,11 +37,6 @@
       <el-table-column prop="num" header-align="center" align="center" label="房间数量"></el-table-column>
       <el-table-column prop="days" header-align="center" align="center" label="入住天数"></el-table-column>
       <el-table-column prop="roomType" header-align="center" align="center" label="房型"></el-table-column>
-      <el-table-column prop="roomLogo" header-align="center" align="center" label="房间主图">
-        <template slot-scope="scope">
-          <img :src="scope.row.roomLogo" alt="" style="with:80px;height:80px">
-        </template>
-      </el-table-column>
       <el-table-column prop="bedType" header-align="center" align="center" label="床型"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="预定人"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="联系电话"></el-table-column>
@@ -53,16 +47,11 @@
         align="center"
         label="订单状态"
       ></el-table-column>
-      <el-table-column prop="outTradeNo" header-align="center" align="center" label="商户单号"></el-table-column>
       <el-table-column prop="disCost" header-align="center" align="center" label="折后价格"></el-table-column>
-      <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column>
-      <el-table-column prop="yhqCost" header-align="center" align="center" label="优惠券价格"></el-table-column>
-      <el-table-column prop="yyzkCost" header-align="center" align="center" label="会员折扣金额"></el-table-column>
+      <el-table-column prop="yhqCost" header-align="center" align="center" label="优惠券"></el-table-column>
+      <el-table-column prop="yyzkCost" header-align="center" align="center" label="会员折扣"></el-table-column>
       <el-table-column prop="totalCost" header-align="center" align="center" label="总价格"></el-table-column>
-      <el-table-column prop="enabled" header-align="center" align="center" label="是否删除"></el-table-column>
       <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
-      <el-table-column prop="retreatCost" header-align="center" align="center" label="已退押金"></el-table-column>
-      <el-table-column prop="classify" header-align="center" align="center" label="分类"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>

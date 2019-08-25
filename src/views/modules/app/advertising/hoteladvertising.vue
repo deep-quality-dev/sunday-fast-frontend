@@ -35,7 +35,12 @@
         </template>
       </el-table-column>
       <!--1.开启  2.关闭-->
-      <el-table-column prop="status" header-align="center" align="center" label="状态"></el-table-column>
+      <el-table-column prop="status" header-align="center" align="center" label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-else size="small">启用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="src" header-align="center" align="center" label="链接"></el-table-column>
       <el-table-column prop="orderby" header-align="center" align="center" label="排序"></el-table-column>
       <el-table-column prop="wbSrc" header-align="center" align="center" label="外部链接"></el-table-column>

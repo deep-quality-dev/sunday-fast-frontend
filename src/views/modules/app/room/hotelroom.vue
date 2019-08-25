@@ -27,30 +27,33 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="商家ID"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="房型名字"></el-table-column>
-      <el-table-column prop="price" header-align="center" align="center" label="价格"></el-table-column>
-      <el-table-column prop="img" header-align="center" align="center" label="图片"></el-table-column>
       <el-table-column prop="floor" header-align="center" align="center" label="楼层"></el-table-column>
       <el-table-column prop="people" header-align="center" align="center" label="可住人数"></el-table-column>
-      <el-table-column prop="bed" header-align="center" align="center" label="加床"></el-table-column>
-      <el-table-column prop="breakfast" header-align="center" align="center" label="早餐"></el-table-column>
-      <el-table-column prop="facilities" header-align="center" align="center" label="房间设施"></el-table-column>
-      <el-table-column prop="windows" header-align="center" align="center" label="窗户"></el-table-column>
-      <el-table-column prop="logo" header-align="center" align="center" label="房型大图"></el-table-column>
+      <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
+        <template slot-scope="scope">
+          <img :src="scope.row.logo" alt="" style="with:80px;height:80px">
+        </template>
+      </el-table-column>
       <el-table-column prop="totalNum" header-align="center" align="center" label="数量"></el-table-column>
-      <el-table-column prop="uniacid" header-align="center" align="center" label=""></el-table-column>
       <el-table-column prop="size" header-align="center" align="center" label="床型尺寸"></el-table-column>
-      <el-table-column prop="isRefund" header-align="center" align="center" label="押金是否可退,1否，2是"></el-table-column>
-      <el-table-column prop="yjState" header-align="center" align="center" label="1在线,2到店,3入住+到店"></el-table-column>
       <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column>
       <el-table-column prop="sort" header-align="center" align="center" label="排序"></el-table-column>
-      <el-table-column prop="state" header-align="center" align="center" label="房间状态"></el-table-column>
-      <el-table-column prop="classify" header-align="center" align="center" label="房间类别"></el-table-column>
-      <el-table-column prop="rzTime" header-align="center" align="center" label="入住时长"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column prop="state" header-align="center" align="center" label="房间状态">
         <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-else size="small">启用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="classify" header-align="center" align="center" label="房间类别">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 0" size="small" type="danger">钟点房</el-tag>
+          <el-tag v-else size="small">普通房</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="mgrRoomMoenyHandler(scope.row.id)">价格管理</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -67,11 +70,13 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <RoomMoney v-if="mgrRoomMoenyVisible" ref="roomMoney"></RoomMoney>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./hotelroom-add-or-update";
+import RoomMoney from "./hotelroom-money";
 export default {
   data() {
     return {
@@ -84,11 +89,13 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      mgrRoomMoenyVisible: false
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    RoomMoney
   },
   activated() {
     this.getDataList();
@@ -136,6 +143,13 @@ export default {
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
         this.$refs.addOrUpdate.init(id);
+      });
+    },
+    //价格管理
+    mgrRoomMoenyHandler(id) {
+      this.mgrRoomMoenyVisible = true;
+      this.$nextTick(() => {
+        this.$refs.roomMoney.init(id);
       });
     },
     // 删除

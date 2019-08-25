@@ -30,7 +30,6 @@
           <img :src="scope.row.img" alt="" style="with:80px;height:80px">
         </template>
       </el-table-column>
-      <el-table-column prop="openid" header-align="center" align="center" label="openID"></el-table-column>
       <el-table-column prop="sellerId" header-align="center" align="center" label="商家"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="手机号"></el-table-column>
       <el-table-column prop="type" header-align="center" align="center" label="是否会员"></el-table-column>
