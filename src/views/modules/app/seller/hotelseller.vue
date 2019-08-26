@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mod-demo-ueditor">
     <el-form
       :model="dataForm"
       :rules="dataRule"
@@ -24,9 +24,9 @@
       </el-form-item>
       <el-form-item label="星级" prop="star">
         <el-select v-model="dataForm.star" placeholder="活动区域">
-      <el-option label="五星级" value="shanghai"></el-option>
-      <el-option label="4星级" value="beijing"></el-option>
-    </el-select>
+          <el-option label="五星级" value="shanghai"></el-option>
+          <el-option label="4星级" value="beijing"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="酒店地址" prop="address">
         <el-input v-model="dataForm.address" placeholder="酒店地址"></el-input>
@@ -42,10 +42,11 @@
       </el-form-item>
       <el-form-item label="开业时间" prop="openTime">
         <el-date-picker
-        v-model="dataForm.openTime"
+          v-model="dataForm.openTime"
           type="date"
-          placeholder="选择日期">
-        </el-date-picker>
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="图片" prop="img">
         <el-input v-model="dataForm.img" placeholder="图片"></el-input>
@@ -61,26 +62,44 @@
       </el-form-item>
       <el-form-item label="酒店设施">
         <el-checkbox label="叫醒" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.wifi" label="Wi-Fi" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.park" label="停车场" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.breakfast" label="早餐" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.gym" label="健身房" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.water" label="热水" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.boardroom" label="会议室" name="type"></el-checkbox>
+        <el-checkbox v-model="dataForm.wifi" :label="1">Wi-Fi</el-checkbox>
+        <el-checkbox v-model="dataForm.park" :label="1">停车场</el-checkbox>
+        <el-checkbox v-model="dataForm.breakfast" :label="1">早餐</el-checkbox>
+        <el-checkbox v-model="dataForm.gym" :label="1">健身房</el-checkbox>
+        <el-checkbox v-model="dataForm.water" :label="1">热水</el-checkbox>
+        <el-checkbox v-model="dataForm.boardroom" :label="1">会议室</el-checkbox>
       </el-form-item>
       <el-form-item label="酒店支持">
-        <el-checkbox v-model="dataForm.unionpay" label="银联支付" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.wxOpen" label="微信支付" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.ddOpen" label="到店支付" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.yeOpen" label="余额支付" name="type"></el-checkbox>
+        <el-checkbox v-model="dataForm.unionpay" :label="1">银联支付</el-checkbox>
+        <el-checkbox v-model="dataForm.wxOpen" :label="1">微信支付</el-checkbox>
+        <el-checkbox v-model="dataForm.ddOpen" :label="1">到店支付</el-checkbox>
+        <el-checkbox v-model="dataForm.yeOpen" :label="1">余额支付</el-checkbox>
       </el-form-item>
-      <el-form-item label="酒店政策" prop="policy">
+      <el-form-item style="height:300px" label="酒店政策" prop="policy">
         <!-- <el-input v-model="dataForm.policy" placeholder="酒店政策"></el-input> -->
-         <script :id="ueId" class="ueditor-box" type="text/plain" style="width: 80%; height: 260px;">hello world!</script>
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.policy"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
       </el-form-item>
-      <el-form-item label="酒店介绍" prop="introduction">
+      <el-form-item label="酒店介绍" style="height:300px" prop="introduction">
         <!-- <el-input v-model="dataForm.introduction" placeholder="酒店介绍"></el-input> -->
-          <script :id="introduction" class="ueditor-box" type="text/plain" style="width: 80%; height: 260px;">hello world!</script>
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.introduction"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -95,12 +114,9 @@ import ueditor from "ueditor";
 export default {
   data() {
     return {
+      content:  '111',
+      editorOption: {},
       uploadAction: "",
-      ue: null,
-      ueId: `J_ueditorBox_${new Date().getTime()}`,
-      introductionUe:null,
-      introduction:`J_ueditorBox_introduction${new Date().getTime()}`,
-      ueContent: "",
       dialogVisible: false,
       visible: false,
       dataForm: {
@@ -148,25 +164,15 @@ export default {
         ddOpen: ""
       },
       dataRule: {
-        userId: [
-          { required: true, message: "用户ID不能为空", trigger: "blur" }
-        ],
-        owner: [
-          {
-            required: true,
-            message: "1后台添加,2入住不能为空",
-            trigger: "blur"
-          }
-        ],
         name: [{ required: true, message: "名字不能为空", trigger: "blur" }],
         star: [{ required: true, message: "星级不能为空", trigger: "blur" }],
         address: [{ required: true, message: "地址不能为空", trigger: "blur" }],
-        linkName: [
-          { required: true, message: "联系人不能为空", trigger: "blur" }
-        ],
-        linkTel: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" }
-        ],
+        // linkName: [
+        //   { required: true, message: "联系人不能为空", trigger: "blur" }
+        // ],
+        // linkTel: [
+        //   { required: true, message: "联系电话不能为空", trigger: "blur" }
+        // ],
         tel: [{ required: true, message: "酒店电话不能为空", trigger: "blur" }],
         handle: [
           { required: true, message: "办理时间不能为空", trigger: "blur" }
@@ -177,156 +183,71 @@ export default {
         wake: [{ required: true, message: "唤醒不能为空", trigger: "blur" }],
         wifi: [{ required: true, message: "Wi-Fi不能为空", trigger: "blur" }],
         park: [{ required: true, message: "停车场不能为空", trigger: "blur" }],
-        breakfast: [
-          { required: true, message: "早餐不能为空", trigger: "blur" }
-        ],
-        unionpay: [
-          { required: true, message: "银联支付不能为空", trigger: "blur" }
-        ],
-        gym: [{ required: true, message: "健身房不能为空", trigger: "blur" }],
-        boardroom: [
-          { required: true, message: "会议室不能为空", trigger: "blur" }
-        ],
-        water: [{ required: true, message: "不能为空", trigger: "blur" }],
-        policy: [
-          { required: true, message: "酒店政策不能为空", trigger: "blur" }
-        ],
-        introduction: [
-          { required: true, message: "酒店介绍不能为空", trigger: "blur" }
-        ],
-        img: [{ required: true, message: "图片不能为空", trigger: "blur" }],
-        rule: [
-          { required: true, message: "退订规则不能为空", trigger: "blur" }
-        ],
-        prompt: [
-          { required: true, message: "温馨提示不能为空", trigger: "blur" }
-        ],
-        bqLogo: [{ required: true, message: "不能为空", trigger: "blur" }],
-        support: [{ required: true, message: "不能为空", trigger: "blur" }],
-        ewmLogo: [
-          { required: true, message: "酒店logo不能为空", trigger: "blur" }
-        ],
         time: [{ required: true, message: "时间不能为空", trigger: "blur" }],
         coordinates: [
           { required: true, message: "经纬度不能为空", trigger: "blur" }
         ],
-        scort: [{ required: true, message: "排序不能为空", trigger: "blur" }],
-        sfzImg1: [
-          { required: true, message: "身份证正面照不能为空", trigger: "blur" }
-        ],
-        sfzImg2: [
-          { required: true, message: "身份证反面照不能为空", trigger: "blur" }
-        ],
-        yyImg: [
-          { required: true, message: "营业执照不能为空", trigger: "blur" }
-        ],
-        other: [
-          { required: true, message: "补充说明不能为空", trigger: "blur" }
-        ],
-        zdMoney: [
-          { required: true, message: "房间最低价格不能为空", trigger: "blur" }
-        ],
-        state: [
-          {
-            required: true,
-            message: "1待审核,2通过，3拒绝不能为空",
-            trigger: "blur"
-          }
-        ],
-        sqTime: [
-          { required: true, message: "申请时间不能为空", trigger: "blur" }
-        ],
-        isUse: [
-          { required: true, message: "平台优惠券使用不能为空", trigger: "blur" }
-        ],
-        llNum: [{ required: true, message: "不能为空", trigger: "blur" }],
-        bdId: [
-          { required: true, message: "绑定提现人不能为空", trigger: "blur" }
-        ],
-        yeOpen: [
-          { required: true, message: "余额支付不能为空", trigger: "blur" }
-        ],
-        wxOpen: [
-          { required: true, message: "微信支付不能为空", trigger: "blur" }
-        ],
-        ddOpen: [
-          { required: true, message: "到店支付不能为空", trigger: "blur" }
-        ]
+        scort: [{ required: true, message: "排序不能为空", trigger: "blur" }]
       }
     };
   },
   mounted() {
     this.uploadAction = this.$http.adornUrl(
-        `/sys/oss/upload?token=${this.$cookie.get("token")}`
-      );
-    this.ue = ueditor.getEditor(this.ueId, {
-      // serverUrl: '', // 服务器统一请求接口路径
-      zIndex: 3000
-    });
-    this.introductionUe = ueditor.getEditor(this.introduction, {
-      // serverUrl: '', // 服务器统一请求接口路径
-      zIndex: 3000
-    });
+      `/sys/oss/upload?token=${this.$cookie.get("token")}`
+    );
+    this.init();
   },
   methods: {
     init(id) {
-      this.dataForm.id = id || 0;
-      this.visible = true;
-      this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
-        if (this.dataForm.id) {
-          this.$http({
-            url: this.$http.adornUrl(
-              `/hotel/hotelseller/info/${this.dataForm.id}`
-            ),
-            method: "get",
-            params: this.$http.adornParams()
-          }).then(({ data }) => {
-            if (data && data.code === 0) {
-              this.dataForm.userId = data.hotelseller.userId;
-              this.dataForm.owner = data.hotelseller.owner;
-              this.dataForm.name = data.hotelseller.name;
-              this.dataForm.star = data.hotelseller.star;
-              this.dataForm.address = data.hotelseller.address;
-              this.dataForm.linkName = data.hotelseller.linkName;
-              this.dataForm.linkTel = data.hotelseller.linkTel;
-              this.dataForm.tel = data.hotelseller.tel;
-              this.dataForm.handle = data.hotelseller.handle;
-              this.dataForm.openTime = data.hotelseller.openTime;
-              this.dataForm.wake = data.hotelseller.wake;
-              this.dataForm.wifi = data.hotelseller.wifi;
-              this.dataForm.park = data.hotelseller.park;
-              this.dataForm.breakfast = data.hotelseller.breakfast;
-              this.dataForm.unionpay = data.hotelseller.unionpay;
-              this.dataForm.gym = data.hotelseller.gym;
-              this.dataForm.boardroom = data.hotelseller.boardroom;
-              this.dataForm.water = data.hotelseller.water;
-              this.dataForm.policy = data.hotelseller.policy;
-              this.dataForm.introduction = data.hotelseller.introduction;
-              this.dataForm.img = data.hotelseller.img;
-              this.dataForm.rule = data.hotelseller.rule;
-              this.dataForm.prompt = data.hotelseller.prompt;
-              this.dataForm.bqLogo = data.hotelseller.bqLogo;
-              this.dataForm.support = data.hotelseller.support;
-              this.dataForm.ewmLogo = data.hotelseller.ewmLogo;
-              this.dataForm.time = data.hotelseller.time;
-              this.dataForm.coordinates = data.hotelseller.coordinates;
-              this.dataForm.scort = data.hotelseller.scort;
-              this.dataForm.sfzImg1 = data.hotelseller.sfzImg1;
-              this.dataForm.sfzImg2 = data.hotelseller.sfzImg2;
-              this.dataForm.yyImg = data.hotelseller.yyImg;
-              this.dataForm.other = data.hotelseller.other;
-              this.dataForm.zdMoney = data.hotelseller.zdMoney;
-              this.dataForm.state = data.hotelseller.state;
-              this.dataForm.sqTime = data.hotelseller.sqTime;
-              this.dataForm.isUse = data.hotelseller.isUse;
-              this.dataForm.llNum = data.hotelseller.llNum;
-              this.dataForm.bdId = data.hotelseller.bdId;
-              this.dataForm.yeOpen = data.hotelseller.yeOpen;
-              this.dataForm.wxOpen = data.hotelseller.wxOpen;
-              this.dataForm.ddOpen = data.hotelseller.ddOpen;
-            }
-          });
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelseller/store`),
+        method: "get",
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.dataForm.id = data.hotelSeller.id;
+          this.dataForm.userId = data.hotelSeller.userId;
+          this.dataForm.owner = data.hotelSeller.owner;
+          this.dataForm.name = data.hotelSeller.name;
+          this.dataForm.star = data.hotelSeller.star;
+          this.dataForm.address = data.hotelSeller.address;
+          this.dataForm.linkName = data.hotelSeller.linkName;
+          this.dataForm.linkTel = data.hotelSeller.linkTel;
+          this.dataForm.tel = data.hotelSeller.tel;
+          this.dataForm.handle = data.hotelSeller.handle;
+          this.dataForm.openTime = data.hotelSeller.openTime;
+          this.dataForm.wake = data.hotelSeller.wake;
+          this.dataForm.wifi = data.hotelSeller.wifi;
+          this.dataForm.park = data.hotelSeller.park;
+          this.dataForm.breakfast = data.hotelSeller.breakfast;
+          this.dataForm.unionpay = data.hotelSeller.unionpay;
+          this.dataForm.gym = data.hotelSeller.gym;
+          this.dataForm.boardroom = data.hotelSeller.boardroom;
+          this.dataForm.water = data.hotelSeller.water;
+          this.dataForm.policy = data.hotelSeller.policy;
+          this.dataForm.introduction = data.hotelSeller.introduction;
+          this.dataForm.img = data.hotelSeller.img;
+          this.dataForm.rule = data.hotelSeller.rule;
+          this.dataForm.prompt = data.hotelSeller.prompt;
+          this.dataForm.bqLogo = data.hotelSeller.bqLogo;
+          this.dataForm.support = data.hotelSeller.support;
+          this.dataForm.ewmLogo = data.hotelSeller.ewmLogo;
+          this.dataForm.time = data.hotelSeller.time;
+          this.dataForm.coordinates = data.hotelSeller.coordinates;
+          this.dataForm.scort = data.hotelSeller.scort;
+          this.dataForm.sfzImg1 = data.hotelSeller.sfzImg1;
+          this.dataForm.sfzImg2 = data.hotelSeller.sfzImg2;
+          this.dataForm.yyImg = data.hotelSeller.yyImg;
+          this.dataForm.other = data.hotelSeller.other;
+          this.dataForm.zdMoney = data.hotelSeller.zdMoney;
+          this.dataForm.state = data.hotelSeller.state;
+          this.dataForm.sqTime = data.hotelSeller.sqTime;
+          this.dataForm.isUse = data.hotelSeller.isUse;
+          this.dataForm.llNum = data.hotelSeller.llNum;
+          this.dataForm.bdId = data.hotelSeller.bdId;
+          this.dataForm.yeOpen = data.hotelSeller.yeOpen;
+          this.dataForm.wxOpen = data.hotelSeller.wxOpen;
+          this.dataForm.ddOpen = data.hotelSeller.ddOpen;
         }
       });
     },
@@ -402,14 +323,17 @@ export default {
         }
       });
     },
-    getContent() {
-      this.dialogVisible = true;
-      this.ue.ready(() => {
-        this.ueContent = this.ue.getContent();
-      });
+
+    onEditorBlur() {},
+    onEditorFocus() {
+      //获得焦点事件
     },
-     handleAvatarSuccess(res, file) {
-      this.dataForm.img = res.url;
+    onEditorChange() {
+      //内容改变事件
+    },
+
+    handleAvatarSuccess(res, file) {
+      this.dataForm.ewmLogo = res.url;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -426,7 +350,7 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss">
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -449,5 +373,12 @@ export default {
   width: 148px;
   height: 148px;
   display: block;
+}
+.mod-demo-ueditor {
+  position: relative;
+  z-index: 510;
+  > .el-alert {
+    margin-bottom: 10px;
+  }
 }
 </style>

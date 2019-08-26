@@ -15,10 +15,10 @@
         <el-input v-model="dataForm.name" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-        <el-input v-model="dataForm.startTime" placeholder="开始时间"></el-input>
+        <el-date-picker v-model="dataForm.startTime" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-        <el-input v-model="dataForm.endTime" placeholder="结束时间"></el-input>
+        <el-date-picker v-model="dataForm.endTime" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="优惠条件" prop="conditions">
         <el-input v-model="dataForm.conditions" placeholder="优惠条件"></el-input>
@@ -115,7 +115,7 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              console.log(data)
+              console.log(data);
               // this.dataForm.sellerId = data.hotelcoupons.sellerId;
               this.dataForm.name = data.hotelCoupons.name;
               this.dataForm.startTime = data.hotelCoupons.startTime;
