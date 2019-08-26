@@ -11,14 +11,14 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="80px"
     >
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+      <el-form-item label="优惠券名称" prop="name">
+        <el-input v-model="dataForm.name" placeholder="优惠券名称"></el-input>
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-        <el-date-picker v-model="dataForm.startTime" type="date" placeholder="选择日期"></el-date-picker>
+         <el-date-picker v-model="dataForm.startTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-        <el-date-picker v-model="dataForm.endTime" type="date" placeholder="选择日期"></el-date-picker>
+         <el-date-picker v-model="dataForm.endTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="优惠条件" prop="conditions">
         <el-input v-model="dataForm.conditions" placeholder="优惠条件"></el-input>
@@ -29,8 +29,14 @@
       <el-form-item label="金额" prop="cost">
         <el-input v-model="dataForm.cost" placeholder="金额"></el-input>
       </el-form-item>
+      <el-form-item label="说明" prop="introduce">
+        <el-input v-model="dataForm.introduce" placeholder="说明"></el-input>
+      </el-form-item>
       <el-form-item label="领取数量" prop="lqNum">
         <el-input v-model="dataForm.lqNum" placeholder="领取数量"></el-input>
+      </el-form-item>
+      <el-form-item label="每人可领取张数" prop="klqzs">
+        <el-input v-model="dataForm.klqzs" placeholder="每人可领取张数"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -96,24 +102,24 @@ export default {
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(
-              `/hotel/hotelcoupons/info/${this.dataForm.id}`
+              `/hotel/hotelcouponscash/info/${this.dataForm.id}`
             ),
             method: "get",
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              console.log(data);
-              this.dataForm.name = data.hotelCoupons.name;
-              this.dataForm.startTime = data.hotelCoupons.startTime;
-              this.dataForm.endTime = data.hotelCoupons.endTime;
-              this.dataForm.conditions = data.hotelCoupons.conditions;
-              this.dataForm.number = data.hotelCoupons.number;
-              this.dataForm.cost = data.hotelCoupons.cost;
-              this.dataForm.type = data.hotelCoupons.type;
-              this.dataForm.introduce = data.hotelCoupons.introduce;
-              this.dataForm.lqNum = data.hotelCoupons.lqNum;
-              this.dataForm.klqzs = data.hotelCoupons.klqzs;
-              this.dataForm.time = data.hotelCoupons.time;
+              this.dataForm.sellerId = data.hotelCouponsCash.sellerId;
+              this.dataForm.name = data.hotelCouponsCash.name;
+              this.dataForm.startTime = data.hotelCouponsCash.startTime;
+              this.dataForm.endTime = data.hotelCouponsCash.endTime;
+              this.dataForm.conditions = data.hotelCouponsCash.conditions;
+              this.dataForm.number = data.hotelCouponsCash.number;
+              this.dataForm.cost = data.hotelCouponsCash.cost;
+              this.dataForm.type = data.hotelCouponsCash.type;
+              this.dataForm.introduce = data.hotelCouponsCash.introduce;
+              this.dataForm.lqNum = data.hotelCouponsCash.lqNum;
+              this.dataForm.klqzs = data.hotelCouponsCash.klqzs;
+              this.dataForm.time = data.hotelCouponsCash.time;
             }
           });
         }
@@ -125,7 +131,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/hotel/hotelcoupons/${!this.dataForm.id ? "save" : "update"}`
+              `/hotel/hotelcouponscash/${!this.dataForm.id ? "save" : "update"}`
             ),
             method: "post",
             data: this.$http.adornData({
@@ -140,7 +146,6 @@ export default {
               introduce: this.dataForm.introduce,
               lqNum: this.dataForm.lqNum,
               klqzs: this.dataForm.klqzs,
-              time: this.dataForm.time
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
