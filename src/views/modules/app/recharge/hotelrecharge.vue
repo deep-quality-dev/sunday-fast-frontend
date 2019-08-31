@@ -7,12 +7,12 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button
-          v-if="isAuth('hotel:hotelcouponsbreakfast:save')"
+          v-if="isAuth('hotel:hotelrecharge:save')"
           type="primary"
           @click="addOrUpdateHandle()"
         >新增</el-button>
         <el-button
-          v-if="isAuth('hotel:hotelcouponsbreakfast:delete')"
+          v-if="isAuth('hotel:hotelrecharge:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
@@ -27,15 +27,18 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="优惠券名称"></el-table-column>
-      <el-table-column prop="startTime" header-align="center" align="center" label="开始时间"></el-table-column>
-      <el-table-column prop="endTime" header-align="center" align="center" label="结束时间"></el-table-column>
-      <el-table-column prop="conditions" header-align="center" align="center" label="优惠条件"></el-table-column>
-      <el-table-column prop="number" header-align="center" align="center" label="发布数量"></el-table-column>
-      <el-table-column prop="cost" header-align="center" align="center" label="金额"></el-table-column>
-      <el-table-column prop="introduce" header-align="center" align="center" label="说明"></el-table-column>
-      <el-table-column prop="lqNum" header-align="center" align="center" label="领取数量"></el-table-column>
-      <el-table-column prop="klqzs" header-align="center" align="center" label="每人可领取张数"></el-table-column>
+      <el-table-column prop="userId" header-align="center" align="center" label="用户"></el-table-column>
+      <el-table-column prop="czMoney" header-align="center" align="center" label="充值金额"></el-table-column>
+      <el-table-column prop="zsMoney" header-align="center" align="center" label="赠送金额"></el-table-column>
+      <el-table-column prop="note" header-align="center" align="center" label="备注信息"></el-table-column>
+      <el-table-column prop="outTradeNo" header-align="center" align="center" label="充值流水"></el-table-column>
+      <el-table-column prop="state" header-align="center" align="center" label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.state === 0" size="small" type="danger">未支付</el-tag>
+          <el-tag v-else size="small">已支付</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="time" header-align="center" align="center" label="充值日期"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
@@ -58,7 +61,7 @@
 </template>
 
 <script>
-import AddOrUpdate from "./hotelcouponsbreakfast-add-or-update";
+import AddOrUpdate from "./hotelrecharge-add-or-update";
 export default {
   data() {
     return {
@@ -85,7 +88,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/hotel/hotelcouponsbreakfast/list"),
+        url: this.$http.adornUrl("/hotel/hotelrecharge/list"),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -142,7 +145,7 @@ export default {
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/hotel/hotelcouponsbreakfast/delete"),
+          url: this.$http.adornUrl("/hotel/hotelrecharge/delete"),
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {
