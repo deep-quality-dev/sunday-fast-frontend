@@ -196,7 +196,7 @@
         },
         markers: [],
         mapCenter: [114.05558, 22.539679],
-        showMap: false,
+        showMap: false
       }
     },
     methods: {
