@@ -15,7 +15,9 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import TableFilter from '@/components/table-filter'
+import VueAMap from 'vue-amap';
 
+Vue.use(VueAMap)
 Vue.use(VueCookie)
 Vue.use(VueQuillEditor)
 Vue.config.productionTip = false
@@ -32,6 +34,11 @@ Vue.prototype.isAuth = isAuth     // 权限方法
 
 // 保存整站vuex本地储存初始状态
 window.SITE_CONFIG['storeState'] = cloneDeep(store.state)
+
+VueAMap.initAMapApiLoader({
+  key: '3bc57a7188e51c379cd5255bd5073fbc',
+  plugin: ['Autocomplete', 'PlaceSearch', 'Scale', 'OverView', 'ToolBar', 'MapType', 'PolyEditor', 'AMap.CircleEditor']
+});
 
 /* eslint-disable no-new */
 new Vue({
