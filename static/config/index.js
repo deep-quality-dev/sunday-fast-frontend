@@ -5,7 +5,7 @@
   window.SITE_CONFIG = {};
 
   // api接口请求地址
-  window.SITE_CONFIG['baseUrl'] = 'http://hotelapi.xqtinfo.cn/';
+  window.SITE_CONFIG['baseUrl'] = 'http://127.0.0.1:9002';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名

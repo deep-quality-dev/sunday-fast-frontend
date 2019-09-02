@@ -49,7 +49,21 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="图片" prop="img">
-        <el-input v-model="dataForm.img" placeholder="图片"></el-input>
+        <img
+          v-for="item in fileList"
+          :src="item.url"
+          class="avatar"
+          style="float:left;margin-right:5px;"
+        >
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false"
+          :on-success="handleImageSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-form-item>
       <el-form-item label="退订规则" prop="rule">
         <el-input v-model="dataForm.rule" placeholder="退订规则"></el-input>
@@ -114,11 +128,12 @@ import ueditor from "ueditor";
 export default {
   data() {
     return {
-      content:  '111',
+      content: "111",
       editorOption: {},
       uploadAction: "",
       dialogVisible: false,
       visible: false,
+      fileList: [],
       dataForm: {
         id: 0,
         owner: "",
@@ -248,6 +263,9 @@ export default {
           this.dataForm.yeOpen = data.hotelSeller.yeOpen;
           this.dataForm.wxOpen = data.hotelSeller.wxOpen;
           this.dataForm.ddOpen = data.hotelSeller.ddOpen;
+          data.hotelSeller.img.split(",").forEach(element => {
+            this.fileList.push({ url: element });
+          });
         }
       });
     },
@@ -335,17 +353,23 @@ export default {
     handleAvatarSuccess(res, file) {
       this.dataForm.ewmLogo = res.url;
     },
+
+    handleImageSuccess(res, file) {
+      this.fileList.push({ url: res.url });
+      let url = [];
+      this.fileList.forEach(item => {
+        url.push(item.url);
+      });
+      console.log(url);
+      this.dataForm.img = url.join(",");
+    },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     }
   }
 };
