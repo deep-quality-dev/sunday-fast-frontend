@@ -27,7 +27,8 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="userId" header-align="center" align="center" label="用户"></el-table-column>
+      <el-table-column prop="sellerName" header-align="center" align="center" label="商家"></el-table-column>
+      <el-table-column prop="memberName" header-align="center" align="center" label="用户"></el-table-column>
       <el-table-column prop="czMoney" header-align="center" align="center" label="充值金额"></el-table-column>
       <el-table-column prop="zsMoney" header-align="center" align="center" label="赠送金额"></el-table-column>
       <el-table-column prop="note" header-align="center" align="center" label="备注信息"></el-table-column>

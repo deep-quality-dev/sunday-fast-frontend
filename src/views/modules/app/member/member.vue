@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.name" placeholder="会员昵称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -30,14 +30,9 @@
           <img :src="scope.row.img" alt="" style="with:80px;height:80px">
         </template>
       </el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="商家"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="手机号"></el-table-column>
       <el-table-column prop="type" header-align="center" align="center" label="是否会员"></el-table-column>
-      <el-table-column prop="levelId" header-align="center" align="center" label="会员等级"></el-table-column>
-      <el-table-column prop="score" header-align="center" align="center" label="积分"></el-table-column>
       <el-table-column prop="zsName" header-align="center" align="center" label="真实姓名"></el-table-column>
-      <el-table-column prop="number" header-align="center" align="center" label="会员卡号"></el-table-column>
-      <el-table-column prop="balance" header-align="center" align="center" label="余额"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
@@ -65,7 +60,7 @@ export default {
   data() {
     return {
       dataForm: {
-        key: ""
+        name: ""
       },
       dataList: [],
       pageIndex: 1,
@@ -92,7 +87,7 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
-          key: this.dataForm.key
+          ...this.dataForm
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

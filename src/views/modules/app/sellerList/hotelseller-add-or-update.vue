@@ -4,12 +4,6 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="用户ID" prop="userId">
-      <el-input v-model="dataForm.userId" placeholder="用户ID"></el-input>
-    </el-form-item>
-    <el-form-item label="1后台添加,2入住" prop="owner">
-      <el-input v-model="dataForm.owner" placeholder="1后台添加,2入住"></el-input>
-    </el-form-item>
     <el-form-item label="名字" prop="name">
       <el-input v-model="dataForm.name" placeholder="名字"></el-input>
     </el-form-item>
