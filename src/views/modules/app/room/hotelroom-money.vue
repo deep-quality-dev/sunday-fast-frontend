@@ -3,6 +3,7 @@
         <el-table :data="dataList" style="width: 100%">
             <el-table-column prop="name" label="价格名称" width="180" align="center"></el-table-column>
             <el-table-column prop="price" label="价格" width="180" align="center"></el-table-column>
+             <el-table-column prop="num" label="数量" width="180" align="center"></el-table-column>
             <el-table-column prop="isVip" label="使用会员折扣" align="center">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.isVip === 0" size="small" type="danger">否</el-tag>
@@ -42,6 +43,9 @@
             <el-form-item label="价格" prop="price">
                 <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="价格"></el-input>
             </el-form-item>
+             <el-form-item label="数量" prop="num">
+                <el-input style="width:90px" size="small" v-model="dataForm.num" placeholder="价格"></el-input>
+            </el-form-item>
             <el-form-item label="会员折扣">
                 <el-radio-group v-model="dataForm.isVip">
                     <el-radio :label="1">是</el-radio>
@@ -68,6 +72,7 @@ export default {
         id: 0,
         name: "",
         price: "",
+        num:0,
         isVip: 0
       },
       dataList: [],
@@ -113,6 +118,7 @@ export default {
               id: this.dataForm.id || undefined,
               name: this.dataForm.name,
               price: this.dataForm.price,
+              num:this.dataForm.num,
               idVip: this.dataForm.isVip,
               roomId: this.roomId
             })
@@ -139,6 +145,7 @@ export default {
       this.dataForm.name = row.name;
       this.dataForm.price = row.price;
       this.dataForm.isVip = row.isVip;
+      this.dataForm.num = row.num;
     },
     deleteHandle(id) {
       var ids = id
