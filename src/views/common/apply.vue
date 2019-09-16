@@ -1,4 +1,3 @@
-
 <template>
   <div class="container">
     <el-steps
@@ -117,6 +116,181 @@
       </el-form-item>
     </el-form>
 
+    <el-form
+      v-show="active === 1"
+      :model="ruleForm1"
+      :rules="rules1"
+      ref="ruleForm1"
+      label-width="150px"
+      class="form"
+    >
+      <h2>个人证件</h2>
+      <el-form-item
+        label="姓名"
+        prop="name"
+      >
+        <el-input
+          v-model="ruleForm1.name"
+          placeholder="请输入身份证姓名"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="身份证号"
+        prop="idCard"
+      >
+        <el-input
+          v-model="ruleForm1.idCard"
+          placeholder="输入身份证号"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="身份证照(正反面)"
+        prop="idCardPicList"
+      >
+        <el-upload
+          :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
+          list-type="picture-card"
+          :on-remove="onIdCardPicListFileChange"
+          :on-change="onIdCardPicListFileChange"
+          :on-exceed="onExceed"
+          :limit="2"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
+      </el-form-item>
+
+      <el-form-item
+        label="手持身份证照"
+        prop="idCardPic"
+      >
+        <el-upload
+          :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
+          list-type="picture-card"
+          :on-remove="onIdCardPicFileChange"
+          :on-change="onIdCardPicFileChange"
+          :on-exceed="onExceed"
+          :limit="1"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
+      </el-form-item>
+
+      <h2>营业执照</h2>
+      <el-form-item
+        label="企业名称"
+        prop="companyName"
+      >
+        <el-input
+          v-model="ruleForm1.companyName"
+          placeholder="请输入企业名称"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="企业法人"
+        prop="companyPerson"
+      >
+        <el-input
+          v-model="ruleForm1.companyPerson"
+          placeholder="请输入企业法人"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="经营场所"
+        prop="companyAddress"
+      >
+        <el-input
+          v-model="ruleForm1.companyAddress"
+          placeholder="请输入经营场所"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="经营范围"
+        prop="companyScope"
+      >
+        <el-input
+          v-model="ruleForm1.companyScope"
+          placeholder="请输入经营范围"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="类型"
+        prop="companyType"
+      >
+        <el-input
+          v-model="ruleForm1.companyType"
+          placeholder="请输入类型"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="注册号"
+        prop="companyNumber"
+      >
+        <el-input
+          v-model="ruleForm1.companyNumber"
+          placeholder="请输入注册号"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="有效期"
+        prop="companyTime"
+      >
+        <el-radio-group v-model="ruleForm1.companyTime">
+          <el-radio
+            label="长期有效"
+            name="companyTime"
+          />
+          <el-radio
+            label="截至至今"
+            name="companyTime"
+          />
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        label="证件照片"
+        prop="companyIdCardPic"
+      >
+        <el-upload
+          :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
+          list-type="picture-card"
+          :on-remove="onCompanyIdCardPicFileChange"
+          :on-change="onCompanyIdCardPicFileChange"
+          :on-exceed="onExceed"
+          :limit="1"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
+      </el-form-item>
+
+      <el-row type="flex">
+        <el-form-item>
+          <el-button
+            @click="active=0"
+          >上一步</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="step2Submit"
+          >提交</el-button>
+        </el-form-item>
+      </el-row>
+    </el-form>
+
+    <div style="text-align: center">
+      <el-button type="primary" v-show="active === 2">
+        提交成功 等待审核吧
+      </el-button>
+    </div>
+
     <el-dialog
       :visible.sync="showMap"
       title="搜索后选择地址"
@@ -194,10 +368,41 @@
             }
           ]
         },
+        ruleForm1: {
+          name: '',
+          idCard: '',
+          idCardPicList: [],
+          idCardPic: '',
+          companyName: '',
+          companyPerson: '',
+          companyAddress: '',
+          companyScope: '',
+          companyType: '',
+          companyNumber: '',
+          companyTime: '长期有效',
+          companyIdCardPic: ''
+        },
+        rules1: {
+          name: [{ required: true, message: '请输入姓名' }],
+          idCard: [{ required: true, message: '请输入身份证号' }],
+          idCardPicList: [{ required: true, message: '请上传身份证照片正反面' }],
+          idCardPic: [{ required: true, message: '请上传手持身份证照片' }],
+          companyName: [{ required: true, message: '请输入企业名称' }],
+          companyPerson: [{ required: true, message: '请输入企业法人' }],
+          companyAddress: [{ required: true, message: '请输入企业经营场所' }],
+          companyScope: [{ required: true, message: '请输入企业经营范围' }],
+          companyType: [{ required: true, message: '请输入企业类型' }],
+          companyNumber: [{ required: true, message: '请输入企业注册号' }],
+          companyTime: [{ required: true, message: '请选择企业有效期' }],
+          companyIdCardPic: [{ required: true, message: '请上传企业证件照片' }]
+        },
         markers: [],
         mapCenter: [114.05558, 22.539679],
         showMap: false
       }
+    },
+    created() {
+      console.log(this.$cookie.get("token"))
     },
     methods: {
       step1Submit() {
@@ -206,6 +411,14 @@
             return false;
           }
           this.active = 1;
+        });
+      },
+      step2Submit() {
+        this.$refs.ruleForm1.validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          this.active = 2;
         });
       },
       onSearchResult(pois) {
@@ -235,6 +448,21 @@
             });
           }
         };
+      },
+      onIdCardPicListFileChange(file, fileList) {
+        const list = fileList.filter(item => item.status === 'success').map(item => item.response.url);
+        this.$set(this.ruleForm1, 'idCardPicList', list);
+      },
+      onIdCardPicFileChange(file, fileList) {
+        const list = fileList.filter(item => item.status === 'success').map(item => item.response.url);
+        this.$set(this.ruleForm1, 'idCardPic', list);
+      },
+      onCompanyIdCardPicFileChange(file, fileList) {
+        const list = fileList.filter(item => item.status === 'success').map(item => item.response.url);
+        this.$set(this.ruleForm1, 'companyIdCardPic', list);
+      },
+      onExceed(file, fileList) {
+        this.$message.error(`最多上传${fileList.length}张`);
       }
     }
   }
