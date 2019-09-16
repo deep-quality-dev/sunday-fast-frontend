@@ -29,25 +29,16 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="会员名称"></el-table-column>
       <el-table-column prop="icon" header-align="center" align="center" label="图标">
-         <template slot-scope="scope">
+        <template slot-scope="scope">
           <img :src="scope.row.icon" alt="" style="with:80px;height:80px">
         </template>
       </el-table-column>
       <el-table-column prop="discount" header-align="center" align="center" label="会员折扣"></el-table-column>
       <el-table-column prop="orderby" header-align="center" align="center" label="排序"></el-table-column>
       <el-table-column prop="content" header-align="center" align="center" label="描述"></el-table-column>
-      <!-- <el-table-column
-        prop="payFlag"
-        header-align="center"
-        align="center"
-        label="是否需要支付">
-      </el-table-column>
-      <el-table-column
-        prop="payAmount"
-        header-align="center"
-        align="center"
-        label="费用">
-      </el-table-column>-->
+      <el-table-column prop="payFlag" header-align="center" align="center" label="是否需要支付"></el-table-column>
+      <el-table-column prop="payAmount" header-align="center" align="center" label="费用"></el-table-column>
+      <el-table-column prop="payIntegral" header-align="center" align="center" label="积分购买"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>

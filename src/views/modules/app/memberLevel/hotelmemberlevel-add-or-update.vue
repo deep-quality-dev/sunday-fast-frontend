@@ -47,12 +47,15 @@
       <el-form-item label="描述" prop="content">
         <el-input v-model="dataForm.content" placeholder="描述"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="是否需要支付" prop="payFlag">
+      <el-form-item label="是否需要支付" prop="payFlag">
         <el-input v-model="dataForm.payFlag" placeholder="是否需要支付"></el-input>
       </el-form-item>
       <el-form-item label="费用" prop="payAmount">
         <el-input v-model="dataForm.payAmount" placeholder="费用"></el-input>
-      </el-form-item>-->
+      </el-form-item>
+       <el-form-item label="积分购买" prop="payIntegral">
+        <el-input v-model="dataForm.payIntegral" placeholder="积分购买"></el-input>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -73,6 +76,7 @@ export default {
         icon: "",
         discount: "",
         bgImage: "",
+        payIntegral:0,
         orderby: 1,
         content: "",
         payFlag: "",
@@ -110,6 +114,7 @@ export default {
               this.dataForm.discount = data.hotelMemberLevel.discount;
               this.dataForm.bgImage = data.hotelMemberLevel.bgImage;
               this.dataForm.orderby = data.hotelMemberLevel.orderby;
+              this.dataForm.payIntegral = data.hotelMemberLevel.payIntegral;
               this.dataForm.content = data.hotelMemberLevel.content;
               this.dataForm.payFlag = data.hotelMemberLevel.payFlag;
               this.dataForm.payAmount = data.hotelMemberLevel.payAmount;
@@ -134,7 +139,8 @@ export default {
               discount: this.dataForm.discount,
               orderby: this.dataForm.orderby,
               content: this.dataForm.content,
-              bgImage:this.dataForm.bgImage,
+              payIntegral:this.dataForm.payIntegral,
+              bgImage: this.dataForm.bgImage,
               payFlag: this.dataForm.payFlag,
               payAmount: this.dataForm.payAmount
             })
