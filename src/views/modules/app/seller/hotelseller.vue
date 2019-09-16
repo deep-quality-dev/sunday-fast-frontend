@@ -115,6 +115,19 @@
           @change="onEditorChange($event)"
         ></quill-editor>
       </el-form-item>
+      <el-form-item label="预定提醒" style="height:300px" prop="reserveRemind">
+        <!-- <el-input v-model="dataForm.introduction" placeholder="酒店介绍"></el-input> -->
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.reserveRemind"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -176,7 +189,8 @@ export default {
         bdId: "",
         yeOpen: "",
         wxOpen: "",
-        ddOpen: ""
+        ddOpen: "",
+        reserveRemind:""
       },
       dataRule: {
         name: [{ required: true, message: "名字不能为空", trigger: "blur" }],
@@ -263,6 +277,7 @@ export default {
           this.dataForm.yeOpen = data.hotelSeller.yeOpen;
           this.dataForm.wxOpen = data.hotelSeller.wxOpen;
           this.dataForm.ddOpen = data.hotelSeller.ddOpen;
+          this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
           data.hotelSeller.img.split(",").forEach(element => {
             this.fileList.push({ url: element });
           });
@@ -321,7 +336,8 @@ export default {
               bdId: this.dataForm.bdId,
               yeOpen: this.dataForm.yeOpen,
               wxOpen: this.dataForm.wxOpen,
-              ddOpen: this.dataForm.ddOpen
+              ddOpen: this.dataForm.ddOpen,
+              reserveRemind:this.dataForm.reserveRemind,
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
