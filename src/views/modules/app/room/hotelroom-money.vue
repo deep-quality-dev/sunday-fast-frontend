@@ -1,63 +1,56 @@
 <template>
-    <el-dialog title="房价管理" :close-on-click-modal="false" :visible.sync="visible">
-        <el-table :data="dataList" style="width: 100%">
-            <el-table-column prop="name" label="价格名称" width="180" align="center"></el-table-column>
-            <el-table-column prop="price" label="价格" width="180" align="center"></el-table-column>
-             <el-table-column prop="num" label="数量" width="180" align="center"></el-table-column>
-            <el-table-column prop="isVip" label="使用会员折扣" align="center">
-                <template slot-scope="scope">
-                    <el-tag v-if="scope.row.isVip === 0" size="small" type="danger">否</el-tag>
-                    <el-tag v-else size="small">是</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column
-                fixed="right"
-                header-align="center"
-                align="center"
-                width="200"
-                label="操作"
-            >
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row)">修改</el-button>
-                    <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-form
-            size="“small”"
-            :inline="true"
-            :model="dataForm"
-            :rules="dataRule"
-            ref="dataForm"
-            class="demo-form-inline"
-            style="margin-top:50px;"
-        >
-            <el-form-item label="价格名称" prop="name">
-                <el-input
-                    style="width:90px"
-                    size="small"
-                    v-model="dataForm.name"
-                    placeholder="价格名称"
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="价格" prop="price">
-                <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="价格"></el-input>
-            </el-form-item>
-             <el-form-item label="数量" prop="num">
-                <el-input style="width:90px" size="small" v-model="dataForm.num" placeholder="价格"></el-input>
-            </el-form-item>
-            <el-form-item label="会员折扣">
-                <el-radio-group v-model="dataForm.isVip">
-                    <el-radio :label="1">是</el-radio>
-                    <el-radio :label="0">否</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item>
-                <el-button size="medium" v-if="dataForm.id>0" @click="onCancelEdit">取消</el-button>
-                <el-button size="medium" type="primary" @click="onSubmit">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-dialog>
+  <el-dialog title="房价管理" :close-on-click-modal="false" :visible.sync="visible">
+    <el-table :data="dataList" style="width: 100%">
+      <el-table-column prop="name" label="价格名称" width="180" align="center"></el-table-column>
+      <el-table-column prop="price" label="价格" width="180" align="center"></el-table-column>
+      <el-table-column prop="integral" label="积分" width="180" align="center"></el-table-column>
+      <el-table-column prop="num" label="数量" width="180" align="center"></el-table-column>
+      <el-table-column prop="isVip" label="使用会员折扣" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isVip === 0" size="small" type="danger">否</el-tag>
+          <el-tag v-else size="small">是</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-form
+      size="“small”"
+      :inline="true"
+      :model="dataForm"
+      :rules="dataRule"
+      ref="dataForm"
+      class="demo-form-inline"
+      style="margin-top:50px;"
+    >
+      <el-form-item label="价格名称" prop="name">
+        <el-input style="width:90px" size="small" v-model="dataForm.name" placeholder="价格名称"></el-input>
+      </el-form-item>
+      <el-form-item label="价格" prop="price">
+        <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="价格"></el-input>
+      </el-form-item>
+       <el-form-item label="积分" prop="price">
+        <el-input style="width:90px" size="small" v-model="dataForm.integral" placeholder="价格"></el-input>
+      </el-form-item>
+      <el-form-item label="数量" prop="num">
+        <el-input style="width:90px" size="small" v-model="dataForm.num" placeholder="价格"></el-input>
+      </el-form-item>
+      <el-form-item label="会员折扣">
+        <el-radio-group v-model="dataForm.isVip">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="medium" v-if="dataForm.id>0" @click="onCancelEdit">取消</el-button>
+        <el-button size="medium" type="primary" @click="onSubmit">保存</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
   <script>
 export default {
@@ -72,7 +65,8 @@ export default {
         id: 0,
         name: "",
         price: "",
-        num:0,
+        num: 0,
+        integral:0,
         isVip: 0
       },
       dataList: [],
@@ -118,8 +112,9 @@ export default {
               id: this.dataForm.id || undefined,
               name: this.dataForm.name,
               price: this.dataForm.price,
-              num:this.dataForm.num,
+              num: this.dataForm.num,
               idVip: this.dataForm.isVip,
+              integral: this.dataForm.integral,
               roomId: this.roomId
             })
           }).then(({ data }) => {
@@ -145,6 +140,7 @@ export default {
       this.dataForm.name = row.name;
       this.dataForm.price = row.price;
       this.dataForm.isVip = row.isVip;
+      this.dataForm.integral = row.integral;
       this.dataForm.num = row.num;
     },
     deleteHandle(id) {
