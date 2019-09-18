@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="订单号" prop="orderNo">
         <el-input v-model="dataForm.orderNo" placeholder="订单号"></el-input>

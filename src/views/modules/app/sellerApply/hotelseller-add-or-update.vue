@@ -3,7 +3,7 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="auto">
     <el-form-item label="用户ID" prop="userId">
       <el-input v-model="dataForm.userId" placeholder="用户ID"></el-input>
     </el-form-item>
@@ -73,10 +73,10 @@
     <el-form-item label="温馨提示" prop="prompt">
       <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
     </el-form-item>
-    <el-form-item label="" prop="bqLogo">
+    <el-form-item label="logo" prop="bqLogo">
       <el-input v-model="dataForm.bqLogo" placeholder=""></el-input>
     </el-form-item>
-    <el-form-item label="" prop="support">
+    <el-form-item label="支持" prop="support">
       <el-input v-model="dataForm.support" placeholder=""></el-input>
     </el-form-item>
     <el-form-item label="酒店logo" prop="ewmLogo">
@@ -115,7 +115,7 @@
     <el-form-item label="平台优惠券使用" prop="isUse">
       <el-input v-model="dataForm.isUse" placeholder="平台优惠券使用"></el-input>
     </el-form-item>
-    <el-form-item label="" prop="llNum">
+    <el-form-item label="优惠券id" prop="llNum">
       <el-input v-model="dataForm.llNum" placeholder=""></el-input>
     </el-form-item>
     <el-form-item label="绑定提现人" prop="bdId">

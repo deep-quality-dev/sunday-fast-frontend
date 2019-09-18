@@ -5,7 +5,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="酒店logo" prop="ewmLogo">
         <el-upload
@@ -51,10 +51,11 @@
       <el-form-item label="图片" prop="img">
         <img
           v-for="item in fileList"
+          :key="item.url"
           :src="item.url"
           class="avatar"
-          style="float:left;margin-right:5px;"
-        >
+          :style="{float:'left', marginRight:'5px'}"
+        />
         <el-upload
           class="avatar-uploader"
           :action="uploadAction"

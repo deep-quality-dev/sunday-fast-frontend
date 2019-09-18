@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="充值金额" prop="money">
         <el-input v-model="dataForm.money" placeholder="充值金额"></el-input>

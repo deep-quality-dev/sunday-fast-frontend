@@ -15,6 +15,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import TableFilter from '@/components/table-filter'
+import TopHeader from '@/components/top-header'
 import VueAMap from 'vue-amap';
 
 Vue.use(VueAMap)
@@ -22,6 +23,7 @@ Vue.use(VueCookie)
 Vue.use(VueQuillEditor)
 Vue.config.productionTip = false
 Vue.component('TableFilter', TableFilter)
+Vue.component('TopHeader', TopHeader)
 
 // 非生产环境, 适配mockjs模拟数据                 // api: https://github.com/nuysoft/Mock
 if (process.env.NODE_ENV !== 'production') {

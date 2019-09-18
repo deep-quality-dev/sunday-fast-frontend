@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="房型名字" prop="name">
         <el-input v-model="dataForm.name" placeholder="房型名字"></el-input>
@@ -58,9 +58,10 @@
       <el-form-item label="图片" prop="img">
         <img
           v-for="item in fileList"
+          :key="item.url"
           :src="item.url"
           class="avatar"
-          style="float:left;margin-right:5px;"
+          :style="{float:'left',marginRight:'5px'}"
         >
         <el-upload
           class="avatar-uploader"

@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="类型" prop="type">
         <el-select v-model="dataForm.type" placeholder="请选择">

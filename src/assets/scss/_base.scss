@@ -57,6 +57,15 @@ img {
   }
 }
 
+.el-dialog {
+  &__body {
+    max-height: 50vh;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+}
+
 
 /* Layout
 ------------------------------ */

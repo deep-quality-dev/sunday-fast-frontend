@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="存储方式" prop="storage">
         <el-input v-model="dataForm.storage" placeholder="存储方式"></el-input>

@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="文件类型" prop="groupType">
         <el-input v-model="dataForm.groupType" placeholder="文件类型"></el-input>

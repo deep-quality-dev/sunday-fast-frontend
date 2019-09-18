@@ -9,7 +9,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="auto"
     >
       <el-form-item label="订单号，小程序中显示用" prop="orderSn">
         <el-input v-model="dataForm.orderSn" placeholder="订单号，小程序中显示用"></el-input>
@@ -20,7 +20,7 @@
       <el-form-item label="用户id" prop="uid">
         <el-input v-model="dataForm.uid" placeholder="用户id"></el-input>
       </el-form-item>
-      <el-form-item label="订单状态 待付款0 已完成1 待发货2 待收货3 已取消4" prop="orderStatus">
+      <el-form-item label="订单状态" prop="orderStatus">
         <el-input v-model="dataForm.orderStatus" placeholder="订单状态 待付款0 已完成1 待发货2 待收货3 已取消4"></el-input>
       </el-form-item>
       <el-form-item label="物流单号" prop="expressnum">
