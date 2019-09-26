@@ -1,8 +1,12 @@
 <template>
     <header class="header">
         <nav class="container flex-container">
-            <div class="flex-item">左logo</div>
-            <div class="flex-item pr50">右logo</div>
+            <div class="flex-item">
+                <img src="../../assets/img/logo.png" alt="千兰" />
+            </div>
+            <div class="flex-item pr50">
+                <img src="../../assets/img/logo.png" alt="千兰" />
+            </div>
         </nav>
     </header>
 </template>
@@ -15,16 +19,25 @@
         background: linear-gradient(to right, #0154af 0%, #049ad7 100%)
     }
     .flex-container {
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
         .flex-item {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #FFFFFF;
             font-size: 32px;
 
             &.pr50 {
-                padding-right: 50px
+                margin-right: 50px
+            }
+            img {
+                width: 100%
             }
         }
     }

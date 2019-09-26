@@ -43,14 +43,20 @@
                 </el-form-item>
 
                 <el-form-item label="集团品牌" prop="brand">
-                    <el-select v-model="ruleForm.brand" placeholder="选择品牌">
+                    <!-- <el-select v-model="ruleForm.brand" placeholder="选择品牌">
                         <el-option
                             v-for="item in options"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
                         ></el-option>
-                    </el-select>
+                    </el-select>-->
+                    <el-cascader
+                        :options="options"
+                        :props="props"
+                        v-model="ruleForm.brand"
+                    >
+                    </el-cascader>
                 </el-form-item>
 
                 <el-form-item label="酒店介绍" prop="desc">
@@ -85,7 +91,7 @@
 
                 <el-form-item label="身份证照(正反面)" prop="idCardPicList">
                     <el-upload
-                        :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
+                        :action="this.$http.adornUrl('/hotel/common/upload')"
                         list-type="picture-card"
                         :on-remove="onIdCardPicListFileChange"
                         :on-change="onIdCardPicListFileChange"
@@ -96,7 +102,7 @@
                     </el-upload>
                 </el-form-item>
 
-                <el-form-item label="手持身份证照" prop="idCardPic">
+                <!-- <el-form-item label="手持身份证照" prop="idCardPic">
                     <el-upload
                         :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
                         list-type="picture-card"
@@ -107,12 +113,12 @@
                     >
                         <i class="el-icon-plus" />
                     </el-upload>
-                </el-form-item>
+                </el-form-item>-->
 
                 <h2>营业执照</h2>
-                <el-form-item label="企业名称" prop="companyName">
+                <!-- <el-form-item label="企业名称" prop="companyName">
                     <el-input v-model="ruleForm1.companyName" placeholder="请输入企业名称" />
-                </el-form-item>
+                </el-form-item>-->
 
                 <el-form-item label="企业法人" prop="companyPerson">
                     <el-input v-model="ruleForm1.companyPerson" placeholder="请输入企业法人" />
@@ -122,13 +128,13 @@
                     <el-input v-model="ruleForm1.companyAddress" placeholder="请输入经营场所" />
                 </el-form-item>
 
-                <el-form-item label="经营范围" prop="companyScope">
+                <!-- <el-form-item label="经营范围" prop="companyScope">
                     <el-input v-model="ruleForm1.companyScope" placeholder="请输入经营范围" />
-                </el-form-item>
+                </el-form-item>-->
 
-                <el-form-item label="类型" prop="companyType">
+                <!-- <el-form-item label="类型" prop="companyType">
                     <el-input v-model="ruleForm1.companyType" placeholder="请输入类型" />
-                </el-form-item>
+                </el-form-item>-->
 
                 <el-form-item label="注册号" prop="companyNumber">
                     <el-input v-model="ruleForm1.companyNumber" placeholder="请输入注册号" />
@@ -141,9 +147,9 @@
                     </el-radio-group>
                 </el-form-item>
 
-                <el-form-item label="证件照片" prop="companyIdCardPic">
+                <el-form-item label="营业执照" prop="companyIdCardPic">
                     <el-upload
-                        :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
+                        :action="this.$http.adornUrl('/hotel/common/upload')"
                         list-type="picture-card"
                         :on-remove="onCompanyIdCardPicFileChange"
                         :on-change="onCompanyIdCardPicFileChange"
@@ -196,28 +202,12 @@ export default {
     data: () => {
         return {
             active: 0,
-            options: [
-                {
-                    value: "选项1",
-                    label: "黄金糕"
-                },
-                {
-                    value: "选项2",
-                    label: "双皮奶"
-                },
-                {
-                    value: "选项3",
-                    label: "蚵仔煎"
-                },
-                {
-                    value: "选项4",
-                    label: "龙须面"
-                },
-                {
-                    value: "选项5",
-                    label: "北京烤鸭"
-                }
-            ],
+            options: [{}],
+            props: {
+                label: 'name',
+                value: "id",
+                children: "brands"
+            },
             ruleForm: {
                 name: "",
                 phone: "",
@@ -260,7 +250,7 @@ export default {
                 companyType: "",
                 companyNumber: "",
                 companyTime: "长期有效",
-                companyIdCardPic: ""
+                companyIdCardPic: []
             },
             rules1: {
                 name: [{ required: true, message: "请输入姓名" }],
@@ -268,24 +258,24 @@ export default {
                 idCardPicList: [
                     { required: true, message: "请上传身份证照片正反面" }
                 ],
-                idCardPic: [
-                    { required: true, message: "请上传手持身份证照片" }
-                ],
-                companyName: [{ required: true, message: "请输入企业名称" }],
+                // idCardPic: [
+                //     { required: true, message: "请上传手持身份证照片" }
+                // ],
+                // companyName: [{ required: true, message: "请输入企业名称" }],
                 companyPerson: [{ required: true, message: "请输入企业法人" }],
                 companyAddress: [
                     { required: true, message: "请输入企业经营场所" }
                 ],
-                companyScope: [
-                    { required: true, message: "请输入企业经营范围" }
-                ],
-                companyType: [{ required: true, message: "请输入企业类型" }],
+                // companyScope: [
+                //     { required: true, message: "请输入企业经营范围" }
+                // ],
+                // companyType: [{ required: true, message: "请输入企业类型" }],
                 companyNumber: [
                     { required: true, message: "请输入企业注册号" }
                 ],
                 companyTime: [{ required: true, message: "请选择企业有效期" }],
                 companyIdCardPic: [
-                    { required: true, message: "请上传企业证件照片" }
+                    { required: true, message: "请上传企业营业执照" }
                 ]
             },
             markers: [],
@@ -296,7 +286,24 @@ export default {
     created() {
         console.log(this.$cookie.get("token"));
     },
+
+    mounted() {
+        this.fetchhotelBrands();
+    },
+
     methods: {
+        fetchhotelBrands() {
+            this.$http({
+                url: this.$http.adornUrl("/hotel/seller/hotelBrands"),
+                method: "get"
+            }).then(({ data }) => {
+                if (data && data.code === 0) {
+                    this.options = data.data
+                }
+                console.log(data);
+            });
+        },
+
         step1Submit() {
             this.$refs.ruleForm.validate(valid => {
                 if (!valid) {
@@ -311,6 +318,20 @@ export default {
                     return false;
                 }
                 this.active = 2;
+                this.$http({
+                    url: this.$http.adornUrl("/hotel/seller/sellerApply"),
+                    method: "post",
+                    data: this.$http.adornData({
+                        ...this.ruleForm,
+                        ...this.ruleForm1
+                    })
+                }).then(({ data }) => {
+                    if (data && data.code === 0) {
+                        this.active = 2;
+                    } else {
+                        this.active = 2;
+                    }
+                });
             });
         },
         onSearchResult(pois) {
