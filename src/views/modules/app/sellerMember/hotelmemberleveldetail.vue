@@ -30,16 +30,13 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="levelName" header-align="center" align="center" label="会员啊类型"></el-table-column>
+      <el-table-column prop="levelName" header-align="center" align="center" label="会员类型"></el-table-column>
       <el-table-column prop="certificateNo" header-align="center" align="center" label="证件号"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
       <el-table-column prop="mobile" header-align="center" align="center" label="手机"></el-table-column>
       <el-table-column prop="gender" header-align="center" align="center" label="性别"></el-table-column>
       <el-table-column prop="cardNo" header-align="center" align="center" label="卡号"></el-table-column>
-      <el-table-column prop="address" header-align="center" align="center" label="联系地址"></el-table-column>
-      <el-table-column prop="creator" header-align="center" align="center" label="创建者"></el-table-column>
       <el-table-column prop="createDate" header-align="center" align="center" label="创建时间"></el-table-column>
-      <el-table-column prop="updateDate" header-align="center" align="center" label="修改时间"></el-table-column>
       <el-table-column prop="salesman" header-align="center" align="center" label="推荐员工"></el-table-column>
       <el-table-column prop="score" header-align="center" align="center" label="积分"></el-table-column>
       <el-table-column prop="balance" header-align="center" align="center" label="余额"></el-table-column>

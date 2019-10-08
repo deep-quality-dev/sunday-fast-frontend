@@ -6,10 +6,13 @@
       @keyup.enter.native="getDataList()"
     >
       <el-form-item>
-        <el-date-picker
-          v-model="dataForm.date"
-          type="date"
-          placeholder="选择日期" />
+      <el-date-picker
+          v-model="value1"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
       </el-form-item>
     </el-form>
 
@@ -75,6 +78,7 @@
   export default {
     data() {
       return {
+        value1: '',
         dataForm: {},
         date: [],
         dataList: [],
