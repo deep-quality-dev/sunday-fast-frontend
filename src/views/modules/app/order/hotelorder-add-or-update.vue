@@ -3,6 +3,7 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
+    width="80%"
   >
     <el-form
       :model="dataForm"
@@ -100,8 +101,7 @@
 
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button @click="visible = false">关闭</el-button>
     </span>
   </el-dialog>
 </template>
@@ -266,44 +266,44 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.sellerId = data.hotelorder.sellerId;
-              this.dataForm.roomId = data.hotelorder.roomId;
-              this.dataForm.userId = data.hotelorder.userId;
-              this.dataForm.couponsId = data.hotelorder.couponsId;
-              this.dataForm.orderNo = data.hotelorder.orderNo;
-              this.dataForm.sellerName = data.hotelorder.sellerName;
-              this.dataForm.sellerAddress = data.hotelorder.sellerAddress;
-              this.dataForm.coordinates = data.hotelorder.coordinates;
-              this.dataForm.arrivalTime = data.hotelorder.arrivalTime;
-              this.dataForm.departureTime = data.hotelorder.departureTime;
-              this.dataForm.ddTime = data.hotelorder.ddTime;
-              this.dataForm.price = data.hotelorder.price;
-              this.dataForm.num = data.hotelorder.num;
-              this.dataForm.days = data.hotelorder.days;
-              this.dataForm.roomType = data.hotelorder.roomType;
-              this.dataForm.roomLogo = data.hotelorder.roomLogo;
-              this.dataForm.bedType = data.hotelorder.bedType;
-              this.dataForm.name = data.hotelorder.name;
-              this.dataForm.tel = data.hotelorder.tel;
-              this.dataForm.status = data.hotelorder.status;
-              this.dataForm.outTradeNo = data.hotelorder.outTradeNo;
-              this.dataForm.disCost = data.hotelorder.disCost;
-              this.dataForm.yjCost = data.hotelorder.yjCost;
-              this.dataForm.yhqCost = data.hotelorder.yhqCost;
-              this.dataForm.yyzkCost = data.hotelorder.yyzkCost;
-              this.dataForm.totalCost = data.hotelorder.totalCost;
-              this.dataForm.enabled = data.hotelorder.enabled;
-              this.dataForm.createTime = data.hotelorder.createTime;
-              this.dataForm.retreatCost = data.hotelorder.retreatCost;
-              this.dataForm.hbCost = data.hotelorder.hbCost;
-              this.dataForm.hbId = data.hotelorder.hbId;
-              this.dataForm.fromId = data.hotelorder.fromId;
-              this.dataForm.classify = data.hotelorder.classify;
-              this.dataForm.code = data.hotelorder.code;
-              this.dataForm.jjTime = data.hotelorder.jjTime;
-              this.dataForm.voice = data.hotelorder.voice;
-              this.dataForm.qrFromid = data.hotelorder.qrFromid;
-              this.dataForm.orderInfo = data.hotelorder.orderInfo;
+              this.dataForm.sellerId = data.hotelOrder.sellerId;
+              this.dataForm.roomId = data.hotelOrder.roomId;
+              this.dataForm.userId = data.hotelOrder.userId;
+              this.dataForm.couponsId = data.hotelOrder.couponsId;
+              this.dataForm.orderNo = data.hotelOrder.orderNo;
+              this.dataForm.sellerName = data.hotelOrder.sellerName;
+              this.dataForm.sellerAddress = data.hotelOrder.sellerAddress;
+              this.dataForm.coordinates = data.hotelOrder.coordinates;
+              this.dataForm.arrivalTime = data.hotelOrder.arrivalTime;
+              this.dataForm.departureTime = data.hotelOrder.departureTime;
+              this.dataForm.ddTime = data.hotelOrder.ddTime;
+              this.dataForm.price = data.hotelOrder.price;
+              this.dataForm.num = data.hotelOrder.num;
+              this.dataForm.days = data.hotelOrder.days;
+              this.dataForm.roomType = data.hotelOrder.roomType;
+              this.dataForm.roomLogo = data.hotelOrder.roomLogo;
+              this.dataForm.bedType = data.hotelOrder.bedType;
+              this.dataForm.name = data.hotelOrder.name;
+              this.dataForm.tel = data.hotelOrder.tel;
+              this.dataForm.status = data.hotelOrder.status;
+              this.dataForm.outTradeNo = data.hotelOrder.outTradeNo;
+              this.dataForm.disCost = data.hotelOrder.disCost;
+              this.dataForm.yjCost = data.hotelOrder.yjCost;
+              this.dataForm.yhqCost = data.hotelOrder.yhqCost;
+              this.dataForm.yyzkCost = data.hotelOrder.yyzkCost;
+              this.dataForm.totalCost = data.hotelOrder.totalCost;
+              this.dataForm.enabled = data.hotelOrder.enabled;
+              this.dataForm.createTime = data.hotelOrder.createTime;
+              this.dataForm.retreatCost = data.hotelOrder.retreatCost;
+              this.dataForm.hbCost = data.hotelOrder.hbCost;
+              this.dataForm.hbId = data.hotelOrder.hbId;
+              this.dataForm.fromId = data.hotelOrder.fromId;
+              this.dataForm.classify = data.hotelOrder.classify;
+              this.dataForm.code = data.hotelOrder.code;
+              this.dataForm.jjTime = data.hotelOrder.jjTime;
+              this.dataForm.voice = data.hotelOrder.voice;
+              this.dataForm.qrFromid = data.hotelOrder.qrFromid;
+              this.dataForm.orderInfo = data.hotelOrder.orderInfo;
             }
           });
         }

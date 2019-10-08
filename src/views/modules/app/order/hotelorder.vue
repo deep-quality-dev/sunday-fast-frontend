@@ -2,21 +2,29 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="请输入入住人姓名/手机号" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker
+          v-model="dataForm.date"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="dataForm.status" placeholder="请选择">
+          <el-option
+            v-for="item in statusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button
-          v-if="isAuth('hotel:hotelorder:save')"
-          type="primary"
-          @click="addOrUpdateHandle()"
-        >新增</el-button>
-        <el-button
-          v-if="isAuth('hotel:hotelorder:delete')"
-          type="danger"
-          @click="deleteHandle()"
-          :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -28,31 +36,31 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="orderNo" header-align="center" align="center" label="订单号"></el-table-column>
-      <el-table-column prop="sellerName" header-align="center" align="center" label="商家名字"></el-table-column>
-      <el-table-column prop="arrivalTime" header-align="center" align="center" label="入住时间"></el-table-column>
-      <el-table-column prop="departureTime" header-align="center" align="center" label="离店时间"></el-table-column>
-      <el-table-column prop="ddTime" header-align="center" align="center" label="到店时间"></el-table-column>
+      <el-table-column prop="createTime" header-align="center" align="center" label="预定时间"></el-table-column>
+      <el-table-column prop="sellerName" header-align="center" align="center" label="商家"></el-table-column>
+      <el-table-column prop="arrivalTime" header-align="center" align="center" label="入住"></el-table-column>
+      <el-table-column prop="departureTime" header-align="center" align="center" label="离店"></el-table-column>
+      <el-table-column prop="ddTime" header-align="center" align="center" label="到店"></el-table-column>
       <el-table-column prop="price" header-align="center" align="center" label="价格"></el-table-column>
-      <el-table-column prop="num" header-align="center" align="center" label="房间数量"></el-table-column>
-      <el-table-column prop="days" header-align="center" align="center" label="入住天数"></el-table-column>
+      <el-table-column prop="num" header-align="center" align="center" label="数量"></el-table-column>
+      <el-table-column prop="days" header-align="center" align="center" label="天数"></el-table-column>
       <el-table-column prop="roomType" header-align="center" align="center" label="房型"></el-table-column>
-      <el-table-column prop="bedType" header-align="center" align="center" label="床型"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="预定人"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="联系电话"></el-table-column>
       <!--1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款-->
-      <el-table-column prop="status" header-align="center" align="center" label="订单状态">
-         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 1" size="small" >未付款</el-tag>
+      <el-table-column prop="status" header-align="center" align="center" label="状态">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 1" size="small">未付款</el-tag>
           <el-tag v-if="scope.row.status === 2" size="small">已付款</el-tag>
           <el-tag v-if="scope.row.status === 3" size="small">已取消</el-tag>
-          <el-tag v-if="scope.row.status === 4" size="small" >已完成</el-tag>
+          <el-tag v-if="scope.row.status === 4" size="small">已完成</el-tag>
           <el-tag v-if="scope.row.status === 5" size="small">已入住</el-tag>
           <el-tag v-if="scope.row.status === 6" size="small">退款中</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="payMethod" header-align="center" align="center" label="支付方式">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.payMethod === 'wx'" size="small" >微信支付</el-tag>
+          <el-tag v-if="scope.row.payMethod === 'wx'" size="small">微信支付</el-tag>
           <el-tag v-if="scope.row.payMethod === 'balance'" size="small">余额支付</el-tag>
           <el-tag v-if="scope.row.payMethod === 'integral'" size="small">积分支付</el-tag>
         </template>
@@ -61,11 +69,9 @@
       <el-table-column prop="yhqCost" header-align="center" align="center" label="优惠券"></el-table-column>
       <el-table-column prop="yyzkCost" header-align="center" align="center" label="会员折扣"></el-table-column>
       <el-table-column prop="totalCost" header-align="center" align="center" label="总价格"></el-table-column>
-      <el-table-column prop="createTime" header-align="center" align="center" label="创建时间"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column fixed="right" header-align="center" align="center" width="80" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,8 +95,11 @@ export default {
   data() {
     return {
       dataForm: {
-        key: ""
+        key: "",
+        status:'0',
+        date:[]
       },
+      statusOptions:[{value:"0",label:"全部订单"},{value:"1",label:"待支付"},{value:"2",label:"已付款"},{value:"3",label:"已取消"},{value:"4",label:"已完成"},{value:"5",label:"已入住"},{value:"6",label:"退款中"}],
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
