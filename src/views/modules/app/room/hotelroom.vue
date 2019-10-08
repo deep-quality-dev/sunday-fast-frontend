@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column prop="classify" header-align="center" align="center" label="房间类别">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">钟点房</el-tag>
+          <el-tag v-if="scope.row.status === 0" size="small">钟点房</el-tag>
           <el-tag v-else size="small">普通房</el-tag>
         </template>
       </el-table-column>

@@ -81,7 +81,7 @@
             <el-col :span="6">
               <div class="grid-content">
                 <span>0</span>
-                <span>已入驻</span>
+                <span>已入住</span>
               </div>
             </el-col>
             <el-col :span="6">

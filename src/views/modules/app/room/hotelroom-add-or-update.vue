@@ -1,8 +1,10 @@
 <template>
   <el-dialog
+    width="80%"
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
+    class="hotel-room"
   >
     <el-form
       :model="dataForm"
@@ -246,6 +248,13 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.hotel-room {
+  .el-dialog__body {
+    height: 80vh;
+  }
+}
+</style>
 <style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

@@ -33,21 +33,15 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <!-- <el-table-column prop="owner" header-align="center" align="center" label="1后台添加,2入住"></el-table-column> -->
       <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
       <el-table-column prop="star" header-align="center" align="center" label="星级"></el-table-column>
       <el-table-column prop="address" header-align="center" align="center" label="地址"></el-table-column>
       <el-table-column prop="linkName" header-align="center" align="center" label="联系人"></el-table-column>
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="酒店电话"></el-table-column>
-      <el-table-column prop="handle" header-align="center" align="center" label="办理时间"></el-table-column>
-      <el-table-column prop="openTime" header-align="center" align="center" label="开业时间"></el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label="时间"></el-table-column>
-      <el-table-column prop="scort" header-align="center" align="center" label="排序"></el-table-column>
-      <el-table-column prop="sqTime" header-align="center" align="center" label="申请时间"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>

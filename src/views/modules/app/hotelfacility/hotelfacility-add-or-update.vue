@@ -14,8 +14,11 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="名称"></el-input>
       </el-form-item>
-      <el-form-item label="1-酒店，2-房间" prop="type">
-        <el-input v-model="dataForm.type" placeholder="1-酒店，2-房间"></el-input>
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="dataForm.type" placeholder="请选择">
+          <el-option label="酒店" :value="1"></el-option>
+          <el-option label="房间" :value="2"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <el-input v-model="dataForm.icon" placeholder="图标"></el-input>
@@ -37,7 +40,6 @@ export default {
         id: 0,
         name: "",
         type: "",
-        createTime: "",
         icon: ""
       },
       dataRule: {
@@ -64,10 +66,10 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.name = data.hotelfacility.name;
-              this.dataForm.type = data.hotelfacility.type;
-              this.dataForm.createTime = data.hotelfacility.createTime;
-              this.dataForm.icon = data.hotelfacility.icon;
+              this.dataForm.name = data.hotelFacility.name;
+              this.dataForm.type = data.hotelFacility.type;
+              this.dataForm.createTime = data.hotelFacility.createTime;
+              this.dataForm.icon = data.hotelFacility.icon;
             }
           });
         }

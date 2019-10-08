@@ -29,7 +29,6 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="orderNo" header-align="center" align="center" label="订单号"></el-table-column>
       <el-table-column prop="sellerName" header-align="center" align="center" label="商家名字"></el-table-column>
-      <el-table-column prop="sellerAddress" header-align="center" align="center" label="商家地址"></el-table-column>
       <el-table-column prop="arrivalTime" header-align="center" align="center" label="入住时间"></el-table-column>
       <el-table-column prop="departureTime" header-align="center" align="center" label="离店时间"></el-table-column>
       <el-table-column prop="ddTime" header-align="center" align="center" label="到店时间"></el-table-column>
@@ -41,12 +40,23 @@
       <el-table-column prop="name" header-align="center" align="center" label="预定人"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="联系电话"></el-table-column>
       <!--1未付款,2已付款，3取消,4完成,5已入住,6申请退款,7退款,8拒绝退款-->
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="订单状态"
-      ></el-table-column>
+      <el-table-column prop="status" header-align="center" align="center" label="订单状态">
+         <template slot-scope="scope">
+          <el-tag v-if="scope.row.status === 1" size="small" >未付款</el-tag>
+          <el-tag v-if="scope.row.status === 2" size="small">已付款</el-tag>
+          <el-tag v-if="scope.row.status === 3" size="small">已取消</el-tag>
+          <el-tag v-if="scope.row.status === 4" size="small" >已完成</el-tag>
+          <el-tag v-if="scope.row.status === 5" size="small">已入住</el-tag>
+          <el-tag v-if="scope.row.status === 6" size="small">退款中</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="payMethod" header-align="center" align="center" label="支付方式">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.payMethod === 'wx'" size="small" >微信支付</el-tag>
+          <el-tag v-if="scope.row.payMethod === 'balance'" size="small">余额支付</el-tag>
+          <el-tag v-if="scope.row.payMethod === 'integral'" size="small">积分支付</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="disCost" header-align="center" align="center" label="折后价格"></el-table-column>
       <el-table-column prop="yhqCost" header-align="center" align="center" label="优惠券"></el-table-column>
       <el-table-column prop="yyzkCost" header-align="center" align="center" label="会员折扣"></el-table-column>

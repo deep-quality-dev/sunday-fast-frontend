@@ -1,8 +1,10 @@
 <template>
   <el-dialog
+    width="70%"
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
+    class="hotel-protocol"
   >
     <el-form
       :model="dataForm"
@@ -15,7 +17,7 @@
         <el-input v-model="dataForm.name" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item label="协议内容" prop="content">
-         <quill-editor
+        <quill-editor
           style="height:200px"
           class="editor"
           v-model="dataForm.content"
@@ -112,7 +114,15 @@ export default {
     },
     onEditorChange() {
       //内容改变事件
-    },
+    }
   }
 };
 </script>
+<style lang="less">
+.hotel-protocol {
+  .el-dialog__body {
+    height: 80vh;
+  }
+}
+</style>
+
