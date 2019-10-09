@@ -34,7 +34,11 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
-      <el-table-column prop="star" header-align="center" align="center" label="星级"></el-table-column>
+      <el-table-column prop="star" header-align="center" align="center" label="星级">
+        <template slot-scope="scope">
+          <el-tag size="small">{{stars[String(scope.row.star)]}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="address" header-align="center" align="center" label="地址"></el-table-column>
       <el-table-column prop="linkName" header-align="center" align="center" label="联系人"></el-table-column>
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
@@ -65,6 +69,13 @@ import AddOrUpdate from "./hotelseller-add-or-update";
 export default {
   data() {
     return {
+      stars: {
+        "1": "一星级",
+        "2": "二星级",
+        "3": "三星级",
+        "4": "四星级",
+        "5": "五星级"
+      },
       dataForm: {
         name: "",
         linkName: "",
