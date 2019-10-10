@@ -20,8 +20,16 @@
                     <el-input v-model="ruleForm.name" placeholder="请输入完整的酒店名称" />
                 </el-form-item>
 
-                <el-form-item label="酒店电话" prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="输入座机号或者手机号" />
+                <el-form-item label="酒店电话" prop="tel">
+                    <el-input v-model="ruleForm.tel" placeholder="输入座机号或者手机号" />
+                </el-form-item>
+
+                 <el-form-item label="酒店联系人" prop="linkName">
+                    <el-input v-model="ruleForm.linkName" placeholder="输入酒店联系人" />
+                </el-form-item>
+
+                 <el-form-item label="酒店联系人电话" prop="linkTel">
+                    <el-input v-model="ruleForm.linkTel" placeholder="输入酒店联系人电话" />
                 </el-form-item>
 
                 <el-form-item label="酒店地址" prop="address">
@@ -29,12 +37,13 @@
                     <el-button @click="showMap = true" type="primary">编辑地址/定位</el-button>
                 </el-form-item>
 
-                <el-form-item label="酒店类型" prop="type">
+                <el-form-item label="酒店星级" prop="type">
                     <el-radio-group v-model="ruleForm.type">
-                        <el-radio label="二星及以下/经济" name="type" />
-                        <el-radio label="三星/舒适" name="type" />
-                        <el-radio label="四星/高档" name="type" />
-                        <el-radio label="五星/豪华" name="type" />
+                         <el-radio label="1" name="type" >一星及以下/经济</el-radio>
+                        <el-radio label="2" name="type" >二星/实惠</el-radio>
+                        <el-radio label="3" name="type" >三星/舒适</el-radio>
+                        <el-radio label="4" name="type" >四星/高档</el-radio>
+                        <el-radio label="5" name="type" >五星/豪华</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
@@ -210,16 +219,20 @@ export default {
             },
             ruleForm: {
                 name: "",
-                phone: "",
+                tel: "",
+                linkName:"",
+                linkTel:"",
                 address: "",
-                type: "三星/舒适",
+                type: "1",
                 roomCount: 1,
                 brand: "",
                 desc: ""
             },
             rules: {
                 name: [{ required: true, message: "请输入酒店名称" }],
-                phone: [{ required: true, message: "请输入酒店电话" }],
+                tel: [{ required: true, message: "请输入酒店电话" }],
+                linkName: [{ required: true, message: "请输入酒店联系人" }],
+                linkTel: [{ required: true, message: "请输入酒店联系人电话" }],
                 address: [{ required: true, message: "请选择酒店地址" }],
                 type: [{ required: true, message: "请输入酒店类型" }],
                 roomCount: [{ required: true, message: "请输入客房总数" }],
@@ -228,9 +241,9 @@ export default {
                     { required: true, message: "请输入酒店介绍" },
                     {
                         validator: (rule, value, callback) => {
-                            if (value.length < 50 || value.length > 400) {
+                            if (value.length < 20 || value.length > 400) {
                                 return callback(
-                                    new Error("酒店介绍字数必须50以上，400以下")
+                                    new Error("酒店介绍字数必须20以上，400以下")
                                 );
                             }
                             return callback();
