@@ -22,12 +22,12 @@
       border=""
     >
       <el-table-column align="center" prop="roomName">
-        <template slot="header" slot-scope="scope">
+        <template slot="header" width="100" slot-scope="scope">
           <div>房型/日期</div>
         </template>
       </el-table-column>
 
-      <el-table-column prop="priceName" label="价格名称" align="center" />
+      <el-table-column prop="priceName" width="100" label="价格名称" align="center" />
 
       <el-table-column align="center" width="40">
         <template slot="header" slot-scope="scope">
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import moment from "moment";
   export default {
     data() {
       return {
@@ -85,7 +86,7 @@
         dataList: [],
         showUpdateModal: false,
         updateCurrent: { row: {}, column: {} },
-        updateCurrentPrice: ''
+        updateCurrentPrice: '',
       };
     },
     activated() {
@@ -101,8 +102,19 @@
         this.updateCurrentPrice = scope.row[scope.column.property];
       },
       onUpdateSubmit() {
-        console.log(this.updateCurrentPrice)
-        console.log(this.updateCurrent)
+        this.$http({
+          url: this.$http.adornUrl("/hotel/hotelroomprice/update4Day"),
+          method: "post",
+          data: this.$http.adornParams({
+           date:this.updateCurrent.column.property,
+           priceId:this.updateCurrent.row.priceId,
+           money: this.updateCurrentPrice
+          })
+        }).then(({ data }) => {
+         if (data && data.code === 0){
+           this.getDataList();
+         }
+        });
       },
       // 获取数据列表
       getDataList() {
@@ -114,8 +126,8 @@
             page: this.pageIndex,
             limit: this.pageSize,
             key: this.dataForm.key,
-            startDate: "2019-09-01",
-            endDate: "2019-09-10"
+            startDate: moment().format("YYYY-MM-DD"),
+            endDate: moment().add(15, 'days').format('YYYY-MM-DD') //默认维护15天房价
           })
         }).then(({ data }) => {
           if (data && data.code === 0) {

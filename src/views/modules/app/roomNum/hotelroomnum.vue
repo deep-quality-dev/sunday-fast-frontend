@@ -66,7 +66,7 @@ export default {
           limit: this.pageSize,
           key: this.dataForm.key,
           startDate: moment().format("YYYY-MM-DD"),
-          endDate: "2019-10-31"
+          endDate: moment().add(15, 'days').format('YYYY-MM-DD')
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
