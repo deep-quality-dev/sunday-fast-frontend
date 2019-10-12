@@ -1,5 +1,5 @@
 <template>
-  <div class="mod-demo-ueditor">
+  <div class="mod-demo-ueditor" v-loading="dataListLoading"  element-loading-text="拼命加载中">
     <el-form
       :model="dataForm"
       :rules="dataRule"
@@ -142,6 +142,7 @@ import ueditor from "ueditor";
 export default {
   data() {
     return {
+      dataListLoading:false,
       content: "111",
       editorOption: {},
       uploadAction: "",
@@ -229,6 +230,7 @@ export default {
   },
   methods: {
     init(id) {
+      this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl(`/hotel/hotelseller/store`),
         method: "get",
@@ -283,6 +285,7 @@ export default {
             this.fileList.push({ url: element });
           });
         }
+        this.dataListLoading = false;
       });
     },
     // 表单提交

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="dataListLoading"  element-loading-text="拼命加载中">
     <el-form
       :inline="true"
       :model="dataForm"
@@ -78,6 +78,7 @@
   export default {
     data() {
       return {
+        dataListLoading:false,
         value1: '',
         dataForm: {},
         date: [],

@@ -1,5 +1,5 @@
 <template>
-    <div class="dash-board" v-loading="dataListLoading">
+    <div class="dash-board" v-loading="dataListLoading"  element-loading-text="拼命加载中">
         <!-- 第一行 start -->
         <el-row class="f-row">
             <div class="header header-ab">
@@ -319,7 +319,7 @@ export default {
   data() {
     return {
       dataForm: {
-          dates:[moment().format("YYYY-MM-DD"),moment().format("YYYY-MM-DD")]
+        dates: [moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD")]
       },
       data: {
         hotelCreateNum: 0,
@@ -395,7 +395,7 @@ export default {
         url: this.$http.adornUrl("/hotel/statistics/platfrom"),
         method: "post",
         data: this.$http.adornData({
-          dates:this.dataForm.dates,
+          dates: this.dataForm.dates
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {

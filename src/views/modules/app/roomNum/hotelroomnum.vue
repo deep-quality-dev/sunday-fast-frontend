@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="dataListLoading"  element-loading-text="拼命加载中">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
         <el-date-picker
@@ -40,13 +40,15 @@
   </div>
 </template>
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-      value1:[],
+      value1: [],
       dataForm: {},
       date: [],
-      dataList: []
+      dataList: [],
+      dataListLoading: false
     };
   },
   activated() {
@@ -63,8 +65,8 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key,
-          startDate: "2019-09-01",
-          endDate: "2019-09-10"
+          startDate: moment().format("YYYY-MM-DD"),
+          endDate: "2019-10-31"
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
