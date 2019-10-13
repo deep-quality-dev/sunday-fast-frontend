@@ -4,7 +4,8 @@
       <el-menu
         :default-active="menuActiveName || 'home'"
         :collapse="sidebarFold"
-        :collapseTransition="false"
+        :collapseTransition="true"
+        :unique-opened="true"
         class="site-sidebar__menu">
         <el-menu-item index="home" @click="$router.push({ name: 'home' })">
           <icon-svg name="shouye" class="site-sidebar__menu-icon"></icon-svg>
