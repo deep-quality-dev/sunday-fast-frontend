@@ -24,6 +24,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
     </el-form>

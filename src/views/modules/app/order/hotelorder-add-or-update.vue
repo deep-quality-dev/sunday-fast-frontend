@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '查看'"
     :close-on-click-modal="false"
     :visible.sync="visible"
     width="80%"
@@ -13,37 +13,37 @@
       label-width="auto"
     >
       <el-form-item label="订单号" prop="orderNo">
-        <el-input v-model="dataForm.orderNo" placeholder="订单号"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.orderNo" placeholder="订单号"></el-input>
       </el-form-item>
       <el-form-item label="商家名字" prop="sellerName">
-        <el-input v-model="dataForm.sellerName" placeholder="商家名字"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.sellerName" placeholder="商家名字"></el-input>
       </el-form-item>
       <el-form-item label="商家地址" prop="sellerAddress">
-        <el-input v-model="dataForm.sellerAddress" placeholder="商家地址"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.sellerAddress" placeholder="商家地址"></el-input>
       </el-form-item>
       <el-form-item label="经纬度" prop="coordinates">
-        <el-input v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
       </el-form-item>
       <el-form-item label="入住时间" prop="arrivalTime">
-        <el-input v-model="dataForm.arrivalTime" placeholder="入住时间"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.arrivalTime" placeholder="入住时间"></el-input>
       </el-form-item>
       <el-form-item label="离店时间" prop="departureTime">
-        <el-input v-model="dataForm.departureTime" placeholder="离店时间"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.departureTime" placeholder="离店时间"></el-input>
       </el-form-item>
       <el-form-item label="到店时间" prop="ddTime">
-        <el-input v-model="dataForm.ddTime" placeholder="到店时间"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.ddTime" placeholder="到店时间"></el-input>
       </el-form-item>
       <el-form-item label="价格" prop="price">
-        <el-input v-model="dataForm.price" placeholder="价格"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.price" placeholder="价格"></el-input>
       </el-form-item>
       <el-form-item label="房间数量" prop="num">
-        <el-input v-model="dataForm.num" placeholder="房间数量"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.num" placeholder="房间数量"></el-input>
       </el-form-item>
       <el-form-item label="入住天数" prop="days">
-        <el-input v-model="dataForm.days" placeholder="入住天数"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.days" placeholder="入住天数"></el-input>
       </el-form-item>
       <el-form-item label="房型" prop="roomType">
-        <el-input v-model="dataForm.roomType" placeholder="房型"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.roomType" placeholder="房型"></el-input>
       </el-form-item>
       <el-form-item label="房间主图" prop="roomLogo">
         <el-upload
@@ -57,46 +57,46 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="床型" prop="bedType">
-        <el-input v-model="dataForm.bedType" placeholder="床型"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.bedType" placeholder="床型"></el-input>
       </el-form-item>
       <el-form-item label="预定人" prop="name">
-        <el-input v-model="dataForm.name" placeholder="预定人"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.name" placeholder="预定人"></el-input>
       </el-form-item>
       <el-form-item label="联系电话" prop="tel">
-        <el-input v-model="dataForm.tel" placeholder="联系电话"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.tel" placeholder="联系电话"></el-input>
       </el-form-item>
       <el-form-item label="订单状态" prop="status">
-        <el-input v-model="dataForm.status" placeholder="订单状态"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.status" placeholder="订单状态"></el-input>
       </el-form-item>
       <el-form-item label="商户订单号" prop="outTradeNo">
-        <el-input v-model="dataForm.outTradeNo" placeholder="商户订单号"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.outTradeNo" placeholder="商户订单号"></el-input>
       </el-form-item>
       <el-form-item label="折后价格" prop="disCost">
-        <el-input v-model="dataForm.disCost" placeholder="折后价格"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.disCost" placeholder="折后价格"></el-input>
       </el-form-item>
       <el-form-item label="押金金额" prop="yjCost">
-        <el-input v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
       </el-form-item>
       <el-form-item label="优惠券价格" prop="yhqCost">
-        <el-input v-model="dataForm.yhqCost" placeholder="优惠券价格"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yhqCost" placeholder="优惠券价格"></el-input>
       </el-form-item>
       <el-form-item label="会员折扣金额" prop="yyzkCost">
-        <el-input v-model="dataForm.yyzkCost" placeholder="会员折扣金额"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yyzkCost" placeholder="会员折扣金额"></el-input>
       </el-form-item>
       <el-form-item label="总价格" prop="totalCost">
-        <el-input v-model="dataForm.totalCost" placeholder="总价格"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.totalCost" placeholder="总价格"></el-input>
       </el-form-item>
       <el-form-item label="是否删除" prop="enabled">
-        <el-input v-model="dataForm.enabled" placeholder="是否删除"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.enabled" placeholder="是否删除"></el-input>
       </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
-        <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.createTime" placeholder="创建时间"></el-input>
       </el-form-item>
       <el-form-item label="已退押金" prop="retreatCost">
-        <el-input v-model="dataForm.retreatCost" placeholder="已退押金"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.retreatCost" placeholder="已退押金"></el-input>
       </el-form-item>
       <el-form-item label="分类" prop="classify">
-        <el-input v-model="dataForm.classify" placeholder="分类"></el-input>
+        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.classify" placeholder="分类"></el-input>
       </el-form-item>
 
     </el-form>
