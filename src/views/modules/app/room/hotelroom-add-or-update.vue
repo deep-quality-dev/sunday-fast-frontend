@@ -35,12 +35,11 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="房间设施">
-        <el-checkbox label="wifi" name="wifi"></el-checkbox>
-        <el-checkbox label="停车场" name="park"></el-checkbox>
-        <el-checkbox label="热水" name="wifi"></el-checkbox>
-        <el-checkbox label="空调" name="park"></el-checkbox>
-        <el-checkbox label="早餐" v-model="dataForm.breakfast"></el-checkbox>
-        <el-checkbox label="窗户" v-model="dataForm.windows"></el-checkbox>
+        <el-checkbox label="热水" v-model="dataForm.water" name="water"></el-checkbox>
+        <el-checkbox label="空调" v-model="dataForm.air" name="air"></el-checkbox>
+        <el-checkbox label="电视" v-model="dataForm.tv" name="tv"></el-checkbox>
+        <el-checkbox label="WIFI" v-model="dataForm.wifi" name="wifi"></el-checkbox>
+        <el-checkbox label="窗户" v-model="dataForm.windows" name="windows"></el-checkbox>
       </el-form-item>
       <el-form-item label="楼层" prop="floor">
         <el-input v-model="dataForm.floor" placeholder="楼层"></el-input>
@@ -53,6 +52,9 @@
       </el-form-item>
       <el-form-item label="押金金额" prop="yjCost">
         <el-input v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
+      </el-form-item>
+       <el-form-item label="数量" prop="totalNum">
+        <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
@@ -106,6 +108,7 @@ export default {
         logo: "",
         size: "",
         isRefund: "",
+        totalNum:"",
         yjState: "",
         yjCost: "",
         sort: "",

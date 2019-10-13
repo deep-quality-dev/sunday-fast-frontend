@@ -35,11 +35,15 @@
           <el-tag size="small">{{stars[String(scope.row.star)]}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="address" header-align="center" align="center" label="地址"></el-table-column>
       <el-table-column prop="linkName" header-align="center" align="center" label="联系人"></el-table-column>
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="酒店电话"></el-table-column>
-      <el-table-column prop="sqTime" header-align="center" align="center" label="申请时间"></el-table-column>
+      <el-table-column prop="sqTime" header-align="center" align="center" label="申请时间">
+          <template slot-scope="scope">
+            <span>{{moment(scope.row.sqTime)}}</span>
+          </template>
+      </el-table-column>
+      <el-table-column prop="address" header-align="center" align="center" width="500" label="地址"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
@@ -64,6 +68,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import AddOrUpdate from "./hotelseller-add-or-update";
 export default {
   data() {
@@ -94,6 +99,9 @@ export default {
     this.getDataList();
   },
   methods: {
+    moment(date){
+      return moment(date).format('YYYY-MM-DD');
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

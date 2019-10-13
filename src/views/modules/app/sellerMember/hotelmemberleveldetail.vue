@@ -13,7 +13,22 @@
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
           @click="addOrUpdateHandle()"
-        >新增</el-button>
+        >办卡</el-button>
+        <el-button
+          v-if="isAuth('hotel:hotelmemberleveldetail:save')"
+          type="primary"
+          @click="addOrUpdateHandle()"
+        >发放优惠券</el-button>
+        <el-button
+          v-if="isAuth('hotel:hotelmemberleveldetail:save')"
+          type="primary"
+          @click="addOrUpdateHandle()"
+        >发放早餐券</el-button>
+        <el-button
+          v-if="isAuth('hotel:hotelmemberleveldetail:save')"
+          type="primary"
+          @click="addOrUpdateHandle()"
+        >发放免房券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:delete')"
           type="danger"
@@ -31,18 +46,17 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="levelName" header-align="center" align="center" label="会员类型"></el-table-column>
-      <el-table-column prop="certificateNo" header-align="center" align="center" label="证件号"></el-table-column>
+      <el-table-column prop="certificateNo" header-align="center" align="center" width="200" label="证件号"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
-      <el-table-column prop="mobile" header-align="center" align="center" label="手机"></el-table-column>
+      <el-table-column prop="mobile" header-align="center" align="center" width="150" label="手机"></el-table-column>
       <el-table-column prop="gender" header-align="center" align="center" label="性别"></el-table-column>
-      <el-table-column prop="cardNo" header-align="center" align="center" label="卡号"></el-table-column>
-      <el-table-column prop="createDate" header-align="center" align="center" label="创建时间"></el-table-column>
+      <el-table-column prop="cardNo" header-align="center" align="center" width="200" label="卡号"></el-table-column>
+      <el-table-column prop="createDate" header-align="center" align="center"  width="200" label="创建时间"></el-table-column>
       <el-table-column prop="salesman" header-align="center" align="center" label="推荐员工"></el-table-column>
       <el-table-column prop="score" header-align="center" align="center" label="积分"></el-table-column>
       <el-table-column prop="balance" header-align="center" align="center" label="余额"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>

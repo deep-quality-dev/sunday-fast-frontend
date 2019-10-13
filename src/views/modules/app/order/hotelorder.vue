@@ -96,8 +96,8 @@
       <el-table-column prop="orderNo" header-align="center" align="center" width="180" label="订单号"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="120" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
+          <el-button type="text" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,9 +157,9 @@ export default {
         method: "POST"
       }).then(({ data }) => {
         console.log(date);
-         if (data && data.code === 0){
-           this.getDataList();
-         }
+        if (data && data.code === 0) {
+          this.getDataList();
+        }
       });
     },
     // 获取数据列表

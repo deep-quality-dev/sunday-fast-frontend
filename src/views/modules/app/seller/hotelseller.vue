@@ -66,18 +66,18 @@
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
-      <el-form-item label="退订规则" prop="rule">
+      <!-- <el-form-item label="退订规则" prop="rule">
         <el-input v-model="dataForm.rule" placeholder="退订规则"></el-input>
       </el-form-item>
       <el-form-item label="经纬度" prop="coordinates">
         <el-input v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
-      </el-form-item>
-      <el-form-item label="温馨提示" prop="prompt">
+      </el-form-item> -->
+      <!-- <el-form-item label="温馨提示" prop="prompt">
         <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="酒店设施">
-        <el-checkbox label="叫醒" name="type"></el-checkbox>
-        <el-checkbox v-model="dataForm.wifi" :label="1">Wi-Fi</el-checkbox>
+        <el-checkbox v-model="dataForm.wake" :label="1" name="type">叫醒</el-checkbox>
+        <el-checkbox v-model="dataForm.wifi" :label="1">WI-FI</el-checkbox>
         <el-checkbox v-model="dataForm.park" :label="1">停车场</el-checkbox>
         <el-checkbox v-model="dataForm.breakfast" :label="1">早餐</el-checkbox>
         <el-checkbox v-model="dataForm.gym" :label="1">健身房</el-checkbox>
@@ -249,14 +249,17 @@ export default {
           this.dataForm.tel = data.hotelSeller.tel;
           this.dataForm.handle = data.hotelSeller.handle;
           this.dataForm.openTime = data.hotelSeller.openTime;
-          this.dataForm.wake = data.hotelSeller.wake;
-          this.dataForm.wifi = data.hotelSeller.wifi;
-          this.dataForm.park = data.hotelSeller.park;
-          this.dataForm.breakfast = data.hotelSeller.breakfast;
-          this.dataForm.unionpay = data.hotelSeller.unionpay;
-          this.dataForm.gym = data.hotelSeller.gym;
-          this.dataForm.boardroom = data.hotelSeller.boardroom;
-          this.dataForm.water = data.hotelSeller.water;
+          this.dataForm.wake = data.hotelSeller.wake === 1 ? true : false;
+          this.dataForm.wifi = data.hotelSeller.wifi === 1 ? true : false;
+          this.dataForm.park = data.hotelSeller.park === 1 ? true : false;
+          this.dataForm.breakfast =
+            data.hotelSeller.breakfast === 1 ? true : false;
+          this.dataForm.unionpay =
+            data.hotelSeller.unionpay === 1 ? true : false;
+          this.dataForm.gym = data.hotelSeller.gym === 1 ? true : false;
+          this.dataForm.boardroom =
+            data.hotelSeller.boardroom === 1 ? true : false;
+          this.dataForm.water = data.hotelSeller.water === 1 ? true : false;
           this.dataForm.policy = data.hotelSeller.policy;
           this.dataForm.introduction = data.hotelSeller.introduction;
           this.dataForm.img = data.hotelSeller.img;
@@ -278,9 +281,9 @@ export default {
           this.dataForm.isUse = data.hotelSeller.isUse;
           this.dataForm.llNum = data.hotelSeller.llNum;
           this.dataForm.bdId = data.hotelSeller.bdId;
-          this.dataForm.yeOpen = data.hotelSeller.yeOpen;
-          this.dataForm.wxOpen = data.hotelSeller.wxOpen;
-          this.dataForm.ddOpen = data.hotelSeller.ddOpen;
+          this.dataForm.yeOpen = data.hotelSeller.yeOpen === 1 ? true : false;
+          this.dataForm.wxOpen = data.hotelSeller.wxOpen === 1 ? true : false;
+          this.dataForm.ddOpen = data.hotelSeller.ddOpen === 1 ? true : false;
           this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
           if (data.hotelSeller.img) {
             data.hotelSeller.img.split(",").forEach(element => {
@@ -312,14 +315,14 @@ export default {
               tel: this.dataForm.tel,
               handle: this.dataForm.handle,
               openTime: this.dataForm.openTime,
-              wake: this.dataForm.wake,
-              wifi: this.dataForm.wifi,
-              park: this.dataForm.park,
-              breakfast: this.dataForm.breakfast,
-              unionpay: this.dataForm.unionpay,
-              gym: this.dataForm.gym,
-              boardroom: this.dataForm.boardroom,
-              water: this.dataForm.water,
+              wake: this.dataForm.wake ? "1" : "0",
+              wifi: this.dataForm.wifi ? "1" : "0",
+              park: this.dataForm.park ? "1" : "0",
+              breakfast: this.dataForm.breakfast ? "1" : "0",
+              unionpay: this.dataForm.unionpay ? "1" : "0",
+              gym: this.dataForm.gym ? "1" : "0",
+              boardroom: this.dataForm.boardroom ? "1" : "0",
+              water: this.dataForm.water ? "1" : "0",
               policy: this.dataForm.policy,
               introduction: this.dataForm.introduction,
               img: this.dataForm.img,
@@ -341,9 +344,9 @@ export default {
               isUse: this.dataForm.isUse,
               llNum: this.dataForm.llNum,
               bdId: this.dataForm.bdId,
-              yeOpen: this.dataForm.yeOpen,
-              wxOpen: this.dataForm.wxOpen,
-              ddOpen: this.dataForm.ddOpen,
+              yeOpen: this.dataForm.yeOpen ? "1" : "0",
+              wxOpen: this.dataForm.wxOpen ? "1" : "0",
+              ddOpen: this.dataForm.ddOpen ? "1" : "0",
               reserveRemind: this.dataForm.reserveRemind
             })
           }).then(({ data }) => {

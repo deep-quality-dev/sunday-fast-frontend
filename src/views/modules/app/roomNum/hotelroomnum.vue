@@ -30,13 +30,33 @@
         v-for="item in date"
         align="center"
         width="60"
-      />
+      >
+      <template slot-scope="scope">
+          <span>{{ scope.row[scope.column.property] }}</span>
+          <i
+            class="el-icon-edit"
+            @click="onEdit(scope)"
+          />
+        </template>
+        </el-table-column>
       <el-table-column align="right" width="40">
         <template slot="header" slot-scope="scope" align="center">
           <i class="el-icon-arrow-right"></i>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      width="40%"
+      :title="`修改【${updateCurrent.row.roomName}】【${updateCurrent.row.priceName}】【${updateCurrent.column.property}】的房量`"
+      :visible="showUpdateModal"
+      :before-close="closeUpdateModal"
+    >
+      <el-input v-model="updateCurrentPrice" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeUpdateModal">取 消</el-button>
+        <el-button type="primary" @click="onUpdateSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -48,6 +68,9 @@ export default {
       dataForm: {},
       date: [],
       dataList: [],
+      showUpdateModal: false,
+        updateCurrent: { row: {}, column: {} },
+        updateCurrentPrice: '',
       dataListLoading: false
     };
   },
@@ -55,6 +78,30 @@ export default {
     this.getDataList();
   },
   methods: {
+     closeUpdateModal() {
+        this.showUpdateModal = false;
+      },
+      onEdit(scope) {
+        this.showUpdateModal = true;
+        this.updateCurrent = scope;
+        this.updateCurrentPrice = scope.row[scope.column.property];
+      },
+       onUpdateSubmit() {
+        this.$http({
+          url: this.$http.adornUrl("/hotel/hotelroomnum/update4Day"),
+          method: "post",
+          data: this.$http.adornParams({
+           date:this.updateCurrent.column.property,
+           priceId:this.updateCurrent.row.priceId,
+           num: this.updateCurrentPrice
+          })
+        }).then(({ data }) => {
+         if (data && data.code === 0){
+           this.getDataList();
+         }
+         this.closeUpdateModal()
+        });
+      },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

@@ -29,30 +29,6 @@
     <el-form-item label="开业时间" prop="openTime">
       <el-input v-model="dataForm.openTime" placeholder="开业时间"></el-input>
     </el-form-item>
-    <el-form-item label="唤醒" prop="wake">
-      <el-input v-model="dataForm.wake" placeholder="唤醒"></el-input>
-    </el-form-item>
-    <el-form-item label="Wi-Fi" prop="wifi">
-      <el-input v-model="dataForm.wifi" placeholder="Wi-Fi"></el-input>
-    </el-form-item>
-    <el-form-item label="停车场" prop="park">
-      <el-input v-model="dataForm.park" placeholder="停车场"></el-input>
-    </el-form-item>
-    <el-form-item label="早餐" prop="breakfast">
-      <el-input v-model="dataForm.breakfast" placeholder="早餐"></el-input>
-    </el-form-item>
-    <el-form-item label="银联支付" prop="unionpay">
-      <el-input v-model="dataForm.unionpay" placeholder="银联支付"></el-input>
-    </el-form-item>
-    <el-form-item label="健身房" prop="gym">
-      <el-input v-model="dataForm.gym" placeholder="健身房"></el-input>
-    </el-form-item>
-    <el-form-item label="会议室" prop="boardroom">
-      <el-input v-model="dataForm.boardroom" placeholder="会议室"></el-input>
-    </el-form-item>
-    <el-form-item label="" prop="water">
-      <el-input v-model="dataForm.water" placeholder=""></el-input>
-    </el-form-item>
     <el-form-item label="酒店政策" prop="policy">
       <el-input v-model="dataForm.policy" placeholder="酒店政策"></el-input>
     </el-form-item>
@@ -68,23 +44,11 @@
     <el-form-item label="温馨提示" prop="prompt">
       <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
     </el-form-item>
-    <el-form-item label="" prop="bqLogo">
-      <el-input v-model="dataForm.bqLogo" placeholder=""></el-input>
-    </el-form-item>
-    <el-form-item label="" prop="support">
-      <el-input v-model="dataForm.support" placeholder=""></el-input>
-    </el-form-item>
     <el-form-item label="酒店logo" prop="ewmLogo">
       <el-input v-model="dataForm.ewmLogo" placeholder="酒店logo"></el-input>
     </el-form-item>
     <el-form-item label="时间" prop="time">
       <el-input v-model="dataForm.time" placeholder="时间"></el-input>
-    </el-form-item>
-    <el-form-item label="经纬度" prop="coordinates">
-      <el-input v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
-    </el-form-item>
-    <el-form-item label="排序" prop="scort">
-      <el-input v-model="dataForm.scort" placeholder="排序"></el-input>
     </el-form-item>
     <el-form-item label="身份证正面照" prop="sfzImg1">
       <el-input v-model="dataForm.sfzImg1" placeholder="身份证正面照"></el-input>
@@ -101,30 +65,12 @@
     <el-form-item label="房间最低价格" prop="zdMoney">
       <el-input v-model="dataForm.zdMoney" placeholder="房间最低价格"></el-input>
     </el-form-item>
-    <el-form-item label="1待审核,2通过，3拒绝" prop="state">
-      <el-input v-model="dataForm.state" placeholder="1待审核,2通过，3拒绝"></el-input>
-    </el-form-item>
     <el-form-item label="申请时间" prop="sqTime">
       <el-input v-model="dataForm.sqTime" placeholder="申请时间"></el-input>
     </el-form-item>
-    <el-form-item label="平台优惠券使用" prop="isUse">
+    <!-- <el-form-item label="平台优惠券使用" prop="isUse">
       <el-input v-model="dataForm.isUse" placeholder="平台优惠券使用"></el-input>
-    </el-form-item>
-    <el-form-item label="" prop="llNum">
-      <el-input v-model="dataForm.llNum" placeholder=""></el-input>
-    </el-form-item>
-    <el-form-item label="绑定提现人" prop="bdId">
-      <el-input v-model="dataForm.bdId" placeholder="绑定提现人"></el-input>
-    </el-form-item>
-    <el-form-item label="余额支付" prop="yeOpen">
-      <el-input v-model="dataForm.yeOpen" placeholder="余额支付"></el-input>
-    </el-form-item>
-    <el-form-item label="微信支付" prop="wxOpen">
-      <el-input v-model="dataForm.wxOpen" placeholder="微信支付"></el-input>
-    </el-form-item>
-    <el-form-item label="到店支付" prop="ddOpen">
-      <el-input v-model="dataForm.ddOpen" placeholder="到店支付"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>

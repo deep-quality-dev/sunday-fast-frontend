@@ -5,100 +5,167 @@
     :visible.sync="visible"
     width="80%"
   >
-    <el-form
-      :model="dataForm"
-      :rules="dataRule"
-      ref="dataForm"
-      @keyup.enter.native="dataFormSubmit()"
-      label-width="auto"
-    >
-      <el-form-item label="订单号" prop="orderNo">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.orderNo" placeholder="订单号"></el-input>
-      </el-form-item>
-      <el-form-item label="商家名字" prop="sellerName">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.sellerName" placeholder="商家名字"></el-input>
-      </el-form-item>
-      <el-form-item label="商家地址" prop="sellerAddress">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.sellerAddress" placeholder="商家地址"></el-input>
-      </el-form-item>
-      <el-form-item label="经纬度" prop="coordinates">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
-      </el-form-item>
-      <el-form-item label="入住时间" prop="arrivalTime">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.arrivalTime" placeholder="入住时间"></el-input>
-      </el-form-item>
-      <el-form-item label="离店时间" prop="departureTime">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.departureTime" placeholder="离店时间"></el-input>
-      </el-form-item>
-      <el-form-item label="到店时间" prop="ddTime">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.ddTime" placeholder="到店时间"></el-input>
-      </el-form-item>
-      <el-form-item label="价格" prop="price">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.price" placeholder="价格"></el-input>
-      </el-form-item>
-      <el-form-item label="房间数量" prop="num">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.num" placeholder="房间数量"></el-input>
-      </el-form-item>
-      <el-form-item label="入住天数" prop="days">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.days" placeholder="入住天数"></el-input>
-      </el-form-item>
-      <el-form-item label="房型" prop="roomType">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.roomType" placeholder="房型"></el-input>
-      </el-form-item>
-      <el-form-item label="房间主图" prop="roomLogo">
-        <el-upload
-          class="avatar-uploader"
-          :action="uploadAction"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="dataForm.roomLogo" :src="dataForm.roomLogo" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="床型" prop="bedType">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.bedType" placeholder="床型"></el-input>
-      </el-form-item>
-      <el-form-item label="预定人" prop="name">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.name" placeholder="预定人"></el-input>
-      </el-form-item>
-      <el-form-item label="联系电话" prop="tel">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.tel" placeholder="联系电话"></el-input>
-      </el-form-item>
-      <el-form-item label="订单状态" prop="status">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.status" placeholder="订单状态"></el-input>
-      </el-form-item>
-      <el-form-item label="商户订单号" prop="outTradeNo">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.outTradeNo" placeholder="商户订单号"></el-input>
-      </el-form-item>
-      <el-form-item label="折后价格" prop="disCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.disCost" placeholder="折后价格"></el-input>
-      </el-form-item>
-      <el-form-item label="押金金额" prop="yjCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
-      </el-form-item>
-      <el-form-item label="优惠券价格" prop="yhqCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yhqCost" placeholder="优惠券价格"></el-input>
-      </el-form-item>
-      <el-form-item label="会员折扣金额" prop="yyzkCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.yyzkCost" placeholder="会员折扣金额"></el-input>
-      </el-form-item>
-      <el-form-item label="总价格" prop="totalCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.totalCost" placeholder="总价格"></el-input>
-      </el-form-item>
-      <el-form-item label="是否删除" prop="enabled">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.enabled" placeholder="是否删除"></el-input>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.createTime" placeholder="创建时间"></el-input>
-      </el-form-item>
-      <el-form-item label="已退押金" prop="retreatCost">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.retreatCost" placeholder="已退押金"></el-input>
-      </el-form-item>
-      <el-form-item label="分类" prop="classify">
-        <el-input :readonly="!dataForm.id ? false : true" v-model="dataForm.classify" placeholder="分类"></el-input>
-      </el-form-item>
-
+    <el-form :model="dataForm" ref="dataForm" label-width="auto">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="订单号" prop="orderNo">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.orderNo"
+              placeholder="订单号"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="入住时间" prop="arrivalTime">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.arrivalTime"
+              placeholder="入住时间"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="离店时间" prop="departureTime">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.departureTime"
+              placeholder="离店时间"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="到店时间" prop="ddTime">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.ddTime"
+              placeholder="到店时间"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="价格" prop="price">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.price"
+              placeholder="价格"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="房间数量" prop="num">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.num"
+              placeholder="房间数量"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="入住天数" prop="days">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.days"
+              placeholder="入住天数"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="房型" prop="roomType">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.roomType"
+              placeholder="房型"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="床型" prop="bedType">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.bedType"
+              placeholder="床型"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="预定人" prop="name">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.name"
+              placeholder="预定人"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="联系电话" prop="tel">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.tel"
+              placeholder="联系电话"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="订单状态" prop="status">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.status"
+              placeholder="订单状态"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="折后价格" prop="disCost">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.disCost"
+              placeholder="折后价格"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="优惠券价格" prop="yhqCost">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.yhqCost"
+              placeholder="优惠券价格"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="会员折扣" prop="yyzkCost">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.yyzkCost"
+              placeholder="会员折扣金额"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="总价格" prop="totalCost">
+            <el-input
+              :readonly="!dataForm.id ? false : true"
+              v-model="dataForm.totalCost"
+              placeholder="总价格"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">关闭</el-button>
@@ -110,7 +177,7 @@
 export default {
   data() {
     return {
-      uploadAction:'',
+      uploadAction: "",
       visible: false,
       dataForm: {
         id: 0,
@@ -118,7 +185,7 @@ export default {
         roomId: "",
         userId: "",
         couponsId: "",
-        roomLogo:"",
+        roomLogo: "",
         orderNo: "",
         sellerName: "",
         sellerAddress: "",
@@ -252,7 +319,9 @@ export default {
   },
   methods: {
     init(id) {
-      this.uploadAction = this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
+      this.uploadAction = this.$http.adornUrl(
+        `/sys/oss/upload?token=${this.$cookie.get("token")}`
+      );
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -381,14 +450,14 @@ export default {
       this.dataForm.roomLogo = res.url;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        this.$message.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+        this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     }
@@ -396,27 +465,27 @@ export default {
 };
 </script>
 <style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 148px;
-    height: 148px;
-    line-height: 148px;
-    text-align: center;
-  }
-  .avatar {
-    width: 148px;
-    height: 148px;
-    display: block;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 148px;
+  height: 148px;
+  line-height: 148px;
+  text-align: center;
+}
+.avatar {
+  width: 148px;
+  height: 148px;
+  display: block;
+}
 </style>
