@@ -23,15 +23,14 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="昵称"></el-table-column>
-      <el-table-column prop="joinTime" header-align="center" align="center" label="注册时间"></el-table-column>
-      <el-table-column prop="img" header-align="center" align="center" label="头像">
+       <el-table-column prop="img" header-align="center" align="center" label="头像">
         <template slot-scope="scope">
-          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+          <img :src="scope.row.img" alt="" style="with:30px;height:30px">
         </template>
       </el-table-column>
+      <el-table-column prop="name" header-align="center" align="center" label="昵称"></el-table-column>
+      <el-table-column prop="joinTime" header-align="center" align="center" label="注册时间"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="手机号"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="是否会员"></el-table-column>
       <el-table-column prop="zsName" header-align="center" align="center" label="真实姓名"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">

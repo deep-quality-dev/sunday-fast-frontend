@@ -1,5 +1,5 @@
 <template>
-    <section v-if="userId && userId === 2">
+    <section v-if="userId && userId !== 1">
         <div class="mod-home dash-board" v-loading="dataListLoading"  element-loading-text="拼命加载中">
             <el-row>
                 <div class="header header-ab">

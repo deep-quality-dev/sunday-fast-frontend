@@ -27,17 +27,17 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
+       <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
+        <template slot-scope="scope">
+          <img :src="scope.row.logo" alt="" style="with:30px;height:30px">
+        </template>
+      </el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="房型名字"></el-table-column>
       <el-table-column prop="floor" header-align="center" align="center" label="楼层"></el-table-column>
       <el-table-column prop="people" header-align="center" align="center" label="可住人数"></el-table-column>
-      <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
-        <template slot-scope="scope">
-          <img :src="scope.row.logo" alt="" style="with:80px;height:80px">
-        </template>
-      </el-table-column>
       <el-table-column prop="totalNum" header-align="center" align="center" label="数量"></el-table-column>
       <el-table-column prop="size" header-align="center" align="center" label="床型尺寸"></el-table-column>
-      <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column>
+      <!-- <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column> -->
       <el-table-column prop="sort" header-align="center" align="center" label="排序"></el-table-column>
       <el-table-column prop="state" header-align="center" align="center" label="房间状态">
         <template slot-scope="scope">

@@ -17,12 +17,12 @@
           type="primary"
           @click="addOrUpdateHandle()"
         >新增</el-button>
-        <el-button
+        <!-- <el-button
           v-if="isAuth('hotel:hotelseller:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button>
+        >批量删除</el-button> -->
       </el-form-item>
     </el-form>
     <el-table
@@ -33,16 +33,21 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
-      <el-table-column prop="star" header-align="center" align="center" label="星级">
+      <el-table-column prop="name" header-align="center" align="center" width="250" label="名字"></el-table-column>
+      <el-table-column prop="star" header-align="center" align="center" width="100" label="星级">
         <template slot-scope="scope">
           <el-tag size="small">{{stars[String(scope.row.star)]}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="address" header-align="center" align="center" label="地址"></el-table-column>
+      <el-table-column prop="address" header-align="center" align="center" width="300" label="地址"></el-table-column>
       <el-table-column prop="linkName" header-align="center" align="center" label="联系人"></el-table-column>
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="酒店电话"></el-table-column>
+      <el-table-column prop="sqTime" header-align="center" align="center" label="入驻时间">
+        <template slot-scope="scope">
+          <span>{{moment(scope.row.sqTime)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
@@ -65,6 +70,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import AddOrUpdate from "./hotelseller-add-or-update";
 export default {
   data() {
@@ -97,6 +103,12 @@ export default {
     this.getDataList();
   },
   methods: {
+    moment(date) {
+      if (date) {
+        return moment(date).format("YYYY-MM-DD");
+      }
+      return "--";
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

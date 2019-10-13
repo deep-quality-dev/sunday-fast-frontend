@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     width="90%"
-    top="0"
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">

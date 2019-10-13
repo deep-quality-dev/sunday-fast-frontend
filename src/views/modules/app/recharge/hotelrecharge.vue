@@ -3,22 +3,13 @@
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <!-- <el-form-item>
         <el-input v-model="dataForm.key" placeholder="用户名称" clearable></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
-        <el-date-picker
-          v-model="dataForm.startDate"
-          type="date"
-          placeholder="开始日期">
-        </el-date-picker>
-        <el-date-picker
-          v-model="dataForm.endDate"
-          type="date"
-          placeholder="结束日期">
-        </el-date-picker>
+        <el-date-picker v-model="dataForm.startDate" type="date" placeholder="开始日期"></el-date-picker>
+        <el-date-picker v-model="dataForm.endDate" type="date" placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        
       </el-form-item>
     </el-form>
     <el-table
@@ -34,15 +25,24 @@
       <el-table-column prop="czMoney" header-align="center" align="center" label="充值金额"></el-table-column>
       <el-table-column prop="zsMoney" header-align="center" align="center" label="赠送金额"></el-table-column>
       <el-table-column prop="note" header-align="center" align="center" label="备注信息"></el-table-column>
-      <el-table-column prop="outTradeNo" header-align="center" align="center" label="充值流水"></el-table-column>
+      <el-table-column prop="outTradeNo" header-align="center" align="center" width="250" label="充值流水"></el-table-column>
       <el-table-column prop="state" header-align="center" align="center" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.state === 0" size="small" type="danger">未支付</el-tag>
           <el-tag v-else size="small">已支付</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label="充值日期"></el-table-column>
-      
+      <el-table-column prop="time" header-align="center" align="center" label="充值日期">
+        <template slot-scope="scope">
+          <span>{{moment(scope.row.time)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import AddOrUpdate from "./hotelrecharge-add-or-update";
 export default {
   data() {
@@ -82,6 +83,9 @@ export default {
     this.getDataList();
   },
   methods: {
+    moment(date){
+      return moment(date).format('YYYY-MM-DD');
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;
