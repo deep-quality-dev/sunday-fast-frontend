@@ -114,6 +114,7 @@ import moment from "moment";
          if (data && data.code === 0){
            this.getDataList();
          }
+         this.closeUpdateModal()
         });
       },
       // 获取数据列表

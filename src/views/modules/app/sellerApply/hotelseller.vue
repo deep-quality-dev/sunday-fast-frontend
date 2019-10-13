@@ -43,8 +43,8 @@
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">通过</el-button>
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">拒绝</el-button>
+          <el-button type="text" size="small" @click="auditPassHandler(scope.row.id)">通过</el-button>
+          <el-button type="text" size="small" @click="auditRefuseHanler(scope.row.id)">拒绝</el-button>
           <!-- <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button> -->
         </template>
       </el-table-column>
@@ -131,6 +131,31 @@ export default {
     selectionChangeHandle(val) {
       this.dataListSelections = val;
     },
+    //审核通过
+    auditPassHandler(id) {
+      this.$confirm("确认操作？")
+        .then(_ => {
+          this.$http({
+            url: this.$http.adornUrl(`/hotel/hotelseller/auditPass/${id}`),
+            method: "POST"
+          }).then(({ data }) => {
+            console.log(data);
+            this.getDataList();
+          });
+        })
+        .catch(_ => {});
+    },
+    //拒绝审核
+    auditRefuseHanler() {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelseller/auditRefuse/${id}`),
+        method: "POST"
+      }).then(({ data }) => {
+        console.log(data);
+        this.getDataList();
+      });
+    },
+
     // 新增 / 修改
     addOrUpdateHandle(id) {
       this.addOrUpdateVisible = true;

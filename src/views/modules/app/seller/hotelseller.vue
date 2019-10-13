@@ -1,5 +1,5 @@
 <template>
-  <div class="mod-demo-ueditor" v-loading="dataListLoading"  element-loading-text="拼命加载中">
+  <div class="mod-demo-ueditor" v-loading="dataListLoading" element-loading-text="拼命加载中">
     <el-form
       :model="dataForm"
       :rules="dataRule"
@@ -55,7 +55,7 @@
           :src="item.url"
           class="avatar"
           :style="{float:'left', marginRight:'5px'}"
-        />
+        >
         <el-upload
           class="avatar-uploader"
           :action="uploadAction"
@@ -139,10 +139,11 @@
   
 <script>
 import ueditor from "ueditor";
+import _ from "lodash";
 export default {
   data() {
     return {
-      dataListLoading:false,
+      dataListLoading: false,
       content: "111",
       editorOption: {},
       uploadAction: "",
@@ -192,7 +193,7 @@ export default {
         yeOpen: "",
         wxOpen: "",
         ddOpen: "",
-        reserveRemind:""
+        reserveRemind: ""
       },
       dataRule: {
         name: [{ required: true, message: "名字不能为空", trigger: "blur" }],
@@ -281,9 +282,11 @@ export default {
           this.dataForm.wxOpen = data.hotelSeller.wxOpen;
           this.dataForm.ddOpen = data.hotelSeller.ddOpen;
           this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
-          data.hotelSeller.img.split(",").forEach(element => {
-            this.fileList.push({ url: element });
-          });
+          if (data.hotelSeller.img) {
+            data.hotelSeller.img.split(",").forEach(element => {
+              this.fileList.push({ url: element });
+            });
+          }
         }
         this.dataListLoading = false;
       });
@@ -341,7 +344,7 @@ export default {
               yeOpen: this.dataForm.yeOpen,
               wxOpen: this.dataForm.wxOpen,
               ddOpen: this.dataForm.ddOpen,
-              reserveRemind:this.dataForm.reserveRemind,
+              reserveRemind: this.dataForm.reserveRemind
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
