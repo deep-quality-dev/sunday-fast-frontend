@@ -50,14 +50,8 @@
       <el-form-item label="床型尺寸" prop="size">
         <el-input v-model="dataForm.size" placeholder="床型尺寸"></el-input>
       </el-form-item>
-      <el-form-item label="押金金额" prop="yjCost">
-        <el-input v-model="dataForm.yjCost" placeholder="押金金额"></el-input>
-      </el-form-item>
-       <el-form-item label="数量" prop="totalNum">
+      <el-form-item label="数量" prop="totalNum">
         <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
-      </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
       </el-form-item>
       <el-form-item label="图片" prop="img">
         <img
@@ -108,12 +102,12 @@ export default {
         logo: "",
         size: "",
         isRefund: "",
-        totalNum:"",
+        totalNum: "",
         yjState: "",
         yjCost: "",
         sort: "",
         state: "",
-        classify: ""
+        classify: 1
       },
       dataRule: {
         name: [
@@ -158,9 +152,11 @@ export default {
               this.dataForm.floor = data.hotelroom.floor;
               this.dataForm.people = data.hotelroom.people;
               this.dataForm.bed = data.hotelroom.bed;
-              this.dataForm.breakfast = data.hotelroom.breakfast;
+              this.dataForm.breakfast =
+                data.hotelroom.breakfast === 1 ? true : false;
               this.dataForm.facilities = data.hotelroom.facilities;
-              this.dataForm.windows = data.hotelroom.windows;
+              this.dataForm.windows =
+                data.hotelroom.windows === 1 ? true : false;
               this.dataForm.logo = data.hotelroom.logo;
               this.dataForm.totalNum = data.hotelroom.totalNum;
               this.dataForm.uniacid = data.hotelroom.uniacid;
@@ -195,9 +191,9 @@ export default {
               floor: this.dataForm.floor,
               people: this.dataForm.people,
               bed: this.dataForm.bed,
-              breakfast: this.dataForm.breakfast,
+              breakfast: this.dataForm.breakfast ? 1 : 0,
               facilities: this.dataForm.facilities,
-              windows: this.dataForm.windows,
+              windows: this.dataForm.windows ? 1 : 0,
               logo: this.dataForm.logo,
               totalNum: this.dataForm.totalNum,
               uniacid: this.dataForm.uniacid,

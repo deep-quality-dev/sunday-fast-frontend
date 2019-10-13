@@ -12,22 +12,22 @@
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="addOrUpdateHandle()"
+          @click="$message('功能建设中')"
         >办卡</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="addOrUpdateHandle()"
+          @click="$message('功能建设中')"
         >发放优惠券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="addOrUpdateHandle()"
+          @click="$message('功能建设中')"
         >发放早餐券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="addOrUpdateHandle()"
+           @click="$message('功能建设中')"
         >发放免房券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:delete')"
@@ -36,6 +36,7 @@
           :disabled="dataListSelections.length <= 0"
         >批量删除</el-button>
       </el-form-item>
+       <!-- @click="addOrUpdateHandle()" -->
     </el-form>
     <el-table
       :data="dataList"

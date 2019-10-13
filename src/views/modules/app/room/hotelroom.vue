@@ -38,7 +38,6 @@
       <el-table-column prop="totalNum" header-align="center" align="center" label="数量"></el-table-column>
       <el-table-column prop="size" header-align="center" align="center" label="床型尺寸"></el-table-column>
       <!-- <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column> -->
-      <el-table-column prop="sort" header-align="center" align="center" label="排序"></el-table-column>
       <el-table-column prop="state" header-align="center" align="center" label="房间状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>

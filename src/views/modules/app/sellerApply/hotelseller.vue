@@ -39,9 +39,9 @@
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="酒店电话"></el-table-column>
       <el-table-column prop="sqTime" header-align="center" align="center" label="申请时间">
-          <template slot-scope="scope">
-            <span>{{moment(scope.row.sqTime)}}</span>
-          </template>
+        <template slot-scope="scope">
+          <span>{{moment(scope.row.sqTime)}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="address" header-align="center" align="center" width="500" label="地址"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
@@ -99,8 +99,8 @@ export default {
     this.getDataList();
   },
   methods: {
-    moment(date){
-      return moment(date).format('YYYY-MM-DD');
+    moment(date) {
+      return moment(date).format("YYYY-MM-DD");
     },
     // 获取数据列表
     getDataList() {
@@ -147,21 +147,37 @@ export default {
             url: this.$http.adornUrl(`/hotel/hotelseller/auditPass/${id}`),
             method: "POST"
           }).then(({ data }) => {
-            console.log(data);
-            this.getDataList();
+            this.$message({
+              message: "操作成功",
+              type: "success",
+              duration: 1500,
+              onClose: () => {
+                this.getDataList();
+              }
+            });
           });
         })
         .catch(_ => {});
     },
     //拒绝审核
-    auditRefuseHanler() {
-      this.$http({
-        url: this.$http.adornUrl(`/hotel/hotelseller/auditRefuse/${id}`),
-        method: "POST"
-      }).then(({ data }) => {
-        console.log(data);
-        this.getDataList();
-      });
+    auditRefuseHanler(id) {
+      this.$confirm("确认操作？")
+        .then(_ => {
+          this.$http({
+            url: this.$http.adornUrl(`/hotel/hotelseller/auditRefuse/${id}`),
+            method: "POST"
+          }).then(({ data }) => {
+            this.$message({
+              message: "操作成功",
+              type: "success",
+              duration: 1500,
+              onClose: () => {
+                this.getDataList();
+              }
+            });
+          });
+        })
+        .catch(_ => {});
     },
 
     // 新增 / 修改

@@ -1,247 +1,268 @@
 <template>
-    <section v-if="userId && userId !== 1">
-        <div class="mod-home dash-board" v-loading="dataListLoading"  element-loading-text="拼命加载中">
-            <el-row>
-                <div class="header header-ab">
-                    <span class="tit">数据概况信息</span>
-                </div>
-                <el-col :span="6" class="md">
-                    <div class="grid-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <div class="img-item">
-                                    <img src="../../assets/img/xinxi1.png" alt="">
-                                </div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div>
-                                    <span>{{data.todayOrderNum}}</span>
-                                    <span>今日订单总数</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col :span="6" class="md">
-                    <div class="grid-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <div class="img-item">
-                                    <img src="../../assets/img/xinxi2.png" alt="">
-                                </div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div>
-                                    <span>{{data.todayMarketingAmount}}</span>
-                                    <span>今日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col :span="6" class="md">
-                    <div class="grid-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <div class="img-item">
-                                    <img src="../../assets/img/xinxi3.png" alt="">
-                                </div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div>
-                                    <span>{{data.yesterdayMarketingAmount}}</span>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col :span="6" class="md">
-                    <div class="grid-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <div class="img-item">
-                                    <img src="../../assets/img/xinxi4.png" alt="">
-                                </div>
-                            </el-col>
-                            <el-col :span="12">
-                                <div>
-                                    <span>{{data.weekMarketingAmount}}</span>
-                                    <span>近7天销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-            </el-row>
-            <el-row type="flex" :gutter="20" justify="space-between">
-                <el-col class="flex-item-r flex-item-r-2">
-                    <div class="header header-bd">
-                        <div>
-                            <img class="avatar" src="../../assets/img/ygrz.png">
-                            订单信息
-                        </div>
-                        <div>(单位：人)</div>
-                    </div>
-                    <div class="grid-content">
-                        <el-row>
-                            <el-col :span="6">
-                                <div class="box-2">
-                                    <span>{{data.statisticsOrder.checkInNum}}</span>
-                                    <span>已入住</span>
-                                </div>
-                            </el-col>
-                            <el-col :span="6">
-                                <div class="box-2">
-                                    <span>{{data.statisticsOrder.completeNum}}</span>
-                                    <span>已完成</span>
-                                </div>
-                            </el-col>
-                            <el-col :span="6">
-                                <div class="box-2">
-                                    <span>{{data.statisticsOrder.cancelNum}}</span>
-                                    <span>已取消</span>
-                                </div>
-                            </el-col>
-                            <el-col :span="6">
-                                <div class="box-2">
-                                    <span>{{data.statisticsOrder.refundNum}}</span>
-                                    <span>已退款</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r flex-item-r-2">
-                    <div class="header header-bd">
-                        <div>
-                            <img class="avatar" src="../../assets/img/6.png">
-                            入住申请
-                        </div>
-                        <div>(单位：间)</div>
-                    </div>
-                    <div class="grid-content grid-content-pd">
-                        <el-row :gutter="20">
-                            <el-col :span="12">
-                                <div class="box-2 box-2-g">
-                                    <span>房间</span>
-                                    <div class="holder-bd"></div>
-                                    <span class="flex-span">
-                                        <div>房间总数: {{data.roomTotal}}</div>
-                                        <div>今日入住: {{data.checkInNum}}</div>
-                                    </span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-            </el-row>
-            <!-- 第三行 start -->
-            <el-row type="flex" :gutter="10" justify="space-between">
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata2.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata1.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata3.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata4.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata5.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata6.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-                <el-col class="flex-item-r">
-                    <div class="grid-content grid-content-lg">
-                        <el-row>
-                            <el-col>
-                                <div class="img-item-box">
-                                    <img src="../../assets/img/gkdata7.png" alt="">
-                                </div>
-                                <div>
-                                    <span>昨日销售额</span>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-col>
-            </el-row>
+  <section v-if="userId && userId !== 1">
+    <div class="mod-home dash-board" v-loading="dataListLoading" element-loading-text="拼命加载中">
+      <el-row>
+        <div class="header header-ab">
+          <span class="tit">数据概况信息</span>
         </div>
-    </section>
-    <section v-else>
-        <dash-board></dash-board>
-    </section>
+        <el-col :span="6" class="md">
+          <div class="grid-content">
+            <el-row>
+              <el-col :span="12">
+                <div class="img-item">
+                  <img src="../../assets/img/xinxi1.png" alt="">
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div>
+                  <span>{{data.todayOrderNum}}</span>
+                  <span>今日订单总数</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="6" class="md">
+          <div class="grid-content">
+            <el-row>
+              <el-col :span="12">
+                <div class="img-item">
+                  <img src="../../assets/img/xinxi2.png" alt="">
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div>
+                  <span>{{data.todayMarketingAmount}}</span>
+                  <span>今日销售额</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="6" class="md">
+          <div class="grid-content">
+            <el-row>
+              <el-col :span="12">
+                <div class="img-item">
+                  <img src="../../assets/img/xinxi3.png" alt="">
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div>
+                  <span>{{data.yesterdayMarketingAmount}}</span>
+                  <span>昨日销售额</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="6" class="md">
+          <div class="grid-content">
+            <el-row>
+              <el-col :span="12">
+                <div class="img-item">
+                  <img src="../../assets/img/xinxi4.png" alt="">
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div>
+                  <span>{{data.weekMarketingAmount}}</span>
+                  <span>近7天销售额</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row type="flex" :gutter="20" justify="space-between">
+        <el-col class="flex-item-r flex-item-r-2">
+          <div class="header header-bd">
+            <div>
+              <img class="avatar" src="../../assets/img/ygrz.png">
+              订单信息
+            </div>
+            <div>(单位：人)</div>
+          </div>
+          <div class="grid-content">
+            <el-row>
+              <el-col :span="6">
+                <div class="box-2">
+                  <span>{{data.statisticsOrder.checkInNum}}</span>
+                  <span>已入住</span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="box-2">
+                  <span>{{data.statisticsOrder.completeNum}}</span>
+                  <span>已完成</span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="box-2">
+                  <span>{{data.statisticsOrder.cancelNum}}</span>
+                  <span>已取消</span>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="box-2">
+                  <span>{{data.statisticsOrder.refundNum}}</span>
+                  <span>已退款</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r flex-item-r-2">
+          <div class="header header-bd">
+            <div>
+              <img class="avatar" src="../../assets/img/6.png">
+              入住申请
+            </div>
+            <div>(单位：间)</div>
+          </div>
+          <div class="grid-content grid-content-pd">
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <div class="box-2 box-2-g">
+                  <span>房间</span>
+                  <div class="holder-bd"></div>
+                  <span class="flex-span">
+                    <div>房间总数: {{data.roomTotal}}</div>
+                    <div>今日入住: {{data.checkInNum}}</div>
+                  </span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+      </el-row>
+      <!-- 第三行 start -->
+      <el-row type="flex" :gutter="10" justify="space-between">
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-seller/hotelseller' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata2.png" alt="">
+                </div>
+                <div>
+                  <span>门店信息</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-room/hotelroom' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata1.png" alt="">
+                </div>
+                <div>
+                  <span>房型管理</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-order/hotelorder' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata3.png" alt="">
+                </div>
+                <div>
+                  <span>订单管理</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-roomPrice/hotelroomprice' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata4.png" alt="">
+                </div>
+                <div>
+                  <span>房价维护</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-roomNum/hotelroomnum' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata7.png" alt="">
+                </div>
+                <div>
+                  <span>房量维护</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-coupons/coupons' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata5.png" alt="">
+                </div>
+                <div>
+                  <span>优惠券管理</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col class="flex-item-r">
+          <div
+            class="grid-content grid-content-lg"
+            @click="$router.push({ path: '/app-assess/hotelassess' })"
+          >
+            <el-row>
+              <el-col>
+                <div class="img-item-box">
+                  <img src="../../assets/img/gkdata6.png" alt="">
+                </div>
+                <div>
+                  <span>评论管理</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </section>
+  <section v-else>
+    <dash-board></dash-board>
+  </section>
 </template>
 <script>
 import echarts from "echarts";
@@ -252,10 +273,10 @@ export default {
       data: {
         statisticsOrder: {
           cancelNum: 0,
-          checkInNum:0,
-          completeNum:0,
-          refundNum:0,
-          total:0
+          checkInNum: 0,
+          completeNum: 0,
+          refundNum: 0,
+          total: 0
         },
         checkInNum: 0,
         roomTotal: 0,
@@ -264,7 +285,7 @@ export default {
         weekMarketingAmount: 0,
         yesterdayMarketingAmount: 0
       },
-       dataListLoading: false
+      dataListLoading: false
     };
   },
   components: {
@@ -465,8 +486,8 @@ export default {
   .img-item-box {
     text-align: center;
     img {
-      width: 41px;
-      height: 44px;
+      width: 55px;
+      height: 55px;
     }
   }
   .flex-item-r {
@@ -482,10 +503,6 @@ export default {
         padding: 40px;
         .img-item-box {
           text-align: center;
-          img {
-            width: 31px;
-            height: 34px;
-          }
         }
       }
     }

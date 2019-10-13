@@ -213,98 +213,98 @@
         <!-- 第三行 start -->
         <el-row type="flex" :gutter="10" justify="space-between">
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-sellerList/hotelseller' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata2.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>酒店管理</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-member/member' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata1.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>用户管理</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-advertising/hoteladvertising' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata3.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>广告管理</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-coupons/coupons' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata4.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>优惠券管理</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-sellerApply/hotelseller' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata5.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>入驻审核</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$router.push({ path: '/app-order/hotelorder' })">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata6.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>订单管理</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
             </el-col>
             <el-col class="flex-item-r">
-                <div class="grid-content grid-content-lg">
+                <div class="grid-content grid-content-lg" @click="$message('功能建设中')">
                     <el-row>
                         <el-col>
                             <div class="img-item-box">
                                 <img src="../../assets/img/gkdata7.png" alt="">
                             </div>
                             <div>
-                                <span>昨日销售额</span>
+                                <span>系统设置</span>
                             </div>
                         </el-col>
                     </el-row>
@@ -522,8 +522,8 @@ export default {
   .img-item-box {
     text-align: center;
     img {
-      width: 41px;
-      height: 44px;
+      width: 55px;
+      height: 55px;
     }
   }
   .flex-item-r {
@@ -539,10 +539,7 @@ export default {
         padding: 40px;
         .img-item-box {
           text-align: center;
-          img {
-            width: 31px;
-            height: 34px;
-          }
+          
         }
       }
     }
