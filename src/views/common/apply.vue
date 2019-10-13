@@ -226,7 +226,9 @@ export default {
                 type: "1",
                 roomCount: 1,
                 brand: "",
-                desc: ""
+                desc: "",
+                lat: "",
+                lng: ""
             },
             rules: {
                 name: [{ required: true, message: "请输入酒店名称" }],
@@ -348,7 +350,6 @@ export default {
             });
         },
         onSearchResult(pois) {
-            console.log(pois);
             let latSum = 0;
             let lngSum = 0;
 
@@ -377,6 +378,16 @@ export default {
                                 this.ruleForm,
                                 "address",
                                 res.data.regeocode.formatted_address
+                            );
+                            this.$set(
+                                this.ruleForm,
+                                "lat",
+                                lnglat.lat
+                            );
+                            this.$set(
+                                this.ruleForm,
+                                "lng",
+                                lnglat.lng
                             );
                             this.showMap = false;
                         });
