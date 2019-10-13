@@ -71,10 +71,10 @@
       </el-form-item>
       <el-form-item label="经纬度" prop="coordinates">
         <el-input v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <!-- <el-form-item label="温馨提示" prop="prompt">
         <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="酒店设施">
         <el-checkbox v-model="dataForm.wake" :label="1" name="type">叫醒</el-checkbox>
         <el-checkbox v-model="dataForm.wifi" :label="1">WI-FI</el-checkbox>
@@ -145,7 +145,14 @@ export default {
     return {
       dataListLoading: false,
       content: "111",
-      editorOption: {},
+      editorOption: {
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike", "link", "image", "align"],
+            ["blockquote", "code-block"]
+          ]
+        }
+      },
       uploadAction: "",
       dialogVisible: false,
       visible: false,
