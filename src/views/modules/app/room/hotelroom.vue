@@ -29,7 +29,7 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
        <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
         <template slot-scope="scope">
-          <img :src="scope.row.logo" alt="" style="with:30px;height:30px">
+          <img-view :imgSrc="scope.row.logo"></img-view>
         </template>
       </el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="房型名字"></el-table-column>

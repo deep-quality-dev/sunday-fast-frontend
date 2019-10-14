@@ -27,7 +27,7 @@
       <el-table-column prop="categoryName" header-align="center" align="center" label="分类"></el-table-column>
       <el-table-column prop="img" header-align="center" align="center" label="商品图片">
         <template slot-scope="scope">
-          <img :src="scope.row.img" alt="" style="with:80px;height:80px">
+          <img-view :imgSrc="scope.row.img" :styleObject="styleObject"></img-view>
         </template>
       </el-table-column>
       <el-table-column prop="sales" header-align="center" align="center" label="销量"></el-table-column>
@@ -67,7 +67,11 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      styleObject: {
+        wdith: '80px',
+        height: '80px'
+      }
     };
   },
   components: {
