@@ -27,7 +27,7 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-       <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
+      <el-table-column prop="logo" header-align="center" align="center" label="房型大图">
         <template slot-scope="scope">
           <img-view :imgSrc="scope.row.logo"></img-view>
         </template>
@@ -40,7 +40,7 @@
       <!-- <el-table-column prop="yjCost" header-align="center" align="center" label="押金金额"></el-table-column> -->
       <el-table-column prop="state" header-align="center" align="center" label="房间状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.state === 0" size="small" type="danger">禁用</el-tag>
           <el-tag v-else size="small">启用</el-tag>
         </template>
       </el-table-column>
@@ -52,6 +52,8 @@
       </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" v-if="scope.row.state === 0" @click="show(scope.row.id)">启用</el-button>
+          <el-button type="text" size="small" v-if="scope.row.state === 1" @click="hide(scope.row.id)">禁用</el-button>
           <el-button type="text" size="small" @click="mgrRoomMoenyHandler(scope.row.id)">价格管理</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
@@ -120,6 +122,30 @@ export default {
           this.totalPage = 0;
         }
         this.dataListLoading = false;
+      });
+    },
+    show(id) {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelroom/show/${id}`),
+        method: "post"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.getDataList();
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    hide(id) {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelroom/hide/${id}`),
+        method: "post"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.getDataList();
+        } else {
+          this.$message.error(data.msg);
+        }
       });
     },
     // 每页数
