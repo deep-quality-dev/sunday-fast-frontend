@@ -12,22 +12,26 @@
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="$message('功能建设中')"
+          @click="registerCardHandler()"
+          :disabled="dataListSelections.length <= 0"
         >办卡</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
           @click="$message('功能建设中')"
+          :disabled="dataListSelections.length <= 0"
         >发放优惠券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
           @click="$message('功能建设中')"
+          :disabled="dataListSelections.length <= 0"
         >发放早餐券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-           @click="$message('功能建设中')"
+          @click="$message('功能建设中')"
+          :disabled="dataListSelections.length <= 0"
         >发放免房券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:delete')"
@@ -36,26 +40,94 @@
           :disabled="dataListSelections.length <= 0"
         >批量删除</el-button>
       </el-form-item>
-       <!-- @click="addOrUpdateHandle()" -->
+      <!-- @click="addOrUpdateHandle()" -->
     </el-form>
     <el-table
       :data="dataList"
       border=""
+      row-key="userId"
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="levelName" header-align="center" align="center" label="会员类型"></el-table-column>
-      <el-table-column prop="certificateNo" header-align="center" align="center" width="200" label="证件号"></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="名字"></el-table-column>
-      <el-table-column prop="mobile" header-align="center" align="center" width="150" label="手机"></el-table-column>
-      <el-table-column prop="gender" header-align="center" align="center" label="性别"></el-table-column>
-      <el-table-column prop="cardNo" header-align="center" align="center" width="200" label="卡号"></el-table-column>
-      <el-table-column prop="createDate" header-align="center" align="center"  width="200" label="创建时间"></el-table-column>
-      <el-table-column prop="salesman" header-align="center" align="center" label="推荐员工"></el-table-column>
-      <el-table-column prop="score" header-align="center" align="center" label="积分"></el-table-column>
-      <el-table-column prop="balance" header-align="center" align="center" label="余额"></el-table-column>
+      <el-table-column prop="img" header-align="center" align="center" label="头像">
+        <template slot-scope="scope">
+          <img :src="scope.row.img" alt="" style="with:30px;height:30px">
+        </template>
+      </el-table-column>
+      <el-table-column prop="name" header-align="center" align="center" label="姓名">
+        <template slot-scope="scope">
+          <span v-if="scope.row.name">{{scope.row.name}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="tel" header-align="center" align="center" width="150" label="手机">
+        <template slot-scope="scope">
+          <span v-if="scope.row.tel">{{scope.row.tel}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="gender" header-align="center" align="center" label="性别">
+        <template slot-scope="scope">
+          <span>{{scope.row.gender === 0?'男':'女' || '--'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="cardNo" header-align="center" align="center" width="200" label="卡号">
+        <template slot-scope="scope">
+          <span v-if="scope.row.cardNo">{{scope.row.cardNo}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" header-align="center" align="center" label="是否本店会员">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.id" size="small">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="levelName" header-align="center" align="center" label="会员类型">
+        <template slot-scope="scope">
+          <span v-if="scope.row.levelName">{{scope.row.levelName}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="certificateNo"
+        header-align="center"
+        align="center"
+        width="200"
+        label="证件号"
+      >
+        <template slot-scope="scope">
+          <span v-if="scope.row.certificateNo">{{scope.row.certificateNo}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="createDate"
+        header-align="center"
+        align="center"
+        width="200"
+        label="创建时间"
+      ></el-table-column>
+      <el-table-column prop="salesman" header-align="center" align="center" label="推荐员工">
+        <template slot-scope="scope">
+          <span v-if="scope.row.salesman">{{scope.row.salesman}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="score" header-align="center" align="center" label="积分">
+        <template slot-scope="scope">
+          <span v-if="scope.row.score">{{scope.row.score}}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="balance" header-align="center" align="center" label="余额">
+        <template slot-scope="scope">
+          <span v-if="scope.row.balance">{{scope.row.balance}}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
@@ -114,8 +186,8 @@ export default {
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
+          this.dataList = data.page.records;
+          this.totalPage = data.page.total;
         } else {
           this.dataList = [];
           this.totalPage = 0;
@@ -137,6 +209,22 @@ export default {
     // 多选
     selectionChangeHandle(val) {
       this.dataListSelections = val;
+    },
+    //办卡
+    registerCardHandler() {
+      if (this.dataListSelections.length > 1) {
+        this.$message.error("请选择一条数据");
+        return;
+      }
+
+      if (this.dataListSelections[0].id) {
+        this.$message.error("用户已办理会员");
+        return;
+      }
+      this.addOrUpdateVisible = true;
+      this.$nextTick(() => {
+        this.$refs.addOrUpdate.init(this.dataListSelections[0]);
+      });
     },
     // 新增 / 修改
     addOrUpdateHandle(id) {
