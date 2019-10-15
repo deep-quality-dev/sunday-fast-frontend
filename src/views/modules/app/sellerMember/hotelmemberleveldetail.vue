@@ -18,19 +18,19 @@
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="$message('功能建设中')"
+          @click="sendCouponsHandler(2)"
           :disabled="dataListSelections.length <= 0"
         >发放优惠券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="$message('功能建设中')"
+          @click="sendCouponsHandler(3)"
           :disabled="dataListSelections.length <= 0"
         >发放早餐券</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
-          @click="$message('功能建设中')"
+          @click="sendCouponsHandler(1)"
           :disabled="dataListSelections.length <= 0"
         >发放免房券</el-button>
         <el-button
@@ -145,11 +145,13 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <CouponsSelect v-if="couponsSelectVisible" ref="couponsSelect" ></CouponsSelect>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./hotelmemberleveldetail-add-or-update";
+import CouponsSelect from "../../../../components/coupons-select";
 export default {
   data() {
     return {
@@ -162,12 +164,14 @@ export default {
       pageSize: 10,
       totalPage: 0,
       dataListLoading: false,
+      couponsSelectVisible:false,
       dataListSelections: [],
       addOrUpdateVisible: false
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    CouponsSelect
   },
   activated() {
     this.getDataList();
@@ -209,6 +213,14 @@ export default {
     // 多选
     selectionChangeHandle(val) {
       this.dataListSelections = val;
+    },
+    //发放优惠券
+
+    sendCouponsHandler(type){
+      this.couponsSelectVisible = true;
+      this.$nextTick(() => {
+        this.$refs.couponsSelect.init(type);
+      });
     },
     //办卡
     registerCardHandler() {

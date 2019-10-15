@@ -15,10 +15,20 @@
         <el-input v-model="dataForm.name" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-        <el-date-picker v-model="dataForm.startTime" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker
+          value-format="yyyy-MM-dd"
+          v-model="dataForm.startTime"
+          type="date"
+          placeholder="选择日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-        <el-date-picker v-model="dataForm.endTime" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker
+          value-format="yyyy-MM-dd"
+          v-model="dataForm.endTime"
+          type="date"
+          placeholder="选择日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="优惠条件" prop="conditions">
         <el-input v-model="dataForm.conditions" placeholder="优惠条件"></el-input>
@@ -56,7 +66,7 @@ export default {
         type: "",
         introduce: "",
         lqNum: "",
-        klqzs: "",
+        klqzs: ""
       },
       dataRule: {
         name: [
@@ -83,7 +93,7 @@ export default {
         ],
         klqzs: [
           { required: true, message: "每人可领取张数不能为空", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
