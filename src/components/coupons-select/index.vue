@@ -1,25 +1,29 @@
 <template>
-    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false">
-        <el-table
-            ref="multipleTable"
-            :data="dataList"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-            v-loading="dataListLoading"
-        >
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column label="有效日期" width="120">
-                <template slot-scope="scope">{{ scope.row.endTime }}</template>
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-            <el-table-column prop="conditions" label="优惠条件" show-overflow-tooltip></el-table-column>
-        </el-table>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close()">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>
+  <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-table
+      ref="multipleTable"
+      :data="dataList"
+      tooltip-effect="dark"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+      v-loading="dataListLoading"
+    >
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column label="有效日期" width="120">
+        <template slot-scope="scope">{{ scope.row.endTime }}</template>
+      </el-table-column>
+      <el-table-column prop="name" label="姓名" width="120"></el-table-column>
+      <el-table-column prop="conditions" label="优惠条件" show-overflow-tooltip></el-table-column>
+    </el-table>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="close()">取 消</el-button>
+      <el-button
+        type="primary"
+        @click="submitHandler()"
+        :disabled="multipleSelection.length <= 0"
+      >确 定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
@@ -31,15 +35,48 @@ export default {
       dialogVisible: false,
       dataList: [],
       multipleSelection: [],
-      dataListLoading: false
+      dataListLoading: false,
+      memberDataList: []
     };
   },
   methods: {
+    submitHandler() {
+      this.$http({
+        url: this.$http.adornUrl("/hotel/hotelcoupons/sendCoupons"),
+        method: "POST",
+        data: this.$http.adornData({
+          memberIds: this.memberDataList.map(item => {
+            return item.userId;
+          }),
+          couponsIds: this.multipleSelection.map(item => {
+            return item.id;
+          }),
+          type: this.type
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: "操作成功",
+            type: "success",
+            duration: 1500,
+            onClose: () => {
+              this.close();
+              this.$emit("refreshDataList");
+            }
+          });
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      let couponIds = this.multipleSelection.map();
+    },
     close() {
       this.dataList = [];
       this.dialogVisible = false;
     },
-    init(type) {
+    init(type, memberDataList) {
+      this.memberDataList = memberDataList;
+      this.type = type;
       if (type === 1) {
         this.title = "请选择免房券";
         this.getCounpons();
@@ -52,7 +89,6 @@ export default {
         this.title = "请选择早餐券";
         this.getBreakfastCounpons();
       }
-      this.type = type;
       this.dialogVisible = true;
     },
     //免房券
@@ -106,15 +142,6 @@ export default {
           done();
         })
         .catch(_ => {});
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

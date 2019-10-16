@@ -145,7 +145,7 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
-    <CouponsSelect v-if="couponsSelectVisible" ref="couponsSelect" ></CouponsSelect>
+    <CouponsSelect v-if="couponsSelectVisible" ref="couponsSelect" @refreshDataList="getDataList"></CouponsSelect>
   </div>
 </template>
 
@@ -164,7 +164,7 @@ export default {
       pageSize: 10,
       totalPage: 0,
       dataListLoading: false,
-      couponsSelectVisible:false,
+      couponsSelectVisible: false,
       dataListSelections: [],
       addOrUpdateVisible: false
     };
@@ -216,10 +216,10 @@ export default {
     },
     //发放优惠券
 
-    sendCouponsHandler(type){
+    sendCouponsHandler(type) {
       this.couponsSelectVisible = true;
       this.$nextTick(() => {
-        this.$refs.couponsSelect.init(type);
+        this.$refs.couponsSelect.init(type, this.dataListSelections);
       });
     },
     //办卡
