@@ -1,5 +1,11 @@
 <template>
-  <el-dialog title="房价管理" width="80%" :close-on-click-modal="false" :visible.sync="visible">
+  <el-dialog
+    title="房价管理"
+    width="80%"
+    :close-on-click-modal="false"
+    :visible.sync="visible"
+    :before-close="handleClose"
+  >
     <el-table :data="dataList" style="width: 100%">
       <el-table-column prop="name" label="价格名称" width="180" align="center"></el-table-column>
       <el-table-column prop="price" label="价格" width="180" align="center"></el-table-column>
@@ -33,7 +39,7 @@
       <el-form-item label="价格" prop="price">
         <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="价格"></el-input>
       </el-form-item>
-      <el-form-item label="积分" prop="price">
+      <el-form-item label="积分" prop="integral">
         <el-input style="width:90px" size="small" v-model="dataForm.integral" placeholder="价格"></el-input>
       </el-form-item>
       <el-form-item label="数量" prop="num">
@@ -181,6 +187,11 @@ export default {
     onCancelEdit() {
       this.dataForm.id = 0;
       this.$refs["dataForm"].resetFields();
+    },
+    handleClose() {
+      this.dataForm.id = 0;
+      this.$refs["dataForm"].resetFields();
+      this.visible = false;
     }
   }
 };

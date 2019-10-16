@@ -22,7 +22,7 @@
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-        >批量删除</el-button> -->
+        >批量删除</el-button>-->
       </el-form-item>
     </el-form>
     <el-table
@@ -39,6 +39,12 @@
           <el-tag size="small">{{stars[String(scope.row.star)]}}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="star" header-align="center" align="center" width="100" label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.enabled === 1">上架</el-tag>
+          <el-tag size="small" type="info" v-else>下架</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="address" header-align="center" align="center" width="300" label="地址"></el-table-column>
       <el-table-column prop="linkName" header-align="center" align="center" label="联系人"></el-table-column>
       <el-table-column prop="linkTel" header-align="center" align="center" label="联系电话"></el-table-column>
@@ -50,6 +56,18 @@
       </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            v-if="scope.row.enabled === -1"
+            @click="show(scope.row.id)"
+          >上架</el-button>
+          <el-button
+            type="text"
+            size="small"
+            v-if="scope.row.enabled === 1"
+            @click="hide(scope.row.id)"
+          >下架</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -108,6 +126,30 @@ export default {
         return moment(date).format("YYYY-MM-DD");
       }
       return "--";
+    },
+    show(id) {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelseller/show/${id}`),
+        method: "post"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.getDataList();
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    hide(id) {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelseller/hide/${id}`),
+        method: "post"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.getDataList();
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
     },
     // 获取数据列表
     getDataList() {

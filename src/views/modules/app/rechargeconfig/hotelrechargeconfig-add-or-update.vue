@@ -61,9 +61,9 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.money = data.hotelrechargeconfig.money;
-              this.dataForm.returnMoney = data.hotelrechargeconfig.returnMoney;
-              this.dataForm.note = data.hotelrechargeconfig.note;
+              this.dataForm.money = data.hotelRechargeConfig.money;
+              this.dataForm.returnMoney = data.hotelRechargeConfig.returnMoney;
+              this.dataForm.note = data.hotelRechargeConfig.note;
             }
           });
         }
