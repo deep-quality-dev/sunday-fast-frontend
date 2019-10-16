@@ -10,6 +10,10 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="setRoomNumHandler()">批量设置房态</el-button>
+        
+      </el-form-item>
     </el-form>
     <el-table :data="dataList" :span-method="objectSpanMethod" border="" key="roomId">
       <el-table-column align="center" prop="roomName">
@@ -57,13 +61,16 @@
         <el-button type="primary" @click="onUpdateSubmit">确 定</el-button>
       </span>
     </el-dialog>
+    <SetRoomNum v-if="setRoomNumVisible" ref="setRoomNum"></SetRoomNum>
   </div>
 </template>
 <script>
 import moment from "moment";
+import SetRoomNum from './set-room-num';
 export default {
   data() {
     return {
+      setRoomNumVisible:false,
       value1: [],
       dataForm: {},
       date: [],
@@ -74,10 +81,19 @@ export default {
       dataListLoading: false
     };
   },
+  components: {
+    SetRoomNum
+  },
   activated() {
     this.getDataList();
   },
   methods: {
+    setRoomNumHandler(){
+      this.setRoomNumVisible = true;
+      this.$nextTick(() => {
+        this.$refs.setRoomNum.init();
+      });
+    },
      closeUpdateModal() {
         this.showUpdateModal = false;
       },
