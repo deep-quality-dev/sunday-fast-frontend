@@ -12,6 +12,18 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="auto"
     >
+      <el-form-item label="酒店logo" prop="ewmLogo">
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="dataForm.ewmLogo" :src="dataForm.ewmLogo" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
       <el-row>
         <el-col :span="12">
           <el-form-item label="名字" prop="name">
@@ -48,6 +60,57 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="开业时间" prop="openTime">
+        <el-date-picker
+          style="width:100%"
+          v-model="dataForm.openTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="图片" prop="img">
+        <img
+          v-for="item in fileList"
+          :key="item.url"
+          :src="item.url"
+          class="avatar"
+          :style="{float:'left', marginRight:'5px'}"
+        >
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false"
+          :on-success="handleImageSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
+      <!-- <el-form-item label="退订规则" prop="rule">
+        <el-input v-model="dataForm.rule" placeholder="退订规则"></el-input>
+      </el-form-item>
+      <el-form-item label="经纬度" prop="coordinates">
+        <el-input v-model="dataForm.coordinates" placeholder="经纬度"></el-input>
+      </el-form-item>-->
+      <!-- <el-form-item label="温馨提示" prop="prompt">
+        <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
+      </el-form-item>-->
+      <el-form-item label="酒店设施">
+        <el-checkbox v-model="dataForm.wake" :label="1" name="type">叫醒</el-checkbox>
+        <el-checkbox v-model="dataForm.wifi" :label="1">WI-FI</el-checkbox>
+        <el-checkbox v-model="dataForm.park" :label="1">停车场</el-checkbox>
+        <el-checkbox v-model="dataForm.breakfast" :label="1">早餐</el-checkbox>
+        <el-checkbox v-model="dataForm.gym" :label="1">健身房</el-checkbox>
+        <el-checkbox v-model="dataForm.water" :label="1">热水</el-checkbox>
+        <el-checkbox v-model="dataForm.boardroom" :label="1">会议室</el-checkbox>
+      </el-form-item>
+      <el-form-item label="酒店支持">
+        <el-checkbox v-model="dataForm.unionpay" :label="1">银联支付</el-checkbox>
+        <el-checkbox v-model="dataForm.wxOpen" :label="1">微信支付</el-checkbox>
+        <el-checkbox v-model="dataForm.ddOpen" :label="1">到店支付</el-checkbox>
+        <el-checkbox v-model="dataForm.yeOpen" :label="1">余额支付</el-checkbox>
+      </el-form-item>
       <el-form-item style="height:300px" label="酒店政策" prop="policy">
         <!-- <el-input v-model="dataForm.policy" placeholder="酒店政策"></el-input> -->
         <quill-editor
@@ -106,11 +169,15 @@ export default {
       editorOption: {
         modules: {
           toolbar: [
-            ["bold", "italic", "underline", "strike","link","image","align"], 
+            ["bold", "italic", "underline", "strike", "link", "image", "align"],
             ["blockquote", "code-block"]
           ]
         }
       },
+      uploadAction: "",
+      dialogVisible: false,
+      visible: false,
+      fileList: [],
       dataForm: {
         id: 0,
         userId: "",
@@ -155,7 +222,8 @@ export default {
         bdId: "",
         yeOpen: "",
         wxOpen: "",
-        ddOpen: ""
+        ddOpen: "",
+        reserveRemind: ""
       },
       dataRule: {
         userId: [
@@ -267,6 +335,9 @@ export default {
   },
   methods: {
     init(id) {
+      this.uploadAction = this.$http.adornUrl(
+        `/sys/oss/upload?token=${this.$cookie.get("token")}`
+      );
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -290,15 +361,17 @@ export default {
               this.dataForm.tel = data.hotelSeller.tel;
               this.dataForm.handle = data.hotelSeller.handle;
               this.dataForm.openTime = data.hotelSeller.openTime;
-              this.dataForm.wake = data.hotelSeller.wake;
-              this.dataForm.wifi = data.hotelSeller.wifi;
-              this.dataForm.park = data.hotelSeller.park;
-              this.dataForm.breakfast = data.hotelSeller.breakfast;
-              this.dataForm.unionpay = data.hotelSeller.unionpay;
-              this.dataForm.gym = data.hotelSeller.gym;
-              this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
-              this.dataForm.boardroom = data.hotelSeller.boardroom;
-              this.dataForm.water = data.hotelSeller.water;
+              this.dataForm.wake = data.hotelSeller.wake === 1 ? true : false;
+              this.dataForm.wifi = data.hotelSeller.wifi === 1 ? true : false;
+              this.dataForm.park = data.hotelSeller.park === 1 ? true : false;
+              this.dataForm.breakfast =
+                data.hotelSeller.breakfast === 1 ? true : false;
+              this.dataForm.unionpay =
+                data.hotelSeller.unionpay === 1 ? true : false;
+              this.dataForm.gym = data.hotelSeller.gym === 1 ? true : false;
+              this.dataForm.boardroom =
+                data.hotelSeller.boardroom === 1 ? true : false;
+              this.dataForm.water = data.hotelSeller.water === 1 ? true : false;
               this.dataForm.policy = data.hotelSeller.policy;
               this.dataForm.introduction = data.hotelSeller.introduction;
               this.dataForm.img = data.hotelSeller.img;
@@ -320,9 +393,18 @@ export default {
               this.dataForm.isUse = data.hotelSeller.isUse;
               this.dataForm.llNum = data.hotelSeller.llNum;
               this.dataForm.bdId = data.hotelSeller.bdId;
-              this.dataForm.yeOpen = data.hotelSeller.yeOpen;
-              this.dataForm.wxOpen = data.hotelSeller.wxOpen;
-              this.dataForm.ddOpen = data.hotelSeller.ddOpen;
+              this.dataForm.yeOpen =
+                data.hotelSeller.yeOpen === 1 ? true : false;
+              this.dataForm.wxOpen =
+                data.hotelSeller.wxOpen === 1 ? true : false;
+              this.dataForm.ddOpen =
+                data.hotelSeller.ddOpen === 1 ? true : false;
+              this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
+              if (data.hotelSeller.img) {
+                data.hotelSeller.img.split(",").forEach(element => {
+                  this.fileList.push({ url: element });
+                });
+              }
             }
           });
         }
@@ -357,14 +439,14 @@ export default {
               tel: this.dataForm.tel,
               handle: this.dataForm.handle,
               openTime: this.dataForm.openTime,
-              wake: this.dataForm.wake,
-              wifi: this.dataForm.wifi,
-              park: this.dataForm.park,
-              breakfast: this.dataForm.breakfast,
-              unionpay: this.dataForm.unionpay,
-              gym: this.dataForm.gym,
-              boardroom: this.dataForm.boardroom,
-              water: this.dataForm.water,
+              wake: this.dataForm.wake ? "1" : "0",
+              wifi: this.dataForm.wifi ? "1" : "0",
+              park: this.dataForm.park ? "1" : "0",
+              breakfast: this.dataForm.breakfast ? "1" : "0",
+              unionpay: this.dataForm.unionpay ? "1" : "0",
+              gym: this.dataForm.gym ? "1" : "0",
+              boardroom: this.dataForm.boardroom ? "1" : "0",
+              water: this.dataForm.water ? "1" : "0",
               policy: this.dataForm.policy,
               introduction: this.dataForm.introduction,
               reserveRemind: this.dataForm.reserveRemind,
@@ -387,9 +469,10 @@ export default {
               isUse: this.dataForm.isUse,
               llNum: this.dataForm.llNum,
               bdId: this.dataForm.bdId,
-              yeOpen: this.dataForm.yeOpen,
-              wxOpen: this.dataForm.wxOpen,
-              ddOpen: this.dataForm.ddOpen
+              yeOpen: this.dataForm.yeOpen ? "1" : "0",
+              wxOpen: this.dataForm.wxOpen ? "1" : "0",
+              ddOpen: this.dataForm.ddOpen ? "1" : "0",
+              reserveRemind: this.dataForm.reserveRemind
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -408,7 +491,60 @@ export default {
           });
         }
       });
+    },
+    handleAvatarSuccess(res, file) {
+      this.dataForm.ewmLogo = res.url;
+    },
+
+    handleImageSuccess(res, file) {
+      this.fileList.push({ url: res.url });
+      let url = [];
+      this.fileList.forEach(item => {
+        url.push(item.url);
+      });
+      console.log(url);
+      this.dataForm.img = url.join(",");
+    },
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isLt2M;
     }
   }
 };
 </script>
+<style lang="scss">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 148px;
+  height: 148px;
+  line-height: 148px;
+  text-align: center;
+}
+.avatar {
+  width: 148px;
+  height: 148px;
+  display: block;
+}
+.mod-demo-ueditor {
+  position: relative;
+  z-index: 510;
+  > .el-alert {
+    margin-bottom: 10px;
+  }
+}
+</style>
