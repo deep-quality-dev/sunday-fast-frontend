@@ -1,6 +1,10 @@
 <template>
     <div>
-        <top-header></top-header>
+        <top-header>
+            <div slot="nav-left">
+                <img src="../../assets/img/logo.png" alt="千兰" />
+            </div>
+        </top-header>
         <div class="container">
             <el-steps class="steps" :active="active" finish-status="success">
                 <el-step title="酒店信息" />
