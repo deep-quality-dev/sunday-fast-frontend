@@ -51,6 +51,7 @@
                                         <el-input
                                             prefix-icon="el-icon-lock"
                                             type="password"
+                                            v-model="dataForm.password"
                                             placeholder="密码"
                                         ></el-input>
                                     </el-form-item>
@@ -87,24 +88,28 @@
                         <div class="bottom-session__header"></div>
                         <div class="bottom-session__body">
                             <div class="flex-box__item">
-                                <div class="hd">手机APP下载安装</div>
+                                <div class="hd">微信小程序</div>
                                 <div class="bd">
-                                    <img src="https://pic.c-ctrip.com/ebooking/web/qrcode_wx.png" />
+                                    <img style="height: 144px;" src="../../assets/img/mapp.jpg" />
                                 </div>
                                 <div class="ft">
+                                    <p>搜索“千兰会小程序”或</p>
+                                    <p>扫描的二维码</p>
+                                </div>
+                                <!-- <div class="ft">
                                     <div class="ft-flex__box">
                                         <el-button type="primary">安卓下载</el-button>
                                         <el-button type="info">ios下载</el-button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="flex-box__item">
                                 <div class="hd">微信公众平台</div>
                                 <div class="bd">
-                                    <img src="https://pic.c-ctrip.com/ebooking/web/qrcode_wx.png" />
+                                     <img style="height: 144px;" src="../../assets/img/wx-mp.jpg" />
                                 </div>
                                 <div class="ft">
-                                    <p>搜索“携程酒店管理系统”或</p>
+                                    <p>搜索“千兰会公众号”或</p>
                                     <p>扫描的二维码</p>
                                 </div>
                             </div>
@@ -145,9 +150,9 @@
             </div>
             <footer class="footer-container">
                 <p class="popyright">
-                    啦啦啦啦啦 版权所有 2002-2019 保留所有权利
-                    <br />Copyright 2002-2019
-                    my.com All rights reserved
+                    上海春卫信息技术有限公司 © 沪ICP备2345432号
+                    <!-- <br />Copyright 2002-2019
+                    my.com All rights reserved -->
                 </p>
             </footer>
         </div>

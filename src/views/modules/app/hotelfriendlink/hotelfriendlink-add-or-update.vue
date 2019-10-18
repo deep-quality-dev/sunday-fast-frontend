@@ -10,9 +10,6 @@
     <el-form-item label="链接地址" prop="url">
       <el-input v-model="dataForm.url" placeholder="链接地址"></el-input>
     </el-form-item>
-    <el-form-item label="创建时间" prop="createtime">
-      <el-input v-model="dataForm.createtime" placeholder="创建时间"></el-input>
-    </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>

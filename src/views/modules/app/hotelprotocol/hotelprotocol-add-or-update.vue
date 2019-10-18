@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item label="协议内容" prop="content">
         <quill-editor
-          style="height:200px"
+          style="height:400px"
           class="editor"
           v-model="dataForm.content"
           ref="myQuillEditor"
