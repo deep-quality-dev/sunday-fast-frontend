@@ -12,18 +12,19 @@
           v-model="checkAll"
           @change="handleCheckAllChange"
         >全选</el-checkbox>
-        <el-row :gutter="20" v-for="item in roomData">
+        <el-row :gutter="20" v-for="item in roomData" :key="item.id">
           <el-col :span="8">
             <div class="grid-content bg-purple">
-              <el-checkbox :label="item.name" :key="item.id">{{item.name}}</el-checkbox>
+              <el-checkbox :label="item.name" :checked="(checked[item.id] || []).length === item.hotelRoomMoney.length" :key="item.id">{{item.name}}</el-checkbox>
             </div>
           </el-col>
+
           <el-col :span="16">
             <div class="grid-content bg-purple">
-              <el-checkbox-group>
+              <el-checkbox-group v-model="checked[item.id]" @change="handleChange(item.id)">
                 <el-checkbox
                   v-for="money in item.hotelRoomMoney"
-                  :label="money.name"
+                  :label="money.id"
                   :key="money.id"
                 >{{money.name}}</el-checkbox>
               </el-checkbox-group>
@@ -66,7 +67,11 @@ export default {
       isIndeterminate: true,
       form: {},
       value1: "",
-      roomData: []
+      roomData: [],
+
+      checked: {
+        
+      }
     };
   },
   methods: {
@@ -91,12 +96,19 @@ export default {
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.roomData = data.data;
+          this.roomData.map(item=>{
+            this.checked[item.id] = [];
+          })
         } else {
           this.$message.error(data.msg);
         }
       });
+    },
+    handleChange(value, categoryId) {
+      console.log(value);
+      this.checked[categoryId] = value;
     }
-  }
+  },
 };
 </script>
 

@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="酒店名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -11,6 +11,11 @@
           type="primary"
           @click="addOrUpdateHandle()"
         >新增</el-button>
+        <el-button
+          v-if="isAuth('hotel:hotelwithdrawal:save')"
+          type="primary"
+          @click="withdrawalSettingHandler()"
+        >提现设置</el-button>
         <el-button
           v-if="isAuth('hotel:hotelwithdrawal:delete')"
           type="danger"
@@ -27,20 +32,17 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label=""></el-table-column>
-      <el-table-column prop="name" header-align="center" align="center" label="真实姓名"></el-table-column>
-      <el-table-column prop="username" header-align="center" align="center" label="账号"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="1支付宝 2.微信 3.银行"></el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label="申请时间"></el-table-column>
-      <el-table-column prop="auditTime" header-align="center" align="center" label="审核时间"></el-table-column>
-      <el-table-column prop="state" header-align="center" align="center" label="1.待审核 2.通过  3.拒绝"></el-table-column>
+      <el-table-column prop="sellerId" header-align="center" align="center" label="酒店"></el-table-column>
       <el-table-column prop="withdrawCost" header-align="center" align="center" label="提现金额"></el-table-column>
       <el-table-column prop="realityCost" header-align="center" align="center" label="实际金额"></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="商家id"></el-table-column>
-      <el-table-column prop="enabled" header-align="center" align="center" label="1显示,0删除"></el-table-column>
+      <el-table-column prop="username" header-align="center" align="center" label="账号"></el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="账户类型"></el-table-column>
+      <el-table-column prop="time" header-align="center" align="center" label="申请时间"></el-table-column>
+      <el-table-column prop="auditTime" header-align="center" align="center" label="审核时间"></el-table-column>
+      <el-table-column prop="state" header-align="center" align="center" label="提现状态"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">审核</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -56,14 +58,26 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <WithdrawalSetting v-if="withdrawalSettingVisible" ref="withdrawalSetting"></WithdrawalSetting>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./hotelwithdrawal-add-or-update";
+import WithdrawalSetting from "./hotelwithdrawal-setting";
 export default {
   data() {
     return {
+      accountType: {
+        "1": "支付宝",
+        "2": "微信",
+        "3": "银行"
+      },
+      txState: {
+        "1": "待审核",
+        "2": "通过",
+        "3": "拒绝"
+      },
       dataForm: {
         key: ""
       },
@@ -71,18 +85,26 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       totalPage: 0,
+      withdrawalSettingVisible: false,
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    WithdrawalSetting
   },
   activated() {
     this.getDataList();
   },
   methods: {
+    withdrawalSettingHandler() {
+      this.withdrawalSettingVisible = true;
+      this.$nextTick(() => {
+        this.$refs.withdrawalSetting.init();
+      });
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;
