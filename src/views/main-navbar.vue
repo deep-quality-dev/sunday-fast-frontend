@@ -2,7 +2,7 @@
   <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="site-navbar__brand-lg" href="javascript:;">千兰会</a>
+        <a class="site-navbar__brand-lg" href="javascript:;"><img style="height: 30px;" src="../assets/img/header_logo.jpg" alt=""></a>
         <a class="site-navbar__brand-mini" href="javascript:;">千兰会</a>
       </h1>
     </div>

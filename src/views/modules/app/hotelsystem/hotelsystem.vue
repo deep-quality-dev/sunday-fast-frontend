@@ -6,7 +6,6 @@
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
       label-width="120px"
-      style="overflow-y: scroll;"
     >
       <el-form-item label="网站名称" prop="linkName">
         <el-input v-model="dataForm.linkName" placeholder="网站名称"></el-input>

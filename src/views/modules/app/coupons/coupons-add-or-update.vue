@@ -16,6 +16,7 @@
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
         <el-date-picker
+          style="width:100%"
           value-format="yyyy-MM-dd"
           v-model="dataForm.startTime"
           type="date"
@@ -24,6 +25,7 @@
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
         <el-date-picker
+          style="width:100%"
           value-format="yyyy-MM-dd"
           v-model="dataForm.endTime"
           type="date"

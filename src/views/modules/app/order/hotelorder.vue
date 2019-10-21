@@ -26,6 +26,11 @@
       <el-form-item>
         <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
+        <el-button
+          v-if="isAuth('hotel:hoteltopic:save')"
+          type="primary"
+          @click="addOrUpdateHandle()"
+        >接单设置</el-button>
       </el-form-item>
     </el-form>
     <el-table
