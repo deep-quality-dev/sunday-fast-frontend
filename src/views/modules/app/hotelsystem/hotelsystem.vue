@@ -11,7 +11,41 @@
         <el-input v-model="dataForm.linkName" placeholder="网站名称"></el-input>
       </el-form-item>
       <el-form-item label="网站logo" prop="linkLogo">
-        <el-input v-model="dataForm.linkLogo" placeholder="网站logo"></el-input>
+        <!-- <el-input v-model="dataForm.linkLogo" placeholder="网站logo"></el-input> -->
+        <el-upload
+          :class="{disabled:fileList.length>0}"
+          :action="uploadAction"
+          list-type="picture-card"
+          :auto-upload="true"
+          :on-remove="handleRemove"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+          :file-list="fileList"
+        >
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+            <span class="el-upload-list__item-actions">
+              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleDownload(file)"
+              >
+                <i class="el-icon-download"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="公司名字" prop="companyName">
         <el-input v-model="dataForm.companyName" placeholder="网站logo"></el-input>
@@ -26,13 +60,90 @@
         <el-input v-model="dataForm.companyAddress" placeholder="网站logo"></el-input>
       </el-form-item>
       <el-form-item label="营业执照" prop="businessLicense">
-        <el-input v-model="dataForm.businessLicense" placeholder="网站logo"></el-input>
+        <!-- <el-input v-model="dataForm.businessLicense" placeholder="网站logo"></el-input> -->
+        <el-upload
+          :class="{disabled:businessLicenseList.length>0}"
+          :action="uploadAction"
+          list-type="picture-card"
+          :auto-upload="true"
+          :on-remove="businessLicenseHandleRemove"
+          :on-success="businessLicenseHandleAvatarSuccess"
+          :before-upload="businessLicenseBeforeAvatarUpload"
+          :file-list="businessLicenseList"
+        >
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+            <span class="el-upload-list__item-actions">
+              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleDownload(file)"
+              >
+                <i class="el-icon-download"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="经营许可证" prop="licence">
-        <el-input v-model="dataForm.licence" placeholder="网站logo"></el-input>
+        <!-- <el-input v-model="dataForm.licence" placeholder="网站logo"></el-input> -->
+        <el-upload
+          :class="{disabled:licenceList.length>0}"
+          :action="uploadAction"
+          list-type="picture-card"
+          :auto-upload="true"
+          :on-remove="licenceHandleRemove"
+          :on-success="licenceHandleAvatarSuccess"
+          :before-upload="licenceBeforeAvatarUpload"
+          :file-list="licenceList"
+        >
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+            <span class="el-upload-list__item-actions">
+              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleDownload(file)"
+              >
+                <i class="el-icon-download"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
       </el-form-item>
       <el-form-item label="平台介绍" prop="platformInfo">
-        <el-input v-model="dataForm.platformInfo" placeholder="平台介绍"></el-input>
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.platformInfo"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -46,6 +157,11 @@
 export default {
   data() {
     return {
+      editorOption: {},
+      fileList: [],
+      businessLicenseList: [],
+      licenceList: [],
+      imageUrl: "",
       visible: false,
       uploadAction: "",
       dataForm: {
@@ -308,6 +424,25 @@ export default {
             this.dataForm.businessLicense = data.hotelSystem.businessLicense;
             this.dataForm.licence = data.hotelSystem.licence;
             this.dataForm.platformInfo = data.hotelSystem.platformInfo;
+            if (data.hotelSystem.linkLogo) {
+              this.fileList.push({
+                name: data.hotelSystem.linkLogo,
+                url: data.hotelSystem.linkLogo
+              });
+            }
+            if (data.hotelSystem.businessLicense) {
+              this.businessLicenseList.push({
+                name: data.hotelSystem.businessLicense,
+                url: data.hotelSystem.businessLicense
+              });
+            }
+            if (data.hotelSystem.licence) {
+              this.licenceList.push({
+                name: data.hotelSystem.licence,
+                url: data.hotelSystem.licence
+              });
+            }
+            console.log(this.fileList);
           }
         });
       });
@@ -329,7 +464,7 @@ export default {
               jfRule: this.dataForm.jfRule,
               bqName: this.dataForm.bqName,
               linkName: this.dataForm.linkName,
-              linkLogo: this.dataForm.linkLogo,
+              linkLogo: this.fileList.length > 0 ? this.fileList[0].url : "",
               support: this.dataForm.support,
               bqLogo: this.dataForm.bqLogo,
               color: this.dataForm.color,
@@ -372,9 +507,13 @@ export default {
               companyPhone: this.dataForm.companyPhone,
               companyEmail: this.dataForm.companyEmail,
               companyAddress: this.dataForm.companyAddress,
-              businessLicense: this.dataForm.businessLicense,
-              licence: this.dataForm.licence,
-              platformInfo:this.dataForm.platformInfo,
+              businessLicense:
+                this.businessLicenseList.length > 0
+                  ? this.businessLicenseList[0].url
+                  : "",
+              licence:
+                this.licenceList.length > 0 ? this.licenceList[0].url : "",
+              platformInfo: this.dataForm.platformInfo
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -393,7 +532,136 @@ export default {
           });
         }
       });
+    },
+    handleAvatarSuccess(res, file) {
+      const { url } = res;
+      this.fileList.push({
+        name: url,
+        url: url
+      });
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    handleRemove(file, fileList) {
+      const { response } = file;
+      this.dataForm.linkLogo = undefined;
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    //
+    businessLicenseHandleAvatarSuccess(res, file) {
+      const { url } = res;
+      this.businessLicenseList.push({
+        name: url,
+        url: url
+      });
+      console.log(url);
+    },
+    businessLicenseBeforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    businessLicenseHandleRemove(file, fileList) {
+      const { response } = file;
+      this.dataForm.businessLicense = undefined;
+      this.businessLicenseList = [];
+    },
+    businessLicenseHandlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    //
+    licenceHandleAvatarSuccess(res, file) {
+      const { url } = res;
+      this.licenceList.push({
+        name: url,
+        url: url
+      });
+      console.log(url);
+    },
+    licenceBeforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    licenceHandleRemove(file, fileList) {
+      const { response } = file;
+      this.dataForm.licence = undefined;
+      this.licenceList = [];
+    },
+    licenceHandlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    isEmpty(obj) {
+      if (typeof obj == "undefined" || obj == null || obj == "") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    onEditorBlur() {},
+    onEditorFocus() {
+      //获得焦点事件
+    },
+    onEditorChange() {
+      //内容改变事件
     }
   }
 };
 </script>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.disabled .el-upload--picture-card {
+  display: none;
+}
+</style>

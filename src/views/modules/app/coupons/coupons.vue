@@ -12,6 +12,11 @@
           @click="addOrUpdateHandle()"
         >新增</el-button>
         <el-button
+          v-if="isAuth('hotel:hotelcoupons:save')"
+          type="primary"
+          @click="addOrUpdateHandle()"
+        >选择房型</el-button>
+        <el-button
           v-if="isAuth('hotel:hotelcoupons:delete')"
           type="danger"
           @click="deleteHandle()"

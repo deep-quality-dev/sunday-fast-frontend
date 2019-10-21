@@ -146,12 +146,7 @@ export default {
       dataListLoading: false,
       content: "111",
       editorOption: {
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline", "strike", "link", "image", "align"],
-            ["blockquote", "code-block"]
-          ]
-        }
+        
       },
       uploadAction: "",
       dialogVisible: false,
