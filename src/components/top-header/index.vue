@@ -44,4 +44,21 @@
             }
         }
     }
+    .nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  font-size: 14px;
+
+  li {
+    cursor: pointer;
+    min-width: 50px;
+    padding: 0 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    &:first-child {
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+}
 </style>

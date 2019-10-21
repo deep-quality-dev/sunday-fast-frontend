@@ -41,7 +41,7 @@ window.SITE_CONFIG['storeState'] = cloneDeep(store.state)
 
 VueAMap.initAMapApiLoader({
   key: '3bc57a7188e51c379cd5255bd5073fbc',
-  plugin: ['Autocomplete', 'PlaceSearch', 'Scale', 'OverView', 'ToolBar', 'MapType', 'PolyEditor', 'AMap.CircleEditor']
+  plugin: ['Autocomplete', 'PlaceSearch', 'Scale', 'OverView', 'ToolBar', 'MapType', 'PolyEditor', 'AMap.CircleEditor', 'AMap.Geolocation']
 });
 
 /* eslint-disable no-new */

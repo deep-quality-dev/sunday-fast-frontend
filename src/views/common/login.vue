@@ -6,8 +6,8 @@
             </div>
             <div slot="nav-right">
                 <ul class="nav">
-                    <li index="1" @click="handleToPage">联系我们</li>
-                    <li index="3" @click="handleToPage">帮助文档</li>
+                    <li index="1" @click="handleToPage('about')">联系我们</li>
+                    <li index="3" @click="handleToPage('help')">帮助文档</li>
                 </ul>
             </div>
         </top-header>
@@ -30,11 +30,11 @@
                                     :class="{'active':loginType === '1'}"
                                     @click="handleChangeLoginType('1')"
                                 >管理员登录</div>
-                                <div
+                                <!-- <div
                                     class="item"
                                     :class="{'active':loginType === '2'}"
                                     @click="handleChangeLoginType('2')"
-                                >商户登录</div>
+                                >商户登录</div> -->
                             </div>
                             <div class="longi-mina__form">
                                 <el-form
@@ -90,9 +90,9 @@
                 <div class="container content-card__container">
                     <div class="bottom-session">
                         <div class="bottom-session__header">
-                            <!-- <div>
+                            <div>
                                 <img style="width:100%" src="../../assets/img/log_header_img.jpeg" alt="">
-                            </div> -->
+                            </div>
                         </div>
                         <div class="bottom-session__body">
                             <div class="flex-box__item">
@@ -214,8 +214,8 @@ export default {
     this.getCaptcha();
   },
   methods: {
-    handleToPage() {
-      console.log("to page");
+    handleToPage(name) {
+      this.$router.push({ name})
     },
     // 切换登陆方式
     handleChangeLoginType(type) {
@@ -308,23 +308,24 @@ export default {
         .item {
           padding: 18px 0;
           flex: 1;
+          max-width: 50%;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
           cursor: pointer;
           position: relative;
 
           &.active {
-            color: #288fe7;
-            &::after {
-              content: "";
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              width: 100%;
-              height: 3px;
-              background-color: #288fe7;
-            }
+            // color: #288fe7;
+            // &::after {
+            //   content: "";
+            //   position: absolute;
+            //   bottom: 0;
+            //   left: 0;
+            //   width: 100%;
+            //   height: 3px;
+            //   background-color: #288fe7;
+            // }
           }
         }
       }
@@ -360,7 +361,7 @@ export default {
     .bottom-session {
       width: 100%;
       .bottom-session__header {
-        height: 55px;
+        // height: 55px;
         width: 100%;
         border-bottom: 1px solid #eeeeee;
       }
