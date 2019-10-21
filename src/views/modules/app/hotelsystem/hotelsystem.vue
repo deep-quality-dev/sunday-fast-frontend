@@ -5,7 +5,7 @@
       :rules="dataRule"
       ref="dataForm"
       @keyup.enter.native="dataFormSubmit()"
-      label-width="80px"
+      label-width="120px"
     >
       <el-form-item label="网站名称" prop="linkName">
         <el-input v-model="dataForm.linkName" placeholder="网站名称"></el-input>
@@ -13,56 +13,26 @@
       <el-form-item label="网站logo" prop="linkLogo">
         <el-input v-model="dataForm.linkLogo" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="bqLogo">
-        <el-input v-model="dataForm.bqLogo" placeholder=""></el-input>
+      <el-form-item label="公司名字" prop="companyName">
+        <el-input v-model="dataForm.companyName" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="color">
-        <el-input v-model="dataForm.color" placeholder=""></el-input>
+      <el-form-item label="公司电话" prop="companyPhone">
+        <el-input v-model="dataForm.companyPhone" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="tzAppid">
-        <el-input v-model="dataForm.tzAppid" placeholder=""></el-input>
+      <el-form-item label="公司邮箱" prop="companyEmail">
+        <el-input v-model="dataForm.companyEmail" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="tzName">
-        <el-input v-model="dataForm.tzName" placeholder=""></el-input>
+      <el-form-item label="公司地址" prop="companyAddress">
+        <el-input v-model="dataForm.companyAddress" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="平台名称" prop="ptName">
-        <el-input v-model="dataForm.ptName" placeholder="平台名称"></el-input>
+      <el-form-item label="营业执照" prop="businessLicense">
+        <el-input v-model="dataForm.businessLicense" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="平台电话" prop="tel">
-        <el-input v-model="dataForm.tel" placeholder="平台电话"></el-input>
+      <el-form-item label="经营许可证" prop="licence">
+        <el-input v-model="dataForm.licence" placeholder="网站logo"></el-input>
       </el-form-item>
-      <el-form-item label="评论积分" prop="plScore">
-        <el-input v-model="dataForm.plScore" placeholder="评论积分"></el-input>
-      </el-form-item>
-      <el-form-item label="消费积分" prop="xfScore">
-        <el-input v-model="dataForm.xfScore" placeholder="消费积分"></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="hyImg">
-        <el-input v-model="dataForm.hyImg" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="rzTid">
-        <el-input v-model="dataForm.rzTid" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="openMember">
-        <el-input v-model="dataForm.openMember" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="jjrzTid">
-        <el-input v-model="dataForm.jjrzTid" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="isSfz">
-        <el-input v-model="dataForm.isSfz" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="tplId2">
-        <el-input v-model="dataForm.tplId2" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="isOrder">
-        <el-input v-model="dataForm.isOrder" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="tid3">
-        <el-input v-model="dataForm.tid3" placeholder=""></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="tid4">
-        <el-input v-model="dataForm.tid4" placeholder=""></el-input>
+      <el-form-item label="平台介绍" prop="platformInfo">
+        <el-input v-model="dataForm.platformInfo" placeholder="平台介绍"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -77,6 +47,7 @@ export default {
   data() {
     return {
       visible: false,
+      uploadAction: "",
       dataForm: {
         id: 0,
         appid: "",
@@ -101,6 +72,13 @@ export default {
         sellerId: "",
         apiclientCert: "",
         apiclientKey: "",
+        companyName: "",
+        companyPhone: "",
+        companyEmail: "",
+        companyAddress: "",
+        businessLicense: "",
+        licence: "",
+        platformInfo: "",
         zdMoney: "",
         txSxf: "",
         rcTk: "",
@@ -258,71 +236,80 @@ export default {
       }
     };
   },
+  mounted() {
+    this.uploadAction = this.$http.adornUrl(
+      `/sys/oss/upload?token=${this.$cookie.get("token")}`
+    );
+    this.init();
+  },
   methods: {
-    init(id) {
-      this.dataForm.id = id || 0;
+    init() {
+      this.dataForm.id = 0;
       this.visible = true;
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
-        if (this.dataForm.id) {
-          this.$http({
-            url: this.$http.adornUrl(
-              `/hotel/hotelsystem/info/${this.dataForm.id}`
-            ),
-            method: "get",
-            params: this.$http.adornParams()
-          }).then(({ data }) => {
-            if (data && data.code === 0) {
-              this.dataForm.appid = data.hotelsystem.appid;
-              this.dataForm.appsecret = data.hotelsystem.appsecret;
-              this.dataForm.mchid = data.hotelsystem.mchid;
-              this.dataForm.wxkey = data.hotelsystem.wxkey;
-              this.dataForm.uniacid = data.hotelsystem.uniacid;
-              this.dataForm.jfRule = data.hotelsystem.jfRule;
-              this.dataForm.bqName = data.hotelsystem.bqName;
-              this.dataForm.linkName = data.hotelsystem.linkName;
-              this.dataForm.linkLogo = data.hotelsystem.linkLogo;
-              this.dataForm.support = data.hotelsystem.support;
-              this.dataForm.bqLogo = data.hotelsystem.bqLogo;
-              this.dataForm.color = data.hotelsystem.color;
-              this.dataForm.tzAppid = data.hotelsystem.tzAppid;
-              this.dataForm.tzName = data.hotelsystem.tzName;
-              this.dataForm.ptName = data.hotelsystem.ptName;
-              this.dataForm.tel = data.hotelsystem.tel;
-              this.dataForm.totalNum = data.hotelsystem.totalNum;
-              this.dataForm.appkey = data.hotelsystem.appkey;
-              this.dataForm.tplId = data.hotelsystem.tplId;
-              this.dataForm.sellerId = data.hotelsystem.sellerId;
-              this.dataForm.apiclientCert = data.hotelsystem.apiclientCert;
-              this.dataForm.apiclientKey = data.hotelsystem.apiclientKey;
-              this.dataForm.zdMoney = data.hotelsystem.zdMoney;
-              this.dataForm.txSxf = data.hotelsystem.txSxf;
-              this.dataForm.rcTk = data.hotelsystem.rcTk;
-              this.dataForm.tid1 = data.hotelsystem.tid1;
-              this.dataForm.txNotice = data.hotelsystem.txNotice;
-              this.dataForm.type = data.hotelsystem.type;
-              this.dataForm.txMode = data.hotelsystem.txMode;
-              this.dataForm.isSjrz = data.hotelsystem.isSjrz;
-              this.dataForm.clientIp = data.hotelsystem.clientIp;
-              this.dataForm.rzNotice = data.hotelsystem.rzNotice;
-              this.dataForm.hyRule = data.hotelsystem.hyRule;
-              this.dataForm.bjLogo = data.hotelsystem.bjLogo;
-              this.dataForm.mapKey = data.hotelsystem.mapKey;
-              this.dataForm.isDxyz = data.hotelsystem.isDxyz;
-              this.dataForm.plScore = data.hotelsystem.plScore;
-              this.dataForm.xfScore = data.hotelsystem.xfScore;
-              this.dataForm.hyImg = data.hotelsystem.hyImg;
-              this.dataForm.rzTid = data.hotelsystem.rzTid;
-              this.dataForm.openMember = data.hotelsystem.openMember;
-              this.dataForm.jjrzTid = data.hotelsystem.jjrzTid;
-              this.dataForm.isSfz = data.hotelsystem.isSfz;
-              this.dataForm.tplId2 = data.hotelsystem.tplId2;
-              this.dataForm.isOrder = data.hotelsystem.isOrder;
-              this.dataForm.tid3 = data.hotelsystem.tid3;
-              this.dataForm.tid4 = data.hotelsystem.tid4;
-            }
-          });
-        }
+        this.$http({
+          url: this.$http.adornUrl(`/hotel/hotelsystem/info`),
+          method: "get",
+          params: this.$http.adornParams()
+        }).then(({ data }) => {
+          if (data && data.code === 0) {
+            this.dataForm.appid = data.hotelSystem.appid;
+            this.dataForm.appsecret = data.hotelSystem.appsecret;
+            this.dataForm.mchid = data.hotelSystem.mchid;
+            this.dataForm.wxkey = data.hotelSystem.wxkey;
+            this.dataForm.uniacid = data.hotelSystem.uniacid;
+            this.dataForm.jfRule = data.hotelSystem.jfRule;
+            this.dataForm.bqName = data.hotelSystem.bqName;
+            this.dataForm.linkName = data.hotelSystem.linkName;
+            this.dataForm.linkLogo = data.hotelSystem.linkLogo;
+            this.dataForm.support = data.hotelSystem.support;
+            this.dataForm.bqLogo = data.hotelSystem.bqLogo;
+            this.dataForm.color = data.hotelSystem.color;
+            this.dataForm.tzAppid = data.hotelSystem.tzAppid;
+            this.dataForm.tzName = data.hotelSystem.tzName;
+            this.dataForm.ptName = data.hotelSystem.ptName;
+            this.dataForm.tel = data.hotelSystem.tel;
+            this.dataForm.totalNum = data.hotelSystem.totalNum;
+            this.dataForm.appkey = data.hotelSystem.appkey;
+            this.dataForm.tplId = data.hotelSystem.tplId;
+            this.dataForm.sellerId = data.hotelSystem.sellerId;
+            this.dataForm.apiclientCert = data.hotelSystem.apiclientCert;
+            this.dataForm.apiclientKey = data.hotelSystem.apiclientKey;
+            this.dataForm.zdMoney = data.hotelSystem.zdMoney;
+            this.dataForm.txSxf = data.hotelSystem.txSxf;
+            this.dataForm.rcTk = data.hotelSystem.rcTk;
+            this.dataForm.tid1 = data.hotelSystem.tid1;
+            this.dataForm.txNotice = data.hotelSystem.txNotice;
+            this.dataForm.type = data.hotelSystem.type;
+            this.dataForm.txMode = data.hotelSystem.txMode;
+            this.dataForm.isSjrz = data.hotelSystem.isSjrz;
+            this.dataForm.clientIp = data.hotelSystem.clientIp;
+            this.dataForm.rzNotice = data.hotelSystem.rzNotice;
+            this.dataForm.hyRule = data.hotelSystem.hyRule;
+            this.dataForm.bjLogo = data.hotelSystem.bjLogo;
+            this.dataForm.mapKey = data.hotelSystem.mapKey;
+            this.dataForm.isDxyz = data.hotelSystem.isDxyz;
+            this.dataForm.plScore = data.hotelSystem.plScore;
+            this.dataForm.xfScore = data.hotelSystem.xfScore;
+            this.dataForm.hyImg = data.hotelSystem.hyImg;
+            this.dataForm.rzTid = data.hotelSystem.rzTid;
+            this.dataForm.openMember = data.hotelSystem.openMember;
+            this.dataForm.jjrzTid = data.hotelSystem.jjrzTid;
+            this.dataForm.isSfz = data.hotelSystem.isSfz;
+            this.dataForm.tplId2 = data.hotelSystem.tplId2;
+            this.dataForm.isOrder = data.hotelSystem.isOrder;
+            this.dataForm.tid3 = data.hotelSystem.tid3;
+            this.dataForm.tid4 = data.hotelSystem.tid4;
+            this.dataForm.companyName = data.hotelSystem.companyName;
+            this.dataForm.companyPhone = data.hotelSystem.companyPhone;
+            this.dataForm.companyEmail = data.hotelSystem.companyEmail;
+            this.dataForm.companyAddress = data.hotelSystem.companyAddress;
+            this.dataForm.businessLicense = data.hotelSystem.businessLicense;
+            this.dataForm.licence = data.hotelSystem.licence;
+            this.dataForm.platformInfo = data.hotelSystem.platformInfo;
+          }
+        });
       });
     },
     // 表单提交
@@ -330,9 +317,7 @@ export default {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
-            url: this.$http.adornUrl(
-              `/hotel/hotelsystem/${!this.dataForm.id ? "save" : "update"}`
-            ),
+            url: this.$http.adornUrl(`/hotel/hotelsystem/save`),
             method: "post",
             data: this.$http.adornData({
               id: this.dataForm.id || undefined,
@@ -382,7 +367,14 @@ export default {
               tplId2: this.dataForm.tplId2,
               isOrder: this.dataForm.isOrder,
               tid3: this.dataForm.tid3,
-              tid4: this.dataForm.tid4
+              tid4: this.dataForm.tid4,
+              companyName: this.dataForm.companyName,
+              companyPhone: this.dataForm.companyPhone,
+              companyEmail: this.dataForm.companyEmail,
+              companyAddress: this.dataForm.companyAddress,
+              businessLicense: this.dataForm.businessLicense,
+              licence: this.dataForm.licence,
+              platformInfo:this.dataForm.platformInfo,
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

@@ -1,11 +1,11 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
+      <!-- <el-form-item>
         <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <!-- <el-button @click="getDataList()">查询</el-button> -->
         <el-button
           v-if="isAuth('hotel:hoteladvertising:save')"
           type="primary"
@@ -41,12 +41,25 @@
           <el-tag v-else size="small">启用</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="广告位置">
+        <template slot-scope="scope">
+          <el-tag size="small" >{{types[scope.row.type]}}</el-tag>
+         
+        </template>
+      </el-table-column>
       <el-table-column prop="src" header-align="center" align="center" label="链接"></el-table-column>
       <el-table-column prop="orderby" header-align="center" align="center" label="排序"></el-table-column>
-      <el-table-column prop="wbSrc" header-align="center" align="center" label="外部链接"></el-table-column>
+      <!-- <el-table-column prop="wbSrc" header-align="center" align="center" label="外部链接"></el-table-column> -->
       <!--<el-table-column prop="state" header-align="center" align="center" label="1内部，2外部,3跳转"></el-table-column>-->
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            v-if="scope.row.status === 0"
+            @click="showHandler(scope.row)"
+          >启用</el-button>
+          <el-button type="text" size="small" v-else @click="hideHandler(scope.row)">禁用</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -71,6 +84,10 @@ import AddOrUpdate from "./hoteladvertising-add-or-update";
 export default {
   data() {
     return {
+      types:{
+        1:'小程序首页',
+        2:'后台登陆'
+      },
       dataForm: {
         key: ""
       },
@@ -90,6 +107,52 @@ export default {
     this.getDataList();
   },
   methods: {
+    showHandler(row) {
+      row.status = 1;
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hoteladvertising/update`),
+        method: "post",
+        data: this.$http.adornData({
+          ...row
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: "操作成功",
+            type: "success",
+            duration: 1500,
+            onClose: () => {
+              this.getDataList();
+            }
+          });
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    hideHandler(row) {
+      row.status = 0;
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hoteladvertising/update`),
+        method: "post",
+        data: this.$http.adornData({
+          ...row
+        })
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.$message({
+            message: "操作成功",
+            type: "success",
+            duration: 1500,
+            onClose: () => {
+              this.getDataList();
+            }
+          });
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

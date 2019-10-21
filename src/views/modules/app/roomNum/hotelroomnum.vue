@@ -15,17 +15,13 @@
         
       </el-form-item>
     </el-form>
-    <el-table :data="dataList" :span-method="objectSpanMethod" border="" key="roomId">
-      <el-table-column align="center" prop="roomName">
-        <template slot="header" slot-scope="scope">
-          <div>房型/日期</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="priceName" label="价格名称" align="center"/>
-      <el-table-column align="center" width="40">
-        <template slot="header" slot-scope="scope">
-          <i class="el-icon-arrow-left"></i>
-        </template>
+    <el-table 
+    :data="dataList" 
+    :span-method="objectSpanMethod" border="" row-key="id" :row-class-name="tableRowClassName" 
+    :expand-row-keys="['room_2']"
+    >
+      <el-table-column  align="left" prop="name" label="房型">
+
       </el-table-column>
       <el-table-column
         :label="item.substring(5, item.length)"
@@ -33,25 +29,30 @@
         :prop="item"
         v-for="item in date"
         align="center"
-        width="60"
+        width="140"
       >
       <template slot-scope="scope">
-          <span>{{ scope.row[scope.column.property] }}</span>
-          <i
-            class="el-icon-edit"
-            @click="onEdit(scope)"
-          />
+          <div v-if="scope.row.type ===0">
+            <el-button size="mini" v-if="scope.row[scope.column.property] === 0" type="primary">有房</el-button>
+            <el-button size="mini" v-else type="danger">满房</el-button>
+          </div>
+          <div v-else>
+            <el-button size="mini" v-if="scope.row[scope.column.property] > 0" type="primary">有房</el-button>
+            <el-button size="mini"  v-else type="danger">满房</el-button>
+            <div style="margin-top:10px">
+                <span>{{ scope.row[scope.column.property] }}</span>
+              <i
+                class="el-icon-edit"
+                @click="onEdit(scope)"
+              />
+            </div>
+           </div>
         </template>
         </el-table-column>
-      <el-table-column align="right" width="40">
-        <template slot="header" slot-scope="scope" align="center">
-          <i class="el-icon-arrow-right"></i>
-        </template>
-      </el-table-column>
     </el-table>
     <el-dialog
       width="40%"
-      :title="`修改【${updateCurrent.row.roomName}】【${updateCurrent.row.priceName}】【${updateCurrent.column.property}】的房量`"
+      :title="`修改【${updateCurrent.row.roomName}】【${updateCurrent.row.name}】【${updateCurrent.column.property}】的房量`"
       :visible="showUpdateModal"
       :before-close="closeUpdateModal"
     >
@@ -67,9 +68,11 @@
 <script>
 import moment from "moment";
 import SetRoomNum from './set-room-num';
+import { treeDataTranslate } from "@/utils";
 export default {
   data() {
     return {
+      expandRowKeys:[],
       setRoomNumVisible:false,
       value1: [],
       dataForm: {},
@@ -88,6 +91,13 @@ export default {
     this.getDataList();
   },
   methods: {
+    tableRowClassName({row, rowIndex}) {
+        if (row.type === 0 ) {
+           console.log(row)
+          return 'success-row';
+        }
+        return '';
+      },
     setRoomNumHandler(){
       this.setRoomNumVisible = true;
       this.$nextTick(() => {
@@ -108,7 +118,7 @@ export default {
           method: "post",
           data: this.$http.adornParams({
            date:this.updateCurrent.column.property,
-           priceId:this.updateCurrent.row.priceId,
+           priceId:this.updateCurrent.row.id.slice(6), //price_11111
            num: this.updateCurrentPrice
           })
         }).then(({ data }) => {
@@ -129,12 +139,15 @@ export default {
           limit: this.pageSize,
           key: this.dataForm.key,
           startDate: moment().format("YYYY-MM-DD"),
-          endDate: moment().add(15, 'days').format('YYYY-MM-DD')
+          endDate: moment().add(7, 'days').format('YYYY-MM-DD')
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.date = data.data.date;
-          this.dataList = this.handlerData(data.data.dataList);
+          this.dataList = treeDataTranslate(data.data.dataList, "id", "pid");//this.handlerData(data.data.dataList);
+          if(this.dataList.length){
+              this.expandRowKeys.push(this.dataList[0].id)
+          }
           // this.dataList = data.page.list;
           // this.totalPage = data.page.totalCount;
         } else {
