@@ -1,76 +1,125 @@
 <template>
-    <div class="about-page">
-        <top-header>
-            <div slot="nav-left">
-                <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
+  <div class="about-page">
+    <top-header>
+      <div slot="nav-left">
+        <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
+      </div>
+      <div slot="nav-right">
+        <ul class="nav">
+          <li index="1" @click="handleToPage('about')">联系我们</li>
+          <li index="3" @click="handleToPage('help')">帮助文档</li>
+        </ul>
+      </div>
+    </top-header>
+    <div class="container">
+      <section class="sec-help">
+        <div class="titles">
+          <h1>
+            帮助中心
+            <em></em>
+          </h1>
+          <h2>
+            <font>Help</font>center
+          </h2>
+        </div>
+      </section>
+      <section class="main-container">
+        <el-row :gutter="20">
+          <el-col :span="4">
+            <div class="grid-content bg-purple">
+              <aside class="aside-box">
+                <div class="menu-item__box" v-for="item in menus" :key="item.id">
+                  <div class="menu-item__title" @click="handleToggelMenu(item.id)">
+                    <i class="el-icon-arrow-right"></i>
+                    <span class="menu-txt">{{item.name}}</span>
+                  </div>
+                  <div
+                    class="menu-item__dropdown"
+                    v-if="item.children"
+                    v-show="item.id === activeId"
+                  >
+                    <ul class="nav-box">
+                      <li
+                        class="nav-box__item"
+                        v-for="child in item.children"
+                        :key="child.id"
+                        @click="handleContent(child)"
+                      >
+                        <span class="menu-txt">{{child.name}}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </aside>
             </div>
-            <div slot="nav-right">
-                <ul class="nav">
-                    <li index="1" @click="handleToPage('about')">联系我们</li>
-                    <li index="3" @click="handleToPage('help')">帮助文档</li>
-                </ul>
+          </el-col>
+          <el-col :span="20">
+            <div class="grid-content bg-purple">
+              <!-- <div class="main-content"> -->
+              <div
+                class="main-content"
+                v-show="subActiveId === item.id"
+                v-for="item in contents"
+                :key="item.id"
+                v-html="item.content"
+              ></div>
+              <!-- </div> -->
             </div>
-        </top-header>
-        <section class="sec-help">
-            <div class="titles">
-                <h1>
-                    帮助中心
-                    <em></em>
-                </h1>
-                <h2>
-                    <font>Help</font>center
-                </h2>
+          </el-col>
+        </el-row>
+      </section>
+      <div class="bottom-session__body">
+        <div class="flex-box__item">
+          <div class="hd">微信小程序</div>
+          <div class="bd">
+            <img style="height: 144px;" src="../../assets/img/mapp.jpg">
+          </div>
+          <div class="ft">
+            <p>搜索“千兰会小程序”或</p>
+            <p>扫描的二维码</p>
+          </div>
+          <!-- <div class="ft">
+                                    <div class="ft-flex__box">
+                                        <el-button type="primary">安卓下载</el-button>
+                                        <el-button type="info">ios下载</el-button>
+                                    </div>
+          </div>-->
+        </div>
+        <div class="flex-box__item">
+          <div class="hd">微信公众平台</div>
+          <div class="bd">
+            <img style="height: 144px;" src="../../assets/img/wx-mp.jpg">
+          </div>
+          <div class="ft">
+            <p>搜索“千兰会公众号”或</p>
+            <p>扫描的二维码</p>
+          </div>
+        </div>
+        <div class="flex-box__item">
+          <div class="hd color-bg__blue">服务热线：021-52298888</div>
+          <div class="flex-box__server">
+            <div class="item">
+              <p>商服邮箱</p>
+              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
             </div>
-        </section>
-        <section class="main-container">
-            <el-row :gutter="20">
-                <el-col :span="4">
-                    <div class="grid-content bg-purple">
-                        <aside class="aside-box">
-                            <div class="menu-item__box" v-for="item in menus" :key="item.id">
-                                <div class="menu-item__title" @click="handleToggelMenu(item.id)">
-                                    <i class="el-icon-arrow-right"></i>
-                                    <span class="menu-txt">{{item.name}}</span>
-                                </div>
-                                <div
-                                    class="menu-item__dropdown"
-                                    v-if="item.children"
-                                    v-show="item.id === activeId"
-                                >
-                                    <ul class="nav-box">
-                                        <li
-                                            class="nav-box__item"
-                                            v-for="child in item.children"
-                                            :key="child.id"
-                                            @click="handleContent(child)"
-                                        >
-                                            <span class="menu-txt">{{child.name}}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </aside>
-                    </div>
-                </el-col>
-                <el-col :span="20">
-                    <div class="grid-content bg-purple">
-                        <!-- <div class="main-content"> -->
-                        <div
-                            class="main-content"
-                            v-show="subActiveId === item.id"
-                            v-for="item in contents"
-                            :key="item.id"
-                            v-html="item.content"
-                        ></div>
-                        <!-- </div> -->
-                    </div>
-                </el-col>
-            </el-row>
-        </section>
+            <div class="item">
+              <p>商服邮箱</p>
+              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+            </div>
+            <div class="item">
+              <p>商服邮箱</p>
+              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <Footer></Footer>
+  </div>
 </template>
 <script>
 import { treeDataTranslate } from "@/utils";
+import Footer from "./footer";
 export default {
   data() {
     return {
@@ -79,6 +128,9 @@ export default {
       menus: [],
       contents: []
     };
+  },
+  components: {
+    Footer
   },
   created() {
     this.getDataList();
@@ -147,9 +199,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
 .sec-help {
+  overflow: hidden;
   .titles {
-    overflow: hidden;
     width: 100%;
     float: left;
     text-align: center;
@@ -182,6 +238,58 @@ export default {
       padding-top: 5px;
       font {
         color: #00b0ed;
+      }
+    }
+  }
+}
+.bottom-session__body {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 20px 0;
+  .flex-box__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    .bd {
+      margin: 15px 0;
+      border: 1px solid #eeeeee;
+      padding: 8px;
+    }
+
+    &:not(:first-child) {
+      border-left: 1px solid #eeeeee;
+    }
+
+    .ft {
+      text-align: center;
+    }
+
+    .color-bg__blue {
+      width: 85%;
+      margin: 0 auto;
+      margin-bottom: 15px;
+      height: 40px;
+      border-left: 1px solid #ddd;
+      line-height: 40px;
+      font-size: 20px;
+      color: #fff;
+      text-align: center;
+      background-color: #288fe7;
+    }
+
+    .flex-box__server {
+      width: 85%;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+
+      .item {
+        width: 50%;
       }
     }
   }

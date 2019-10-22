@@ -20,7 +20,8 @@
         width: 100%;
         height: 60px;
         line-height: 70px;
-        background: linear-gradient(to right, #0154af 0%, #049ad7 100%)
+        background-color: #17B3A3;
+        //background: linear-gradient(to right, #0154af 0%, #049ad7 100%)
     }
     .flex-container {
         height: 100%;

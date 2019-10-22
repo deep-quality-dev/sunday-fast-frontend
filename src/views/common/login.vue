@@ -136,17 +136,13 @@
           <div class="item border"></div>
         </div>
       </div>
-      <footer class="footer-container">
-        <p class="popyright">上海春卫信息技术有限公司 © 沪ICP备2345432号
-          <!-- <br />Copyright 2002-2019
-          my.com All rights reserved-->
-        </p>
-      </footer>
+      <Footer></Footer>
     </div>
   </div>
 </template>
 
 <script>
+import Footer from "./footer";
 import { getUUID } from "@/utils";
 export default {
   data() {
@@ -176,6 +172,9 @@ export default {
       },
       captchaPath: ""
     };
+  },
+  components: {
+    Footer
   },
   created() {
     this.getCaptcha();
@@ -424,7 +423,7 @@ export default {
 
 .footer-container {
   width: 100%;
-  min-height: 120px;
+  min-height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,70 +1,74 @@
 <template>
-    <div class="about-page">
-        <top-header>
-            <div slot="nav-left">
-                <a href="/">
-                    <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
-                </a>
-            </div>
-            <div slot="nav-right">
-                <ul class="nav">
-                    <li index="1" @click="handleToPage('about')">联系我们</li>
-                    <li index="3" @click="handleToPage('help')">帮助文档</li>
-                </ul>
-            </div>
-        </top-header>
-        <section class="main-container">
-            <div class="main-content">
-                <section class="contact-box">
-                    <div class="tit">
-                        <span>联系我们</span>
-                    </div>
-                    <div class="address">
-                        <p class="pre">地址：{{sysData.companyAddress}}</p>
-                        <p class="pre">客服热线：{{sysData.companyPhone}}</p>
-                        <p class="pre">传真：{{sysData.companyPhone}}</p>
-                        <!-- <p class="pre">QQ群咨询：284664459</p> -->
-                        <p class="pre">邮箱：{{sysData.companyEmail}}</p>
-                    </div>
-                </section>
-                <section class="feadback-box">
-                    <div class="tit">
-                        <span>留言板</span>
-                    </div>
-                    <div class="feadback-box__input">
-                        <el-form
-                            ref="dataForm"
-                            :rules="dataRule"
-                            :label-position="labelPosition"
-                            :model="dataForm"
-                            label-width="50px"
-                        >
-                            <el-form-item label="姓名" prop="name">
-                                <el-input v-model="dataForm.name"></el-input>
-                            </el-form-item>
-                            <el-form-item label="电话" prop="phone">
-                                <el-input v-model="dataForm.phone"></el-input>
-                            </el-form-item>
-                            <el-form-item label="留言" prop="content">
-                                <el-input
-                                    type="textarea"
-                                    :autosize="{ minRows: 5, maxRows: 15}"
-                                    v-model="dataForm.content"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" @click="handleSubmit">提交</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </section>
-            </div>
-            <el-amap v-show="loaded" class="map" :plugin="plugin" :center="center" :zoom="16"></el-amap>
+  <div class="about-page">
+    <top-header>
+      <div slot="nav-left">
+        <a href="/">
+          <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
+        </a>
+      </div>
+      <div slot="nav-right">
+        <ul class="nav">
+          <li index="1" @click="handleToPage('about')">联系我们</li>
+          <li index="3" @click="handleToPage('help')">帮助文档</li>
+        </ul>
+      </div>
+    </top-header>
+    <section class="main-container">
+      <div class="main-content">
+        <section class="contact-box">
+          <div class="tit">
+            <span>联系我们</span>
+          </div>
+          <div class="address">
+            <p class="pre">地址：{{sysData.companyAddress}}</p>
+            <p class="pre">客服热线：{{sysData.companyPhone}}</p>
+            <p class="pre">传真：{{sysData.companyPhone}}</p>
+            <!-- <p class="pre">QQ群咨询：284664459</p> -->
+            <p class="pre">邮箱：{{sysData.companyEmail}}</p>
+          </div>
         </section>
-    </div>
+        <section class="feadback-box">
+          <div class="tit">
+            <span>留言板</span>
+          </div>
+          <div class="feadback-box__input">
+            <el-form
+              ref="dataForm"
+              :rules="dataRule"
+              :label-position="labelPosition"
+              :model="dataForm"
+              label-width="50px"
+            >
+              <el-form-item label="姓名" prop="name">
+                <el-input v-model="dataForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="电话" prop="phone">
+                <el-input v-model="dataForm.phone"></el-input>
+              </el-form-item>
+              <el-form-item label="留言" prop="content">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 5, maxRows: 15}"
+                  v-model="dataForm.content"
+                ></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleSubmit">提交</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </section>
+      </div>
+      <el-amap v-show="loaded" class="map" :plugin="plugin" :center="center" :zoom="16"></el-amap>
+      <section class="footer-wrap">
+        <Footer></Footer>
+      </section>
+    </section>
+  </div>
 </template>
 
 <script>
+import Footer from "./footer";
 export default {
   data() {
     const self = this;
@@ -118,6 +122,9 @@ export default {
         }
       ]
     };
+  },
+  components: {
+    Footer
   },
   created() {
     this.getSysData();
@@ -214,5 +221,12 @@ export default {
       margin-top: 30px;
     }
   }
+}
+.footer-wrap {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10000;
 }
 </style>
