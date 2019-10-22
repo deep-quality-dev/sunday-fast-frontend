@@ -53,6 +53,9 @@
             <el-form-item label="数量" prop="totalNum">
                 <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
             </el-form-item>
+             <el-form-item label="取消规则" prop="totalNum">
+                <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
+            </el-form-item>
             <el-form-item label="图片" prop="img">
                 <div class="updaloe-row">
                     <el-upload

@@ -35,8 +35,8 @@
             color: #FFFFFF;
             font-size: 32px;
             &.logo {
-                width: 60px;
-                height: 60px;
+                // width: 60px;
+                // height: 60px;
             }
             img {
                 display: block;

@@ -1,169 +1,149 @@
 <template>
-    <div class="login-page">
-        <top-header>
-            <div slot="nav-left">
-                <img src="../../assets/img/logo.png" alt="千兰">
+  <div class="login-page">
+    <top-header>
+      <div slot="nav-left">
+        <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
+      </div>
+      <div slot="nav-right">
+        <ul class="nav">
+          <li index="1" @click="handleToPage('about')">联系我们</li>
+          <li index="3" @click="handleToPage('help')">帮助文档</li>
+        </ul>
+      </div>
+    </top-header>
+    <div class="login-page__container">
+      <!-- carousel -->
+      <div class="carousel-container">
+        <el-carousel height="480px">
+          <el-carousel-item v-for="item in banners" :key="item.url">
+            <div>
+              <img :src="item.url">-
             </div>
-            <div slot="nav-right">
-                <ul class="nav">
-                    <li index="1" @click="handleToPage('about')">联系我们</li>
-                    <li index="3" @click="handleToPage('help')">帮助文档</li>
-                </ul>
-            </div>
-        </top-header>
-        <div class="login-page__container">
-            <!-- carousel -->
-            <div class="carousel-container">
-                <el-carousel height="480px">
-                    <el-carousel-item v-for="item in banners" :key="item.url">
-                        <div>
-                            <img :src="item.url">-
-                        </div>
-                    </el-carousel-item>
-                </el-carousel>
-                <div class="container login-container__session">
-                    <div class="login-container__box">
-                        <div class="login-main">
-                            <div class="login-mian__title">
-                                <div
-                                    class="item"
-                                    :class="{'active':loginType === '1'}"
-                                    @click="handleChangeLoginType('1')"
-                                >管理员登录</div>
-                                <!-- <div
+          </el-carousel-item>
+        </el-carousel>
+        <div class="container login-container__session">
+          <div class="login-container__box">
+            <div class="login-main">
+              <div class="login-mian__title">
+                <div
+                  class="item"
+                  :class="{'active':loginType === '1'}"
+                  @click="handleChangeLoginType('1')"
+                >管理员登录</div>
+                <!-- <div
                                     class="item"
                                     :class="{'active':loginType === '2'}"
                                     @click="handleChangeLoginType('2')"
-                                >商户登录</div> -->
-                            </div>
-                            <div class="longi-mina__form">
-                                <el-form
-                                    :model="dataForm"
-                                    :rules="dataRule"
-                                    ref="dataForm"
-                                    @keyup.enter.native="dataFormSubmit()"
-                                    status-icon
-                                >
-                                    <el-form-item prop="userName">
-                                        <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>
-                                    </el-form-item>
-                                    <el-form-item prop="password">
-                                        <el-input
-                                            prefix-icon="el-icon-lock"
-                                            type="password"
-                                            v-model="dataForm.password"
-                                            placeholder="密码"
-                                        ></el-input>
-                                    </el-form-item>
-                                    <el-form-item prop="captcha">
-                                        <el-row :gutter="20">
-                                            <el-col :span="14">
-                                                <el-input
-                                                    v-model="dataForm.captcha"
-                                                    placeholder="验证码"
-                                                ></el-input>
-                                            </el-col>
-                                            <el-col :span="10" class="login-captcha">
-                                                <img
-                                                    :src="captchaPath"
-                                                    @click="getCaptcha()"
-                                                    alt=""
-                                                >
-                                            </el-col>
-                                        </el-row>
-                                    </el-form-item>
-                                    <el-form-item>
-                                        <el-button
-                                            class="login-btn-submit"
-                                            type="primary"
-                                            @click="dataFormSubmit()"
-                                        >登录</el-button>
-                                    </el-form-item>
-                                </el-form>
-                                <router-link :to="{ path: 'apply' }">商家入驻 ></router-link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                >商户登录</div>-->
+              </div>
+              <div class="longi-mina__form">
+                <el-form
+                  :model="dataForm"
+                  :rules="dataRule"
+                  ref="dataForm"
+                  @keyup.enter.native="dataFormSubmit()"
+                  status-icon
+                >
+                  <el-form-item prop="userName">
+                    <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>
+                  </el-form-item>
+                  <el-form-item prop="password">
+                    <el-input
+                      prefix-icon="el-icon-lock"
+                      type="password"
+                      v-model="dataForm.password"
+                      placeholder="密码"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item prop="captcha">
+                    <el-row :gutter="20">
+                      <el-col :span="14">
+                        <el-input v-model="dataForm.captcha" placeholder="验证码"></el-input>
+                      </el-col>
+                      <el-col :span="10" class="login-captcha">
+                        <img :src="captchaPath" @click="getCaptcha()" alt="">
+                      </el-col>
+                    </el-row>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
+                  </el-form-item>
+                </el-form>
+                <router-link :to="{ path: 'apply' }">商家入驻 ></router-link>
+              </div>
             </div>
-            <div class="login-page__content">
-                <div class="container content-card__container">
-                    <div class="bottom-session">
-                        <div class="bottom-session__header">
-                            <div>
-                                <img style="width:100%" src="../../assets/img/log_header_img.jpeg" alt="">
-                            </div>
-                        </div>
-                        <div class="bottom-session__body">
-                            <div class="flex-box__item">
-                                <div class="hd">微信小程序</div>
-                                <div class="bd">
-                                    <img style="height: 144px;" src="../../assets/img/mapp.jpg">
-                                </div>
-                                <div class="ft">
-                                    <p>搜索“千兰会小程序”或</p>
-                                    <p>扫描的二维码</p>
-                                </div>
-                                <!-- <div class="ft">
+          </div>
+        </div>
+      </div>
+      <div class="login-page__content">
+        <div class="container content-card__container">
+          <div class="bottom-session">
+            <div class="bottom-session__header">
+              <div>
+                <img style="width:100%" src="../../assets/img/log_header_img.jpeg" alt="">
+              </div>
+            </div>
+            <div class="bottom-session__body">
+              <div class="flex-box__item">
+                <div class="hd">微信小程序</div>
+                <div class="bd">
+                  <img style="height: 144px;" src="../../assets/img/mapp.jpg">
+                </div>
+                <div class="ft">
+                  <p>搜索“千兰会小程序”或</p>
+                  <p>扫描的二维码</p>
+                </div>
+                <!-- <div class="ft">
                                     <div class="ft-flex__box">
                                         <el-button type="primary">安卓下载</el-button>
                                         <el-button type="info">ios下载</el-button>
                                     </div>
-                                </div>-->
-                            </div>
-                            <div class="flex-box__item">
-                                <div class="hd">微信公众平台</div>
-                                <div class="bd">
-                                    <img style="height: 144px;" src="../../assets/img/wx-mp.jpg">
-                                </div>
-                                <div class="ft">
-                                    <p>搜索“千兰会公众号”或</p>
-                                    <p>扫描的二维码</p>
-                                </div>
-                            </div>
-                            <div class="flex-box__item">
-                                <div class="hd color-bg__blue">服务热线：021-52298888</div>
-                                <div class="flex-box__server">
-                                    <div class="item">
-                                        <p>商服邮箱</p>
-                                        <a
-                                            type="primary"
-                                            href="mailto:ebooking@ctrip.com"
-                                        >ebooking@ctrip.com</a>
-                                    </div>
-                                    <div class="item">
-                                        <p>商服邮箱</p>
-                                        <a
-                                            type="primary"
-                                            href="mailto:ebooking@ctrip.com"
-                                        >ebooking@ctrip.com</a>
-                                    </div>
-                                    <div class="item">
-                                        <p>商服邮箱</p>
-                                        <a
-                                            type="primary"
-                                            href="mailto:ebooking@ctrip.com"
-                                        >ebooking@ctrip.com</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>-->
+              </div>
+              <div class="flex-box__item">
+                <div class="hd">微信公众平台</div>
+                <div class="bd">
+                  <img style="height: 144px;" src="../../assets/img/wx-mp.jpg">
                 </div>
-                <div class="container bootom-card__container">
-                    <div class="item border"></div>
-                    <div class="item text">我是有底线的</div>
-                    <div class="item border"></div>
+                <div class="ft">
+                  <p>搜索“千兰会公众号”或</p>
+                  <p>扫描的二维码</p>
                 </div>
+              </div>
+              <div class="flex-box__item">
+                <div class="hd color-bg__blue">服务热线：021-52298888</div>
+                <div class="flex-box__server">
+                  <div class="item">
+                    <p>商服邮箱</p>
+                    <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+                  </div>
+                  <div class="item">
+                    <p>商服邮箱</p>
+                    <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+                  </div>
+                  <div class="item">
+                    <p>商服邮箱</p>
+                    <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <footer class="footer-container">
-                <p class="popyright">上海春卫信息技术有限公司 © 沪ICP备2345432号
-                    <!-- <br />Copyright 2002-2019
-                    my.com All rights reserved-->
-                </p>
-            </footer>
+          </div>
         </div>
+        <div class="container bootom-card__container">
+          <div class="item border"></div>
+          <div class="item text">我是有底线的</div>
+          <div class="item border"></div>
+        </div>
+      </div>
+      <footer class="footer-container">
+        <p class="popyright">上海春卫信息技术有限公司 © 沪ICP备2345432号
+          <!-- <br />Copyright 2002-2019
+          my.com All rights reserved-->
+        </p>
+      </footer>
     </div>
+  </div>
 </template>
 
 <script>
@@ -172,20 +152,7 @@ export default {
   data() {
     return {
       loginType: "1",
-      banners: [
-        {
-          url: "https://Images4.c-ctrip.com/target/270r1800000154d4x9A04.jpg"
-        },
-        {
-          url: "https://Images4.c-ctrip.com/target/27080y000000mgdpu49A1.jpg"
-        },
-        {
-          url: "https://Images4.c-ctrip.com/target/270c1900000166ottFE7F.jpg"
-        },
-        {
-          url: "https://Images4.c-ctrip.com/target/270j16000000ysri7F5A9.png"
-        }
-      ],
+      banners: [],
       dataForm: {
         userName: "",
         password: "",
@@ -212,10 +179,27 @@ export default {
   },
   created() {
     this.getCaptcha();
+    this.getBannerData();
   },
   methods: {
     handleToPage(name) {
-      this.$router.push({ name})
+      this.$router.push({ name });
+    },
+    getBannerData() {
+      this.$http({
+        url: this.$http.adornUrl("/hotel/adv/loadByType?type=2"),
+        method: "get"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          data.data.map(item => {
+            this.banners.push({
+              url: item.logo
+            });
+          });
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
     },
     // 切换登陆方式
     handleChangeLoginType(type) {

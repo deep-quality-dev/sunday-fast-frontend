@@ -2,7 +2,9 @@
     <div>
         <top-header>
             <div slot="nav-left">
-                <img src="../../assets/img/logo.png" alt="千兰" />
+              <a href="/">
+                    <img style="height: 44px;" src="../../assets/img/header_logo.jpg" alt="千兰">
+                </a>
             </div>
         </top-header>
         <div class="container">
