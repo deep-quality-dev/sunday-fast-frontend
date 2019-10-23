@@ -14,9 +14,6 @@
       <el-form-item label="昵称" prop="name">
         <el-input v-model="dataForm.name" placeholder="昵称"></el-input>
       </el-form-item>
-      <el-form-item label="注册时间" prop="joinTime">
-        <el-input v-model="dataForm.joinTime" placeholder="注册时间"></el-input>
-      </el-form-item>
       <el-form-item label="头像" prop="img">
         <!--<el-input v-model="dataForm.img" placeholder="头像"></el-input>-->
         <el-upload
@@ -36,7 +33,9 @@
       <el-form-item label="真实姓名" prop="zsName">
         <el-input v-model="dataForm.zsName" placeholder="真实姓名"></el-input>
       </el-form-item>
-      
+      <el-form-item label="身份证" prop="identityNo">
+        <el-input v-model="dataForm.identityNo" placeholder="身份证"></el-input>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -60,17 +59,18 @@ export default {
         type: "",
         zsName: "",
         number: "",
+        identityNo: ""
       },
       dataRule: {
         name: [{ required: true, message: "昵称不能为空", trigger: "blur" }],
-        joinTime: [
-          { required: true, message: "注册时间不能为空", trigger: "blur" }
+        identityNo: [
+          { required: true, message: "身份证不能为空", trigger: "blur" }
         ],
         img: [{ required: true, message: "头像不能为空", trigger: "blur" }],
         tel: [{ required: true, message: "手机号不能为空", trigger: "blur" }],
         zsName: [
           { required: true, message: "真是姓名不能为空", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -94,6 +94,7 @@ export default {
             if (data && data.code === 0) {
               this.dataForm.name = data.hotelMember.name;
               this.dataForm.joinTime = data.hotelMember.joinTime;
+              this.dataForm.identityNo = data.hotelMember.identityNo;
               this.dataForm.img = data.hotelMember.img;
               this.dataForm.tel = data.hotelMember.tel;
               this.dataForm.type = data.hotelMember.type;
@@ -118,8 +119,9 @@ export default {
               joinTime: this.dataForm.joinTime,
               img: this.dataForm.img,
               tel: this.dataForm.tel,
+              identityNo: this.dataForm.identityNo,
               type: this.dataForm.type,
-              zsName: this.dataForm.zsName,
+              zsName: this.dataForm.zsName
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

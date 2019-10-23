@@ -12,16 +12,31 @@
                     v-model="checkAll"
                     @change="handleCheckAllChange"
                 >全选</el-checkbox>
-                <el-tree
-                    ref="roomTree"
-                    :props="propsOptions"
-                    :data="roomData"
-                    node-key="id"
-                    show-checkbox
-                    @check-change="checkChange"
-                    @check="currentChecked"
-                    default-expand-all
-                ></el-tree>
+                <el-row :gutter="20" v-for="item in roomData" :key="item.id">
+                    <el-col :span="8">
+                        <div class="grid-content bg-purple">
+                            <el-checkbox
+                                :label="item.name"
+                                :checked="item.hotelRoomMoney.filter(item=>item.checked==true).length == item.hotelRoomMoney.length"
+                                :key="item.id"
+                            >{{item.name}},{{item.hotelRoomMoney.filter(item=>item.checked==true)}}</el-checkbox>
+                        </div>
+                    </el-col>
+                    <el-col :span="16">
+                        <div class="grid-content bg-purple">
+                            <el-checkbox-group
+                                v-model="checked[item.id]"
+                                @change="handleChange(item.id)"
+                            >
+                                <el-checkbox
+                                    v-for="money in item.hotelRoomMoney"
+                                    :key="money.id"
+                                    :label="money.id"
+                                >{{money.name}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    </el-col>
+                </el-row>
             </el-form-item>
             <el-form-item label="选择日期">
                 <el-date-picker
@@ -48,63 +63,87 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            dialogFormVisible: false,
-            checkAll: false,
-            isIndeterminate: true,
-            form: {},
-            value1: "",
-            roomData: [],
-            radio: [3],
-            propsOptions: {
-                label: (data, node) => {
-                  console.log(node)
-                    return data.name
-                },
-                children: "hotelRoomMoney"
+  data() {
+    return {
+      dialogFormVisible: false,
+      checkAll: false,
+      isIndeterminate: true,
+      form: {},
+      value1: "",
+      roomData: [
+        {
+          checked: false,
+          hotelRoomMoney: [
+            {
+              checked: false
             }
-        };
+          ]
+        }
+      ],
+      radio: [3],
+      checked: {},
+      propsOptions: {
+        label: (data, node) => {
+          console.log(node);
+          return data.name;
+        },
+        children: "hotelRoomMoney"
+      }
+    };
+  },
+  methods: {
+    init(id) {
+      this.dialogFormVisible = true;
+      this.getRoomDatas();
     },
-    methods: {
-        init(id) {
-            this.dialogFormVisible = true;
-            this.getRoomDatas();
-        },
-        handleCheckAllChange() {
-            if (this.checkAll) {
-                this.$refs.roomTree.setCheckedNodes(this.roomData);
-                this.isIndeterminate = false;
-                
-            } else {
-                this.$refs.roomTree.setCheckedKeys([]);
-                this.isIndeterminate = true;
-            }
-        },
-        getRoomDatas() {
-            this.$http({
-                url: this.$http.adornUrl(`/hotel/hotelroom/getAllRooms`),
-                method: "get"
-            }).then(({ data }) => {
-                if (data && data.code === 0) {
-                    this.roomData = data.data;
-                } else {
-                    this.$message.error(data.msg);
-                }
+    handleCheckAllChange() {
+      if (this.checkAll) {
+        this.$refs.roomTree.setCheckedNodes(this.roomData);
+        this.isIndeterminate = false;
+      } else {
+        this.$refs.roomTree.setCheckedKeys([]);
+        this.isIndeterminate = true;
+      }
+    },
+    getRoomDatas() {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelroom/getAllRooms`),
+        method: "get"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.roomData = data.data;
+          this.roomData.map(item => {
+            item.checked = false;
+            this.checked[item.id] = [];
+            item.hotelRoomMoney.map(money => {
+              this.checked[item.id].push(money.id);
+              money.checked = false;
             });
-        },
-         handleSubmit() {
-           this.dialogFormVisible = false;
-           const roomId = this.$refs.roomTree.getHalfCheckedKeys().concat(this.$refs.roomTree.getCheckedKeys());
-           console.log(roomId)
-         },
-         checkChange(item, check, isChildCheck) {
-          //  console.log(item)
-         },
-         currentChecked(data, check) {
-          //  console.log(data, check)
-         }
+          });
+          console.log(this.checked);
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    handleSubmit() {
+      this.dialogFormVisible = false;
+      const roomId = this.$refs.roomTree
+        .getHalfCheckedKeys()
+        .concat(this.$refs.roomTree.getCheckedKeys());
+      console.log(roomId);
+    },
+    checkChange(item, check, isChildCheck) {
+      //  console.log(item)
+    },
+    currentChecked(data, check) {
+      //  console.log(data, check)
+    },
+    handleChange(value, categoryId) {
+      console.log(value);
+      this.checked[categoryId] = value;
     }
+  }
 };
 </script>
 

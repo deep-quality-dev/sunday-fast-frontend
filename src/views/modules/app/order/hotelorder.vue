@@ -27,7 +27,7 @@
         <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
         <el-button
-          v-if="isAuth('hotel:hoteltopic:save')"
+          v-if="isAuth('hotel:hotelorder:ordersetting')"
           type="primary"
           @click="addOrUpdateHandle()"
         >接单设置</el-button>
@@ -87,7 +87,13 @@
           <el-tag v-if="scope.row.status === 6" size="small">退款中</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="payMethod" header-align="center" align="center" label="支付方式">
+      <el-table-column
+        prop="payMethod"
+        header-align="center"
+        width="120"
+        align="center"
+        label="支付方式"
+      >
         <template slot-scope="scope">
           <el-tag v-if="scope.row.payMethod === 'wx'" size="small">微信支付</el-tag>
           <el-tag v-if="scope.row.payMethod === 'balance'" size="small">余额支付</el-tag>

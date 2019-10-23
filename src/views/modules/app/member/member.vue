@@ -5,6 +5,12 @@
         <el-input v-model="dataForm.name" placeholder="会员昵称" clearable></el-input>
       </el-form-item>
       <el-form-item>
+        <el-input v-model="dataForm.identityNo" placeholder="身份证" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="dataForm.tel" placeholder="电话" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('hotel:member:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button
@@ -23,7 +29,7 @@
       style="width: 100%;"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-       <el-table-column prop="img" header-align="center" align="center" label="头像">
+      <el-table-column prop="img" header-align="center" align="center" label="头像">
         <template slot-scope="scope">
           <img :src="scope.row.img" alt="" style="with:30px;height:30px">
         </template>
@@ -32,6 +38,14 @@
       <el-table-column prop="joinTime" header-align="center" align="center" label="注册时间"></el-table-column>
       <el-table-column prop="tel" header-align="center" align="center" label="手机号"></el-table-column>
       <el-table-column prop="zsName" header-align="center" align="center" label="真实姓名"></el-table-column>
+      <el-table-column prop="identityNo" header-align="center" align="center" label="身份证"></el-table-column>
+      <!-- <el-table-column header-align="center" align="center" label="实名认证">
+        <template slot-scope="scope">
+          <el-ta type="success" size="small" v-if="scope.row.identityNo">是</el-ta>
+          <el-ta type="info" size="small" v-else>否</el-ta>
+        </template>
+      </el-table-column>-->
+
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
