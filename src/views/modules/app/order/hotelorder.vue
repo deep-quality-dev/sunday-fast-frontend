@@ -26,12 +26,11 @@
       <el-form-item>
         <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
-        <Setting>
-          <el-button
-            v-if="isAuth('hotel:hotelorder:ordersetting')"
-            type="primary"
-          >接单设置</el-button>
-        </Setting>
+        <el-button
+          @click="orderSettingHandler()"
+          v-if="isAuth('hotel:hotelordersetting:info')"
+          type="primary"
+        >接单设置</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -124,6 +123,7 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <Setting v-if="orderSettingVisible" ref="orderSetting" @refreshDataList="getDataList"></Setting>
   </div>
 </template>
 
@@ -154,7 +154,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      orderSettingVisible: false
     };
   },
   components: {
@@ -165,6 +166,12 @@ export default {
     this.getDataList();
   },
   methods: {
+    orderSettingHandler() {
+      this.orderSettingVisible = true;
+      this.$nextTick(() => {
+        this.$refs.orderSetting.init();
+      });
+    },
     //订单入住
     orderCheckInHandler(orderId) {
       this.$http({

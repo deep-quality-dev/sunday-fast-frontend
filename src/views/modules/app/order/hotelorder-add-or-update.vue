@@ -1,5 +1,5 @@
 <template>
-  <el-c
+  <el-dialog
     :title="!dataForm.id ? '新增' : '查看'"
     :close-on-click-modal="false"
     :visible.sync="visible"
@@ -187,7 +187,9 @@
               <p class="pre">订单编号：{{dataForm.orderNo}}</p>
               <p class="pre">
                 付款类型：
-                <span class="text--strong">{{dataForm.payMethod+'+'+payMethodMap[dataForm.payMethod]}}</span>
+                <span
+                  class="text--strong"
+                >{{dataForm.payMethod+'+'+payMethodMap[dataForm.payMethod]}}</span>
               </p>
             </div>
             <div class="order-info__main">
@@ -247,7 +249,7 @@
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">关闭</el-button>
     </span>
-  </el-c>
+  </el-dialog>
 </template>
 
 <script>
@@ -293,7 +295,7 @@ export default {
         tel: "",
         status: "",
         outTradeNo: "",
-        payMethod:"",
+        payMethod: "",
         disCost: "",
         yjCost: "",
         yhqCost: "",
