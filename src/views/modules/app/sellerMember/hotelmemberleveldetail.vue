@@ -79,12 +79,12 @@
           <span v-else>--</span>
         </template>
       </el-table-column>
-      <el-table-column prop="id" header-align="center" align="center" label="是否本店会员">
+      <!-- <el-table-column prop="id" header-align="center" align="center" label="是否本店会员">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.id" size="small">是</el-tag>
           <el-tag v-else type="danger">否</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="levelName" header-align="center" align="center" label="会员类型">
         <template slot-scope="scope">
           <span v-if="scope.row.levelName">{{scope.row.levelName}}</span>
