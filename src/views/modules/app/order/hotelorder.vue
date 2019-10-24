@@ -26,11 +26,12 @@
       <el-form-item>
         <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
-        <el-button
-          v-if="isAuth('hotel:hotelorder:ordersetting')"
-          type="primary"
-          @click="addOrUpdateHandle()"
-        >接单设置</el-button>
+        <Setting>
+          <el-button
+            v-if="isAuth('hotel:hotelorder:ordersetting')"
+            type="primary"
+          >接单设置</el-button>
+        </Setting>
       </el-form-item>
     </el-form>
     <el-table
@@ -128,6 +129,8 @@
 
 <script>
 import AddOrUpdate from "./hotelorder-add-or-update";
+import Setting from "./setting";
+
 export default {
   data() {
     return {
@@ -155,7 +158,8 @@ export default {
     };
   },
   components: {
-    AddOrUpdate
+    AddOrUpdate,
+    Setting
   },
   activated() {
     this.getDataList();
