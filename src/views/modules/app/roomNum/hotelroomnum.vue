@@ -62,7 +62,7 @@
         <el-button type="primary" @click="onUpdateSubmit">确 定</el-button>
       </span>
     </el-dialog>
-    <SetRoomNum v-if="setRoomNumVisible" ref="setRoomNum"></SetRoomNum>
+    <SetRoomNum v-if="setRoomNumVisible" @refreshDataList="getDataList" ref="setRoomNum"></SetRoomNum>
   </div>
 </template>
 <script>
@@ -93,7 +93,6 @@ export default {
   methods: {
     tableRowClassName({row, rowIndex}) {
         if (row.type === 0 ) {
-           console.log(row)
           return 'success-row';
         }
         return '';
