@@ -13,7 +13,6 @@
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
           type="primary"
           @click="registerCardHandler()"
-          :disabled="dataListSelections.length <= 0"
         >办卡</el-button>
         <el-button
           v-if="isAuth('hotel:hotelmemberleveldetail:save')"
@@ -224,18 +223,9 @@ export default {
     },
     //办卡
     registerCardHandler() {
-      if (this.dataListSelections.length > 1) {
-        this.$message.error("请选择一条数据");
-        return;
-      }
-
-      if (this.dataListSelections[0].id) {
-        this.$message.error("用户已办理会员");
-        return;
-      }
       this.addOrUpdateVisible = true;
       this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(this.dataListSelections[0]);
+        this.$refs.addOrUpdate.init();
       });
     },
     // 新增 / 修改
