@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <el-c
     :title="!dataForm.id ? '新增' : '查看'"
     :close-on-click-modal="false"
     :visible.sync="visible"
@@ -247,7 +247,7 @@
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">关闭</el-button>
     </span>
-  </el-dialog>
+  </el-c>
 </template>
 
 <script>
