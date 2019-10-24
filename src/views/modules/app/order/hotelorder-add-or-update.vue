@@ -170,31 +170,34 @@
       </el-form>
     </section>
     <section class="order-info__container" v-else>
-      <header class="oreder-header">
+      <!-- <header class="oreder-header">
         <el-steps :active="2" align-center finish-status="finish">
           <el-step title="用户订单"></el-step>
           <el-step title="已确认"></el-step>
           <el-step title="已入住"></el-step>
         </el-steps>
-      </header>
+      </header>-->
       <div class="order-info__wrapper">
         <div class="flex-item order-info__left">
           <div class="order-info__title">
-            <h3>订单信息</h3>
+            <!-- <h3>订单信息</h3> -->
           </div>
           <div class="order-info__body">
             <div class="order-info__top">
-              <p class="pre">订单编号：{{dataForm.ddTime}}</p>
+              <p class="pre">订单编号：{{dataForm.orderNo}}</p>
               <p class="pre">
                 付款类型：
-                <span class="text--strong">xxxxxxxx</span>
+                <span class="text--strong">{{dataForm.payMethod+'+'+payMethodMap[dataForm.payMethod]}}</span>
               </p>
             </div>
             <div class="order-info__main">
-              <p class="pre">订单编号：xxxxxxxx</p>
-              <p class="pre">订单编号：xxxxxxxx</p>
-              <p class="pre">订单编号：xxxxxxxx</p>
-              <p class="pre">订单编号：xxxxxxxx</p>
+              <p class="pre">下单时间 {{dataForm.createTime}}</p>
+              <p class="pre">预定时间 {{dataForm.arrivalTime}}</p>
+              <p class="pre">会员卡号 {{dataForm.orderNo}}</p>
+              <p class="pre">姓名 {{dataForm.name}}</p>
+              <p class="pre">电话 {{dataForm.tel}}</p>
+              <p class="pre">身份证 {{dataForm.orderNo}}</p>
+              <p class="pre">预定天数 {{dataForm.days}}</p>
             </div>
           </div>
         </div>
@@ -208,21 +211,22 @@
                 <i class="el-icon-warning"></i>
                 <div class="room">
                   订房状态：
-                  <span class="status">已入住</span>
+                  <span class="status">{{orderStatusMap[String(dataForm.status)]}}</span>
                 </div>
                 <div class="amount">
                   付款金额：
-                  <span class="unit">0.01</span>
+                  <span class="unit">{{dataForm.totalCost}}</span>
                 </div>
               </div>
             </div>
             <div class="order-remark__main">
               <h3>备注</h3>
               <div class="order-remark__body">
-                <p class="pre">房价：xxxxxxxx</p>
-                <p class="pre">押金：xxxxxxxx</p>
-                <p class="pre">订单编号：xxxxxxxx</p>
-                <p class="pre">订单编号：xxxxxxxx</p>
+                <p class="pre">会员折扣：</p>
+                <p class="pre">优惠券：</p>
+                <p class="pre">备注：</p>
+                <!-- <p class="pre">订单编号：xxxxxxxx</p>
+                <p class="pre">订单编号：xxxxxxxx</p>-->
               </div>
             </div>
           </div>
@@ -232,10 +236,11 @@
         <div class="title">
           <h3>订单详情</h3>
         </div>
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="日期" width="180"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table :data="orderRecord" style="width: 100%">
+          <el-table-column prop="roomType" label="名称" width="180"></el-table-column>
+          <el-table-column prop="amount" label="价格" width="180"></el-table-column>
+          <el-table-column prop="arrivalTime" label="到店时间"></el-table-column>
+          <el-table-column prop="createTime" label="离店时间"></el-table-column>
         </el-table>
       </div>
     </section>
@@ -249,30 +254,22 @@
 export default {
   data() {
     return {
+      payMethodMap: {
+        wx: "微信支付",
+        balance: "余额支付",
+        integral: "积分支付"
+      },
+      orderStatusMap: {
+        "1": "待支付",
+        "2": "已付款",
+        "3": "已取消",
+        "4": "已完成",
+        "5": "已入住",
+        "6": "退款中"
+      },
       uploadAction: "",
       visible: false,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
+      orderRecord: [],
       dataForm: {
         id: 0,
         sellerId: "",
@@ -296,6 +293,7 @@ export default {
         tel: "",
         status: "",
         outTradeNo: "",
+        payMethod:"",
         disCost: "",
         yjCost: "",
         yhqCost: "",
@@ -419,7 +417,7 @@ export default {
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
+        // this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(
@@ -467,6 +465,8 @@ export default {
               this.dataForm.voice = data.hotelOrder.voice;
               this.dataForm.qrFromid = data.hotelOrder.qrFromid;
               this.dataForm.orderInfo = data.hotelOrder.orderInfo;
+              this.dataForm.payMethod = data.hotelOrder.payMethod;
+              this.orderRecord = data.hotelOrder.records;
             }
           });
         }
@@ -674,6 +674,6 @@ export default {
 
 .order-info__table {
   margin-top: 40px;
-  padding: 10px 30px
+  padding: 10px 30px;
 }
 </style>
