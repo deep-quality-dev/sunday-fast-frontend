@@ -5,249 +5,252 @@
     :visible.sync="visible"
     width="80%"
   >
-    <section v-if="!dataForm.id">
-      <el-form :model="dataForm" ref="dataForm" label-width="auto">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="订单号" prop="orderNo">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.orderNo"
-                placeholder="订单号"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="入住时间" prop="arrivalTime">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.arrivalTime"
-                placeholder="入住时间"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="离店时间" prop="departureTime">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.departureTime"
-                placeholder="离店时间"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="到店时间" prop="ddTime">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.ddTime"
-                placeholder="到店时间"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="价格" prop="price">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.price"
-                placeholder="价格"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="房间数量" prop="num">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.num"
-                placeholder="房间数量"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="入住天数" prop="days">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.days"
-                placeholder="入住天数"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="房型" prop="roomType">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.roomType"
-                placeholder="房型"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="床型" prop="bedType">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.bedType"
-                placeholder="床型"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="预定人" prop="name">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.name"
-                placeholder="预定人"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="联系电话" prop="tel">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.tel"
-                placeholder="联系电话"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="订单状态" prop="status">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.status"
-                placeholder="订单状态"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="折后价格" prop="disCost">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.disCost"
-                placeholder="折后价格"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="优惠券价格" prop="yhqCost">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.yhqCost"
-                placeholder="优惠券价格"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="会员折扣" prop="yyzkCost">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.yyzkCost"
-                placeholder="会员折扣金额"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="总价格" prop="totalCost">
-              <el-input
-                :readonly="!dataForm.id ? false : true"
-                v-model="dataForm.totalCost"
-                placeholder="总价格"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </section>
-    <section class="order-info__container" v-else>
-      <!-- <header class="oreder-header">
+    <div v-loading="dataListLoading">
+      <section v-if="!dataForm.id">
+        <el-form :model="dataForm" ref="dataForm" label-width="auto">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="订单号" prop="orderNo">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.orderNo"
+                  placeholder="订单号"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="入住时间" prop="arrivalTime">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.arrivalTime"
+                  placeholder="入住时间"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="离店时间" prop="departureTime">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.departureTime"
+                  placeholder="离店时间"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="到店时间" prop="ddTime">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.ddTime"
+                  placeholder="到店时间"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="价格" prop="price">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.price"
+                  placeholder="价格"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="房间数量" prop="num">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.num"
+                  placeholder="房间数量"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="入住天数" prop="days">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.days"
+                  placeholder="入住天数"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="房型" prop="roomType">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.roomType"
+                  placeholder="房型"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="床型" prop="bedType">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.bedType"
+                  placeholder="床型"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="预定人" prop="name">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.name"
+                  placeholder="预定人"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="联系电话" prop="tel">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.tel"
+                  placeholder="联系电话"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="订单状态" prop="status">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.status"
+                  placeholder="订单状态"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="折后价格" prop="disCost">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.disCost"
+                  placeholder="折后价格"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="优惠券价格" prop="yhqCost">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.yhqCost"
+                  placeholder="优惠券价格"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="会员折扣" prop="yyzkCost">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.yyzkCost"
+                  placeholder="会员折扣金额"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="总价格" prop="totalCost">
+                <el-input
+                  :readonly="!dataForm.id ? false : true"
+                  v-model="dataForm.totalCost"
+                  placeholder="总价格"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </section>
+      <section class="order-info__container" v-else>
+        <!-- <header class="oreder-header">
         <el-steps :active="2" align-center finish-status="finish">
           <el-step title="用户订单"></el-step>
           <el-step title="已确认"></el-step>
           <el-step title="已入住"></el-step>
         </el-steps>
-      </header>-->
-      <div class="order-info__wrapper">
-        <div class="flex-item order-info__left">
-          <div class="order-info__title">
-            <!-- <h3>订单信息</h3> -->
-          </div>
-          <div class="order-info__body">
-            <div class="order-info__top">
-              <p class="pre">订单编号：{{dataForm.orderNo}}</p>
-              <p class="pre">
-                付款类型：
-                <span
-                  class="text--strong"
-                >{{dataForm.payMethod+'+'+payMethodMap[dataForm.payMethod]}}</span>
-              </p>
+        </header>-->
+        <div class="order-info__wrapper">
+          <div class="flex-item order-info__left">
+            <div class="order-info__title">
+              <!-- <h3>订单信息</h3> -->
             </div>
-            <div class="order-info__main">
-              <p class="pre">下单时间 {{dataForm.createTime}}</p>
-              <p class="pre">预定时间 {{dataForm.arrivalTime}}</p>
-              <p class="pre">会员卡号 {{dataForm.orderNo}}</p>
-              <p class="pre">姓名 {{dataForm.name}}</p>
-              <p class="pre">电话 {{dataForm.tel}}</p>
-              <p class="pre">身份证 {{dataForm.orderNo}}</p>
-              <p class="pre">预定天数 {{dataForm.days}}</p>
-            </div>
-          </div>
-        </div>
-        <div class="flex-item order-info__right">
-          <div class="order-info__title">
-            <h3>订单信息</h3>
-          </div>
-          <div class="order-info__remark">
-            <div class="order-remark__top">
-              <div class="bar">
-                <i class="el-icon-warning"></i>
-                <div class="room">
-                  订房状态：
-                  <span class="status">{{orderStatusMap[String(dataForm.status)]}}</span>
-                </div>
-                <div class="amount">
-                  付款金额：
-                  <span class="unit">{{dataForm.totalCost}}</span>
-                </div>
+            <div class="order-info__body">
+              <div class="order-info__top">
+                <p class="pre">订单编号：{{dataForm.orderNo}}</p>
+                <p class="pre">
+                  付款类型：
+                  <span class="text--strong">
+                    <el-tag v-if="dataForm.payMethod">{{payMethodMap[dataForm.payMethod]}}</el-tag>
+                    <span v-else>--</span>
+                  </span>
+                </p>
               </div>
-            </div>
-            <div class="order-remark__main">
-              <h3>备注</h3>
-              <div class="order-remark__body">
-                <p class="pre">会员折扣：</p>
-                <p class="pre">优惠券：</p>
-                <p class="pre">备注：</p>
-                <!-- <p class="pre">订单编号：xxxxxxxx</p>
-                <p class="pre">订单编号：xxxxxxxx</p>-->
+              <div class="order-info__main">
+                <p class="pre">下单时间 {{dataForm.createTime}}</p>
+                <p class="pre">预定时间 {{dataForm.arrivalTime}}</p>
+                <p class="pre">会员卡号 {{dataForm.orderNo}}</p>
+                <p class="pre">姓名 {{dataForm.name}}</p>
+                <p class="pre">电话 {{dataForm.tel}}</p>
+                <p class="pre">身份证 {{dataForm.orderNo}}</p>
+                <p class="pre">预定天数 {{dataForm.days}}</p>
               </div>
             </div>
           </div>
+          <div class="flex-item order-info__right">
+            <div class="order-info__title">
+              <h3>订单信息</h3>
+            </div>
+            <div class="order-info__remark">
+              <div class="order-remark__top">
+                <div class="bar">
+                  <i class="el-icon-warning"></i>
+                  <div class="room">
+                    订房状态：
+                    <span class="status">{{orderStatusMap[String(dataForm.status)]}}</span>
+                  </div>
+                  <div class="amount">
+                    付款金额：
+                    <span class="unit">{{dataForm.totalCost}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="order-remark__main">
+                <h3>备注</h3>
+                <div class="order-remark__body">
+                  <p class="pre">会员折扣：{{dataForm.yyzkCost || '0.00'}}</p>
+                  <p class="pre">优惠券：{{dataForm.yhqCost || '0.00'}}</p>
+                  <p class="pre">备注：{{dataForm.remark || '--'}}</p>
+                  <!-- <p class="pre">订单编号：xxxxxxxx</p>
+                  <p class="pre">订单编号：xxxxxxxx</p>-->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="order-info__table">
-        <div class="title">
-          <h3>订单详情</h3>
+        <div class="order-info__table">
+          <div class="title">
+            <h3>订单详情</h3>
+          </div>
+          <el-table :data="orderRecord" style="width: 100%">
+            <el-table-column prop="roomType" label="名称" width="180"></el-table-column>
+            <el-table-column prop="amount" label="价格" width="80"></el-table-column>
+            <el-table-column prop="arrivalTime" label="入住时间"></el-table-column>
+            <el-table-column prop="createTime" label="离店时间"></el-table-column>
+          </el-table>
         </div>
-        <el-table :data="orderRecord" style="width: 100%">
-          <el-table-column prop="roomType" label="名称" width="180"></el-table-column>
-          <el-table-column prop="amount" label="价格" width="180"></el-table-column>
-          <el-table-column prop="arrivalTime" label="到店时间"></el-table-column>
-          <el-table-column prop="createTime" label="离店时间"></el-table-column>
-        </el-table>
-      </div>
-    </section>
+      </section>
+    </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">关闭</el-button>
+      <el-button @click="visible = false">取消</el-button>
     </span>
   </el-dialog>
 </template>
@@ -256,6 +259,7 @@
 export default {
   data() {
     return {
+      dataListLoading: false,
       payMethodMap: {
         wx: "微信支付",
         balance: "余额支付",
@@ -413,6 +417,7 @@ export default {
   },
   methods: {
     init(id) {
+      this.dataListLoading = true;
       this.uploadAction = this.$http.adornUrl(
         `/sys/oss/upload?token=${this.$cookie.get("token")}`
       );
@@ -428,6 +433,7 @@ export default {
             method: "get",
             params: this.$http.adornParams()
           }).then(({ data }) => {
+            this.dataListLoading = false;
             if (data && data.code === 0) {
               this.dataForm.sellerId = data.hotelOrder.sellerId;
               this.dataForm.roomId = data.hotelOrder.roomId;
@@ -661,7 +667,7 @@ export default {
 
         .status,
         .unit {
-          font-size: 38px;
+          font-size: 30px;
         }
         .status {
           color: orange;
