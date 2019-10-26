@@ -14,7 +14,25 @@
       <el-form-item label="会员名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="会员名称"></el-input>
       </el-form-item>
-      <el-form-item label="图标" prop="icon">
+      <el-form-item label="会员折扣" prop="discount">
+        <el-input v-model="dataForm.discount" placeholder="享受折扣"></el-input>
+      </el-form-item>
+      <el-form-item label="是否需要支付" prop="payFlag">
+        <el-radio-group v-model="dataForm.payFlag">
+          <el-radio v-model="dataForm.payFlag" :label="1">是</el-radio>
+          <el-radio v-model="dataForm.payFlag" :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="dataForm.payFlag === 1" label="支付费用" prop="payAmount">
+        <el-input v-model="dataForm.payAmount" placeholder="支付费用"></el-input>
+      </el-form-item>
+      <el-form-item label="积分购买" prop="payIntegral">
+        <el-input v-model="dataForm.payIntegral" placeholder="积分兑换会员卡"></el-input>
+      </el-form-item>
+      <el-form-item label="等级排序" prop="orderby">
+        <el-input v-model="dataForm.orderby" placeholder="等级排序"></el-input>
+      </el-form-item>
+      <el-form-item label="会员图标" prop="icon">
         <el-upload
           class="avatar-uploader"
           :action="uploadAction"
@@ -26,7 +44,7 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
-      <el-form-item label="背景图" prop="bgImage">
+      <el-form-item label="卡片景图" prop="bgImage">
         <el-upload
           class="avatar-uploader"
           :action="uploadAction"
@@ -38,23 +56,17 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
-      <el-form-item label="会员折扣" prop="discount">
-        <el-input v-model="dataForm.discount" placeholder="折扣"></el-input>
-      </el-form-item>
-      <el-form-item label="排序" prop="orderby">
-        <el-input v-model="dataForm.orderby" placeholder="排序"></el-input>
-      </el-form-item>
-      <el-form-item label="描述" prop="content">
-        <el-input v-model="dataForm.content" placeholder="描述"></el-input>
-      </el-form-item>
-      <el-form-item label="是否需要支付" prop="payFlag">
-        <el-input v-model="dataForm.payFlag" placeholder="是否需要支付"></el-input>
-      </el-form-item>
-      <el-form-item label="费用" prop="payAmount">
-        <el-input v-model="dataForm.payAmount" placeholder="费用"></el-input>
-      </el-form-item>
-       <el-form-item label="积分购买" prop="payIntegral">
-        <el-input v-model="dataForm.payIntegral" placeholder="积分购买"></el-input>
+      <el-form-item label="卡片描述" prop="content">
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.content"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -76,15 +88,18 @@ export default {
         icon: "",
         discount: "",
         bgImage: "",
-        payIntegral:0,
+        payIntegral: 0,
         orderby: 1,
         content: "",
-        payFlag: "",
+        payFlag: 0,
         payAmount: ""
       },
       dataRule: {
         name: [
           { required: true, message: "会员名称不能为空", trigger: "blur" }
+        ],
+        payAmount: [
+          { required: true, message: "卡片支付费用不能为空", trigger: "blur" }
         ],
         icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
         orderby: [{ required: true, message: "排序不能为空", trigger: "blur" }]
@@ -139,7 +154,7 @@ export default {
               discount: this.dataForm.discount,
               orderby: this.dataForm.orderby,
               content: this.dataForm.content,
-              payIntegral:this.dataForm.payIntegral,
+              payIntegral: this.dataForm.payIntegral,
               bgImage: this.dataForm.bgImage,
               payFlag: this.dataForm.payFlag,
               payAmount: this.dataForm.payAmount
@@ -179,6 +194,13 @@ export default {
     },
     handleBgImageSuccess(res, file) {
       this.dataForm.bgImage = res.url;
+    },
+    onEditorBlur() {},
+    onEditorFocus() {
+      //获得焦点事件
+    },
+    onEditorChange() {
+      //内容改变事件
     },
     beforeBgImageUpload(file) {
       const isJPG = file.type === "image/jpeg";
