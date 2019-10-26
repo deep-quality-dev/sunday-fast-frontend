@@ -32,6 +32,11 @@
           v-if="isAuth('hotel:hotelordersetting:info')"
           type="primary"
         >接单设置</el-button>
+        <el-button
+          @click="orderNotificationHandler()"
+          v-if="isAuth('hotel:hotelordersetting:info')"
+          type="primary"
+        >通知设置</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -125,12 +130,14 @@
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
     <Setting v-if="orderSettingVisible" ref="orderSetting" @refreshDataList="getDataList"></Setting>
+    <OrderNotification v-if="orderNotificationVisible" ref="orderNotification"></OrderNotification>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./hotelorder-add-or-update";
 import Setting from "./setting";
+import OrderNotification from "./hotelordernotification-add-or-update";
 
 export default {
   data() {
@@ -156,17 +163,25 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false,
-      orderSettingVisible: false
+      orderSettingVisible: false,
+      orderNotificationVisible: false
     };
   },
   components: {
     AddOrUpdate,
-    Setting
+    Setting,
+    OrderNotification
   },
   activated() {
     this.getDataList();
   },
   methods: {
+    orderNotificationHandler() {
+      this.orderNotificationVisible = true;
+      this.$nextTick(() => {
+        this.$refs.orderNotification.init();
+      });
+    },
     orderSettingHandler() {
       this.orderSettingVisible = true;
       this.$nextTick(() => {
