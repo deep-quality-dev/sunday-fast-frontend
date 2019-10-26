@@ -51,6 +51,7 @@
         </el-table-column>
     </el-table>
     <el-dialog
+     :close-on-click-modal="false"
       width="40%"
       :title="`修改【${updateCurrent.row.roomName}】【${updateCurrent.row.name}】【${updateCurrent.column.property}】的房量`"
       :visible="showUpdateModal"
