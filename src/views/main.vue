@@ -71,8 +71,23 @@
             this.loading = false
             this.userId = data.user.userId
             this.userName = data.user.username
+            this.initWebsocket(data.user.userId)
           }
         })
+      },
+      initWebsocket(userId) {
+        window.QLH_WEBSOCKET = new WebSocket("ws://qlh.cypms.com/websocket/" + userId);
+        window.QLH_WEBSOCKET.onopen = function(evt) {
+          console.log("Connection open ...");
+        };
+
+        window.QLH_WEBSOCKET.onmessage = function(evt) {
+          console.log("Received Message: " + evt.data);
+        };
+
+        window.QLH_WEBSOCKET.onclose = function(evt) {
+          console.log("Connection closed.");
+        };
       }
     }
   }
