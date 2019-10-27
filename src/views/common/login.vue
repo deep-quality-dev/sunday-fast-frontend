@@ -406,7 +406,7 @@ export default {
       width: 400px;
       height: 330px;
       z-index: 100;
-      top: 25px;
+      top: 75px;
       right: 0;
       padding: 5px;
       border-radius: 8px;
