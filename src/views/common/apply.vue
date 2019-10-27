@@ -311,7 +311,7 @@ export default {
                 name: [{ required: true, message: "请输入姓名" }],
                 idCard: [{ required: true, message: "请输入身份证号" }],
                 idCardPicList: [
-                    { required: true, message: "请上传身份证照片正反面" }
+                    { required: true, message: "请上传身份证照片" }
                 ],
                 // idCardPic: [
                 //     { required: true, message: "请上传手持身份证照片" }
@@ -369,7 +369,6 @@ export default {
             });
         },
         step2Submit() {
-          return console.log(this.ruleForm1)
             this.$refs.ruleForm1.validate(valid => {
                 if (!valid) {
                     return false;
