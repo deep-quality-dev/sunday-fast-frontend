@@ -8,6 +8,7 @@
       </div>
       <div slot="nav-right">
         <ul class="nav">
+          <li index="0" @click="handleToPage('login')">首页</li>
           <li index="1" @click="handleToPage('about')">联系我们</li>
           <li index="3" @click="handleToPage('help')">帮助文档</li>
         </ul>

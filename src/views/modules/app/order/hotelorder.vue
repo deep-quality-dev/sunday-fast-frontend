@@ -114,7 +114,7 @@
       <el-table-column fixed="right" header-align="center" align="center" width="120" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
-          <el-button type="text" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
+          <el-button type="text" v-if="scope.row.status === 2" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
         </template>
       </el-table-column>
     </el-table>
