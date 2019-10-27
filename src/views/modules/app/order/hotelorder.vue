@@ -26,12 +26,17 @@
       <el-form-item>
         <!-- <el-button @click="getDataList()">修改</el-button> -->
         <el-button @click="getDataList()">查询</el-button>
-        <Setting>
-          <el-button
-            v-if="isAuth('hotel:hotelorder:ordersetting')"
-            type="primary"
-          >接单设置</el-button>
-        </Setting>
+        <!-- <setting></setting> -->
+        <el-button
+          @click="orderSettingHandler()"
+          v-if="isAuth('hotel:hotelordersetting:info')"
+          type="primary"
+        >接单设置</el-button>
+        <el-button
+          @click="orderNotificationHandler()"
+          v-if="isAuth('hotel:hotelordersetting:info')"
+          type="primary"
+        >通知设置</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -109,7 +114,7 @@
       <el-table-column fixed="right" header-align="center" align="center" width="120" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
-          <el-button type="text" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
+          <el-button type="text" v-if="scope.row.status === 2" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,12 +129,15 @@
     ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <Setting v-if="orderSettingVisible" ref="orderSetting" @refreshDataList="getDataList"></Setting>
+    <OrderNotification v-if="orderNotificationVisible" ref="orderNotification"></OrderNotification>
   </div>
 </template>
 
 <script>
 import AddOrUpdate from "./hotelorder-add-or-update";
 import Setting from "./setting";
+import OrderNotification from "./hotelordernotification-add-or-update";
 
 export default {
   data() {
@@ -154,17 +162,32 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      orderSettingVisible: false,
+      orderNotificationVisible: false
     };
   },
   components: {
     AddOrUpdate,
-    Setting
+    Setting,
+    OrderNotification
   },
   activated() {
     this.getDataList();
   },
   methods: {
+    orderNotificationHandler() {
+      this.orderNotificationVisible = true;
+      this.$nextTick(() => {
+        this.$refs.orderNotification.init();
+      });
+    },
+    orderSettingHandler() {
+      this.orderSettingVisible = true;
+      this.$nextTick(() => {
+        this.$refs.orderSetting.init();
+      });
+    },
     //订单入住
     orderCheckInHandler(orderId) {
       this.$http({

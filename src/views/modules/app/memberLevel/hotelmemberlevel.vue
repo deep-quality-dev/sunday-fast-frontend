@@ -1,11 +1,11 @@
 <template>
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-      <el-form-item>
+      <!-- <el-form-item>
         <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
+        <!-- <el-button @click="getDataList()">查询</el-button> -->
         <el-button
           v-if="isAuth('hotel:hotelmemberlevel:save')"
           type="primary"
@@ -34,9 +34,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="discount" header-align="center" align="center" label="会员折扣"></el-table-column>
-      <el-table-column prop="orderby" header-align="center" align="center" label="排序"></el-table-column>
-      <el-table-column prop="content" header-align="center" align="center" label="描述"></el-table-column>
-      <el-table-column prop="payFlag" header-align="center" align="center" label="是否需要支付"></el-table-column>
+      <el-table-column prop="payFlag" header-align="center" align="center" label="是否需要支付">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.payFlag === 1" size="small">是</el-tag>
+          <el-tag v-if="scope.row.payFlag === 0" size="small">否</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="payAmount" header-align="center" align="center" label="费用"></el-table-column>
       <el-table-column prop="payIntegral" header-align="center" align="center" label="积分购买"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">

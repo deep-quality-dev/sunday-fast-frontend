@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="'办卡'"
     :close-on-click-modal="false"
     :visible.sync="visible"
   >
@@ -11,8 +11,27 @@
       @keyup.enter.native="dataFormSubmit()"
       label-width="auto"
     >
+      <el-form-item label="搜索会员" prop="memberId">
+        <el-select
+          style="width:100%;"
+          v-model="dataForm.memberId"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入姓名/电话"
+          :remote-method="remoteMethod"
+          :loading="loading"
+        >
+          <el-option
+            v-for="item in platfromMembers"
+            :key="item.id"
+            :label="item.name+'—'+item.tel"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="等级类型" prop="levelId">
-        <el-select v-model="dataForm.levelId" placeholder="请选择等级">
+        <el-select style="width:100%;" v-model="dataForm.levelId" placeholder="请选择等级">
           <el-option v-for="item in levelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -43,6 +62,13 @@ export default {
       platformMember: {},
       visible: false,
       levelList: [],
+      //
+      platfromMembers: [],
+      value9: "",
+      list: [],
+      loading: false,
+      states: [],
+      //
       dataForm: {
         id: 0,
         levelId: "",
@@ -112,14 +138,10 @@ export default {
         url: this.$http.adornUrl("/hotel/hotelmemberlevel/sellerLevleList"),
         method: "GET"
       }).then(({ data }) => {
-        console.log(data);
         this.levelList = data.data;
       });
     },
     init(platformMember) {
-      this.dataForm.mobile = platformMember.tel;
-      this.dataForm.name = platformMember.name;
-      this.dataForm.memberId = platformMember.userId;
       this.loadSellerLevel();
       this.dataForm.id = 0;
       this.visible = true;
@@ -155,6 +177,25 @@ export default {
               this.dataForm.balance = data.hotelmemberleveldetail.balance;
             }
           });
+        }
+      });
+    },
+    //加载平台会员数据
+    remoteMethod(query) {
+      this.loading = true;
+      this.$http({
+        url: this.$http.adornUrl("/hotel/hotelmember/platformMember"),
+        method: "get",
+        method: "get",
+        params: this.$http.adornParams({
+          kw: query
+        })
+      }).then(({ data }) => {
+        this.loading = false;
+        if (data && data.code === 0) {
+          this.platfromMembers = data.data;
+        } else {
+          this.$message.error(data.msg);
         }
       });
     },

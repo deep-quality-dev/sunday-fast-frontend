@@ -53,7 +53,7 @@
         <el-radio-group v-model="status">
           <el-radio :label="-1">不做改变</el-radio>
           <el-radio :label="1">房间开放</el-radio>
-          <el-radio :label="3">房间关闭</el-radio>
+          <el-radio :label="0">房间关闭</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="设置保留房">

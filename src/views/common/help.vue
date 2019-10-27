@@ -6,6 +6,7 @@
       </div>
       <div slot="nav-right">
         <ul class="nav">
+          <li index="0" @click="handleToPage('login')">首页</li>
           <li index="1" @click="handleToPage('about')">联系我们</li>
           <li index="3" @click="handleToPage('help')">帮助文档</li>
         </ul>
@@ -96,19 +97,23 @@
           </div>
         </div>
         <div class="flex-box__item">
-          <div class="hd color-bg__blue">服务热线：021-52298888</div>
+          <div class="hd color-bg__blue">服务热线：{{sysData.companyPhone}}</div>
           <div class="flex-box__server">
             <div class="item">
-              <p>商服邮箱</p>
-              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+              <p>商家名称</p>
+              <a type="primary">{{sysData.companyName}}</a>
+            </div>
+            <div class="item">
+              <p>联系地址</p>
+              <a type="primary">{{sysData.companyAddress}}</a>
+            </div>
+            <div class="item">
+              <p>传真</p>
+              <a type="primary">{{sysData.companyPhone}}</a>
             </div>
             <div class="item">
               <p>商服邮箱</p>
-              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
-            </div>
-            <div class="item">
-              <p>商服邮箱</p>
-              <a type="primary" href="mailto:ebooking@ctrip.com">ebooking@ctrip.com</a>
+              <a type="primary">{{sysData.companyEmail}}</a>
             </div>
           </div>
         </div>
@@ -126,7 +131,8 @@ export default {
       activeId: "",
       subActiveId: "",
       menus: [],
-      contents: []
+      contents: [],
+      sysData: {}
     };
   },
   components: {
@@ -134,6 +140,7 @@ export default {
   },
   created() {
     this.getDataList();
+    this.getSysData();
   },
   methods: {
     getDataList() {
@@ -194,6 +201,18 @@ export default {
     handleShowCOntent(id) {
       this.subActiveId = id;
       // or request
+    },
+    getSysData() {
+      this.$http({
+        url: this.$http.adornUrl("/hotel/hotelsystem/info"),
+        method: "get"
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.sysData = data.hotelSystem;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
     }
   }
 };
