@@ -95,7 +95,11 @@
                 label-width="150px"
                 class="form"
             >
-                <h2>个人证件</h2>
+                <h2>
+                  <span>个人证件</span>
+                  <span class="strong">(*必填)</span>
+                  <el-tag>需与酒店联系人保持一致</el-tag>
+                </h2>
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="ruleForm1.name" placeholder="请输入身份证姓名" />
                 </el-form-item>
@@ -104,33 +108,50 @@
                     <el-input v-model="ruleForm1.idCard" placeholder="输入身份证号" />
                 </el-form-item>
 
-                <el-form-item label="身份证照(正反面)" prop="idCardPicList">
+                <el-form-item label="身份证照(正面)" prop="idCardPicList">
                     <el-upload
                         :action="this.$http.adornUrl('/hotel/common/upload')"
                         list-type="picture-card"
-                        :on-remove="onIdCardPicListFileChange"
-                        :on-change="onIdCardPicListFileChange"
-                        :on-exceed="onExceed"
-                        :limit="2"
-                    >
-                        <i class="el-icon-plus" />
-                    </el-upload>
-                </el-form-item>
-
-                <!-- <el-form-item label="手持身份证照" prop="idCardPic">
-                    <el-upload
-                        :action="this.$http.adornUrl('/sys/oss/upload?token=' + this.$cookie.get('token'))"
-                        list-type="picture-card"
-                        :on-remove="onIdCardPicFileChange"
-                        :on-change="onIdCardPicFileChange"
+                        :on-remove="onIdCardPicListFileChange.bind(null, 0)"
+                        :on-change="onIdCardPicListFileChange.bind(null, 0)"
                         :on-exceed="onExceed"
                         :limit="1"
                     >
                         <i class="el-icon-plus" />
                     </el-upload>
-                </el-form-item>-->
+                </el-form-item>
 
-                <h2>营业执照</h2>
+              <el-form-item label="身份证照(反面)" prop="idCardPicList">
+                <el-upload
+                  :action="this.$http.adornUrl('/hotel/common/upload')"
+                  list-type="picture-card"
+                  :on-remove="onIdCardPicListFileChange.bind(null, 1)"
+                  :on-change="onIdCardPicListFileChange.bind(null, 1)"
+                  :on-exceed="onExceed"
+                  :limit="1"
+                >
+                  <i class="el-icon-plus" />
+                </el-upload>
+              </el-form-item>
+
+              <el-form-item label="身份证照(手持)" prop="idCardPicList">
+                <el-upload
+                  :action="this.$http.adornUrl('/hotel/common/upload')"
+                  list-type="picture-card"
+                  :on-remove="onIdCardPicListFileChange.bind(null, 2)"
+                  :on-change="onIdCardPicListFileChange.bind(null, 2)"
+                  :on-exceed="onExceed"
+                  :limit="1"
+                >
+                  <i class="el-icon-plus" />
+                </el-upload>
+                <a @click="showTips = true">详情要求</a>
+              </el-form-item>
+
+                <h2>
+                  <span>营业执照</span>
+                  <span class="strong">(*必填)</span>
+                </h2>
                 <!-- <el-form-item label="企业名称" prop="companyName">
                     <el-input v-model="ruleForm1.companyName" placeholder="请输入企业名称" />
                 </el-form-item>-->
@@ -206,6 +227,20 @@
                     </el-amap>
                 </div>
             </el-dialog>
+
+
+            <el-dialog :visible.sync="showTips" title="手持身份证拍照要求">
+              <img src="../../assets/img/idCardSuccess.jpg" />
+              <img src="../../assets/img/idCardError.jpg" />
+              <ul>
+                <li>免冠，建议未化妆，五关可见;</li>
+                <li>身份证全部信息清晰无遮挡，否则将无法通过认证;</li>
+                <li>完整露出手臂;</li>
+                <li>以酒店门头招牌为背景图片;</li>
+                <li>请勿进行任何软件处理;</li>
+                <li>单张图片不超过5M，尺寸要求500（长）X412（宽）以上，支持jpg、png、gif;</li>
+              </ul>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -216,7 +251,7 @@ import axios from "axios";
 export default {
     data: () => {
         return {
-            active: 0,
+            active: 1,
             options: [{}],
             props: {
                 label: 'name',
@@ -244,7 +279,6 @@ export default {
                 address: [{ required: true, message: "请选择酒店地址" }],
                 type: [{ required: true, message: "请输入酒店类型" }],
                 roomCount: [{ required: true, message: "请输入客房总数" }],
-                brand: [{ required: true, message: "请选择集团品牌" }],
                 desc: [
                     { required: true, message: "请输入酒店介绍" },
                     {
@@ -301,7 +335,8 @@ export default {
             },
             markers: [],
             mapCenter: [114.05558, 22.539679],
-            showMap: false
+            showMap: false,
+            showTips: false
         };
     },
     created() {
@@ -334,6 +369,7 @@ export default {
             });
         },
         step2Submit() {
+          return console.log(this.ruleForm1)
             this.$refs.ruleForm1.validate(valid => {
                 if (!valid) {
                     return false;
@@ -400,11 +436,13 @@ export default {
                 }
             };
         },
-        onIdCardPicListFileChange(file, fileList) {
+        onIdCardPicListFileChange(index, file, fileList) {
             const list = fileList
                 .filter(item => item.status === "success")
                 .map(item => item.response.url);
-            this.$set(this.ruleForm1, "idCardPicList", list);
+            const idCardPicList = this.ruleForm1.idCardPicList;
+            idCardPicList[index] = list[0];
+            this.$set(this.ruleForm1, "idCardPicList", idCardPicList.filter(value => !!value));
         },
         onIdCardPicFileChange(file, fileList) {
             const list = fileList
@@ -426,7 +464,7 @@ export default {
 </script>
 
 <style lang="scss">
-.container {
+  .container {
     margin: 0 auto;
     width: 1200px;
 
@@ -451,5 +489,9 @@ export default {
             top: 20px;
         }
     }
-}
+
+    .strong {
+      color: red;
+    }
+  }
 </style>
