@@ -8,9 +8,9 @@
       label-width="120px"
     >
       <el-form-item label="网站名称" prop="linkName">
-        <el-input v-model="dataForm.linkName" placeholder="网站名称"></el-input>
+        <el-input v-model="dataForm.linkName" placeholder="请输入网站名称"></el-input>
       </el-form-item>
-      <el-form-item label="网站logo" prop="linkLogo">
+      <el-form-item label="网站logo">
         <!-- <el-input v-model="dataForm.linkLogo" placeholder="网站logo"></el-input> -->
         <el-upload
           :class="{disabled:fileList.length>0}"
@@ -48,16 +48,16 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="公司名字" prop="companyName">
-        <el-input v-model="dataForm.companyName" placeholder="网站logo"></el-input>
+        <el-input v-model="dataForm.companyName" placeholder="请输入公司名字"></el-input>
       </el-form-item>
       <el-form-item label="公司电话" prop="companyPhone">
-        <el-input v-model="dataForm.companyPhone" placeholder="网站logo"></el-input>
+        <el-input v-model="dataForm.companyPhone" placeholder="请输入公司电话"></el-input>
       </el-form-item>
       <el-form-item label="公司邮箱" prop="companyEmail">
-        <el-input v-model="dataForm.companyEmail" placeholder="网站logo"></el-input>
+        <el-input v-model="dataForm.companyEmail" placeholder="请输入公司邮箱"></el-input>
       </el-form-item>
       <el-form-item label="公司地址" prop="companyAddress">
-        <el-input v-model="dataForm.companyAddress" placeholder="网站logo"></el-input>
+        <el-input v-model="dataForm.companyAddress" placeholder="请输入公司地址"></el-input>
       </el-form-item>
       <el-form-item label="营业执照" prop="businessLicense">
         <!-- <el-input v-model="dataForm.businessLicense" placeholder="网站logo"></el-input> -->
@@ -147,7 +147,6 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
   </div>
@@ -239,9 +238,6 @@ export default {
         ],
         linkName: [
           { required: true, message: "网站名称不能为空", trigger: "blur" }
-        ],
-        linkLogo: [
-          { required: true, message: "网站logo不能为空", trigger: "blur" }
         ],
         support: [
           { required: true, message: "技术支持不能为空", trigger: "blur" }
@@ -555,6 +551,7 @@ export default {
     handleRemove(file, fileList) {
       const { response } = file;
       this.dataForm.linkLogo = undefined;
+      this.fileList = [];
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;

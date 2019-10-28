@@ -15,8 +15,9 @@
           v-model="emailInputValue"
           ref="saveEmailInput"
           size="small"
-          @keyup.enter.native="handleEmailInputConfirm"
-        ></el-input>
+        >
+          <el-button slot="append" icon="el-icon-plus" @click="handleEmailInputConfirm()"></el-button>
+        </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showEmailInput">+ 新增</el-button>
         <span class="tips">输入邮箱，用于接收预定消息</span>
       </el-form-item>
@@ -34,8 +35,9 @@
           v-model="mobileInputValue"
           ref="saveMobileInput"
           size="small"
-          @keyup.enter.native="handleMobileInputConfirm"
-        ></el-input>
+        >
+          <el-button slot="append" icon="el-icon-plus" @click="handleMobileInputConfirm()"></el-button>
+        </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showMobileInput()">+ 新增</el-button>
         <span class="tips">输入手机号，用于接收预定消息</span>
       </el-form-item>
@@ -89,8 +91,8 @@ export default {
         pcSwitch: 0
       },
       dataRule: {
-        email: [{ required: true, message: "邮件不能为空", trigger: "blur" }],
-        mobile: [{ required: true, message: "手机不能为空", trigger: "blur" }],
+        // email: [{ required: true, message: "邮件不能为空", trigger: "blur" }],
+        // mobile: [{ required: true, message: "手机不能为空", trigger: "blur" }],
         smsSwitch: [
           { required: true, message: "短信开关不能为空", trigger: "blur" }
         ],
@@ -186,7 +188,10 @@ export default {
         this.$refs.saveMobileInput.$refs.input.focus();
       });
     },
-
+    handleEmailInputBlur() {
+      this.mobileInputVisible = false;
+      this.mobileInputValue = "";
+    },
     handleMobileInputConfirm() {
       let mobileInputValue = this.mobileInputValue;
       if (!isMobile(this.mobileInputValue)) {
@@ -214,7 +219,10 @@ export default {
         this.$refs.saveEmailInput.$refs.input.focus();
       });
     },
-
+    handleEmailInputBlur() {
+      this.emailInputVisible = false;
+      this.emailInputValue = "";
+    },
     handleEmailInputConfirm() {
       if (!isEmail(this.emailInputValue)) {
         this.$message.error("邮箱格式不正确");
@@ -243,7 +251,7 @@ export default {
   padding-bottom: 0;
 }
 .input-new-tag {
-  width: 90px;
+  width: 200px;
   margin-left: 10px;
   vertical-align: bottom;
 }

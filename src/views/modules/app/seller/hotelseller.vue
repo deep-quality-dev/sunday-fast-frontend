@@ -24,8 +24,11 @@
       </el-form-item>
       <el-form-item label="星级" prop="star">
         <el-select v-model="dataForm.star" placeholder="活动区域">
-          <el-option label="五星级" value="shanghai"></el-option>
-          <el-option label="4星级" value="beijing"></el-option>
+          <el-option label="一星及以下/经济" value="1"></el-option>
+          <el-option label="二星/实惠" value="2"></el-option>
+          <el-option label="三星/舒适" value="3"></el-option>
+          <el-option label="四星/高档" value="4"></el-option>
+          <el-option label="五星/豪华" value="5"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="酒店地址" prop="address">
@@ -131,7 +134,6 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
       <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
     </span>
   </div>
@@ -145,9 +147,7 @@ export default {
     return {
       dataListLoading: false,
       content: "111",
-      editorOption: {
-        
-      },
+      editorOption: {},
       uploadAction: "",
       dialogVisible: false,
       visible: false,

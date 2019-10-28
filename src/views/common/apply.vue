@@ -37,6 +37,23 @@
                  <el-form-item label="酒店联系人电话" prop="linkTel">
                     <el-input v-model="ruleForm.linkTel" placeholder="输入酒店联系人电话" />
                 </el-form-item>
+                <el-form-item label="图片验证码" prop="captcha">
+                    <el-row>
+                        <el-col :span="14">
+                          <el-input v-model="ruleForm.captcha" placeholder="请输入图片验证码"></el-input>
+                        </el-col>
+                        <el-col :span="10" class="login-captcha">
+                          <img style="margin-left:10px" :src="captchaPath"  @click="getCaptcha()" alt="">
+                        </el-col>
+                      </el-row>
+                </el-form-item>
+                 <el-form-item label="短信验证码" prop="smsCode">
+                     <el-row>
+                        <el-col :span="14"><el-input v-model="ruleForm.smsCode" placeholder="请输入短信验证码" /></el-col>
+                        <el-col :span="10"> <el-button style="margin-left:10px" :disabled="!ruleForm.captcha ||isSend" @click="sendSmsCode()">{{isSend? '('+timer+')秒后重试':'发送'}}</el-button></el-col>
+                    </el-row>
+                   
+                </el-form-item>
 
                 <el-form-item label="酒店地址" prop="address">
                     <span>{{ ruleForm.address }}</span>
@@ -74,16 +91,21 @@
                     </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="酒店介绍" prop="desc">
-                    <el-input
-                        type="textarea"
-                        v-model="ruleForm.desc"
-                        placeholder="填写规则：简介中需包含酒店的地理位置、周边信息，店内设施、客房等信息。确保语句通顺、无错别字、段首无空格、不提及星级、无敏感字眼，字数50以上，400以下"
-                    />
+                <el-form-item label="酒店介绍"  style="height:300px">
+                    <quill-editor
+                    style="height:200px"
+                    class="editor"
+                    v-model="ruleForm.introduction"
+                    ref="myQuillEditor"
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)"
+                    @focus="onEditorFocus($event)"
+                    @change="onEditorChange($event)"
+                    ></quill-editor>
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="step1Submit">下一步，填写证件类型</el-button>
+                    <el-button type="primary" @click="step1Submit" :disabled="!ruleForm.smsCode">下一步，填写证件类型</el-button>
                 </el-form-item>
             </el-form>
 
@@ -247,10 +269,16 @@
 
 <script>
 import axios from "axios";
-
+import { getUUID } from "@/utils";
 export default {
     data: () => {
         return {
+            isSend:false,
+            timer:60,
+            captchaPath: "",
+            editorOption: {
+                placeholder: '填写规则：简介中需包含酒店的地理位置、周边信息，店内设施、客房等信息。确保语句通顺、无错别字、段首无空格、不提及星级、无敏感字眼，字数50以上，400以下',
+             },
             active: 0,
             options: [{}],
             props: {
@@ -259,7 +287,10 @@ export default {
                 children: "brands"
             },
             ruleForm: {
+                captcha:"",
+                uuid:"",
                 name: "",
+                smsCode:"",
                 tel: "",
                 linkName:"",
                 linkTel:"",
@@ -267,7 +298,7 @@ export default {
                 type: "1",
                 roomCount: 1,
                 brand: "",
-                desc: "",
+                introduction: "",
                 lat: "",
                 lng: ""
             },
@@ -279,7 +310,7 @@ export default {
                 address: [{ required: true, message: "请选择酒店地址" }],
                 type: [{ required: true, message: "请输入酒店类型" }],
                 roomCount: [{ required: true, message: "请输入客房总数" }],
-                desc: [
+                introduction: [
                     { required: true, message: "请输入酒店介绍" },
                     {
                         validator: (rule, value, callback) => {
@@ -340,6 +371,7 @@ export default {
         };
     },
     created() {
+        this.getCaptcha()
         console.log(this.$cookie.get("token"));
     },
 
@@ -348,6 +380,46 @@ export default {
     },
 
     methods: {
+        sendSmsCode(){
+            
+            this.$http({
+                url: this.$http.adornUrl('/hotel/common/smsCode'),
+                method: "get",
+                params: this.$http.adornParams({
+                    mobile: this.ruleForm.linkTel,
+                    uuid: this.ruleForm.uuid,
+                    captchaCode: this.ruleForm.captcha
+                })
+            }).then(({ data }) => {
+                if (data && data.code === 0) {
+                   this.isSend = true;
+                    let time = setInterval(() => {
+                        this.timer -=1;
+                        if(this.timer<=0){
+                            clearInterval(time)
+                            this.isSend = false;
+                        }
+                    }, 1000);
+                }else{
+                    this.$message.error(data.msg);
+                    this.getCaptcha();
+                }
+            });
+        },
+         // 获取验证码
+        getCaptcha() {
+        this.ruleForm.uuid = getUUID();
+        this.captchaPath = this.$http.adornUrl(
+            `/captcha.jpg?uuid=${this.ruleForm.uuid}`
+        );
+        },
+        onEditorBlur() {},
+        onEditorFocus() {
+        //获得焦点事件
+        },
+        onEditorChange() {
+        //内容改变事件
+        },
         fetchhotelBrands() {
             this.$http({
                 url: this.$http.adornUrl("/hotel/seller/hotelBrands"),
@@ -361,11 +433,26 @@ export default {
         },
 
         step1Submit() {
-            this.$refs.ruleForm.validate(valid => {
+            //校验验证码
+            this.$http({
+                url: this.$http.adornUrl("/hotel/common/checkSmsCode"),
+                method: "get",
+                params: this.$http.adornParams({
+                    mobile: this.ruleForm.linkTel,
+                    vcode: this.ruleForm.smsCode
+                })
+            }).then(({ data }) => {
+                if (data && data.code === 0) {
+                     this.$refs.ruleForm.validate(valid => {
                 if (!valid) {
                     return false;
                 }
                 this.active = 1;
+            });
+                }else{
+                    this.$message.error(data.msg);
+                }
+               
             });
         },
         step2Submit() {
@@ -457,16 +544,23 @@ export default {
         },
         onExceed(file, fileList) {
             this.$message.error(`最多上传${fileList.length}张`);
-        }
+        },
+        
     }
 };
 </script>
 
 <style lang="scss">
   .container {
+      
     margin: 0 auto;
     width: 1200px;
-
+    .login-captcha {
+          img {
+            max-width: 100%;
+            height: 34px;
+          }
+    }
     .steps {
         margin: 20px 0;
     }

@@ -15,7 +15,9 @@
         <el-input v-model="dataForm.name" placeholder="品牌名称"></el-input>
       </el-form-item>
       <el-form-item label="品牌类型" prop="typeId">
-        <el-input v-model="dataForm.typeId" placeholder=""></el-input>
+        <el-select style="width:100%" v-model="dataForm.typeId" placeholder="请选择">
+          <el-option v-for="item in barndTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -30,19 +32,25 @@ export default {
   data() {
     return {
       visible: false,
+      barndTypes: [],
       dataForm: {
         id: 0,
         name: "",
         typeId: ""
       },
       dataRule: {
-        name: [{ required: true, message: "不能为空", trigger: "blur" }],
-        typeId: [{ required: true, message: "不能为空", trigger: "blur" }]
+        name: [
+          { required: true, message: "品牌名称不能为空", trigger: "blur" }
+        ],
+        typeId: [
+          { required: true, message: "品牌类型不能为空", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
     init(id) {
+      this.getBrandTypes();
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -56,9 +64,9 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.name = data.hotelbrand.name;
-              this.dataForm.creatTime = data.hotelbrand.creatTime;
-              this.dataForm.typeId = data.hotelbrand.typeId;
+              this.dataForm.name = data.hotelBrand.name;
+              this.dataForm.creatTime = data.hotelBrand.creatTime;
+              this.dataForm.typeId = data.hotelBrand.typeId;
             }
           });
         }
@@ -94,6 +102,17 @@ export default {
               this.$message.error(data.msg);
             }
           });
+        }
+      });
+    },
+    getBrandTypes() {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelbrandtype/listAll`),
+        method: "get",
+        params: this.$http.adornParams()
+      }).then(({ data }) => {
+        if (data && data.code === 0) {
+          this.barndTypes = data.data;
         }
       });
     }

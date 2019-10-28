@@ -29,7 +29,7 @@
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="品牌名称"></el-table-column>
       <el-table-column prop="creatTime" header-align="center" align="center" label="创建时间"></el-table-column>
-      <el-table-column prop="typeId" header-align="center" align="center" label="品牌类型"></el-table-column>
+      <el-table-column prop="typeName" header-align="center" align="center" label="品牌类型"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>

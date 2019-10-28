@@ -141,7 +141,7 @@ export default {
     },
     //审核通过
     auditPassHandler(id) {
-      this.$confirm("确认操作？")
+      this.$confirm("确认审核通过吗？")
         .then(_ => {
           this.$http({
             url: this.$http.adornUrl(`/hotel/hotelseller/auditPass/${id}`),
