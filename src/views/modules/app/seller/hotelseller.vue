@@ -52,21 +52,14 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="图片" prop="img">
-        <img
-          v-for="item in fileList"
-          :key="item.url"
-          :src="item.url"
-          class="avatar"
-          :style="{float:'left', marginRight:'5px'}"
-        >
         <el-upload
-          class="avatar-uploader"
+          list-type="picture-card"
           :action="uploadAction"
-          :show-file-list="false"
           :on-success="handleImageSuccess"
+          :on-remove="handleImageRemove"
           :before-upload="beforeAvatarUpload"
         >
-          <i class="el-icon-plus avatar-uploader-icon"></i>
+          <i class="el-icon-plus"></i>
         </el-upload>
       </el-form-item>
       <!-- <el-form-item label="退订规则" prop="rule">
@@ -138,7 +131,7 @@
     </span>
   </div>
 </template>
-  
+
 <script>
 import ueditor from "ueditor";
 import _ from "lodash";
@@ -382,14 +375,13 @@ export default {
       this.dataForm.ewmLogo = res.url;
     },
 
-    handleImageSuccess(res, file) {
-      this.fileList.push({ url: res.url });
-      let url = [];
-      this.fileList.forEach(item => {
-        url.push(item.url);
-      });
-      console.log(url);
-      this.dataForm.img = url.join(",");
+    handleImageSuccess(res, file, fileList) {
+      const list = fileList.map(item => item.response.url);
+      this.fileList = list;
+      this.dataForm.img = list.join(",");
+    },
+    handleImageRemove(file, fileList) {
+      this.handleImageSuccess({}, file, fileList);
     },
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
