@@ -35,6 +35,7 @@
     "vue": "2.5.2",
     "vue-amap": "^0.5.10",
     "vue-cookie": "1.1.4",
+    "vue-gallery": "^2.0.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "3.0.1",
     "vuex": "3.0.1"

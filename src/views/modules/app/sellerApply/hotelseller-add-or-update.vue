@@ -1,84 +1,104 @@
 <template>
-  <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
-    :close-on-click-modal="false"
-    :visible.sync="visible"
-  >
-    <el-form :model="dataForm" ref="dataForm" label-width="auto">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="名字" prop="name">
-            <el-input :readonly="true" v-model="dataForm.name" placeholder="名字"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="星级" prop="star">
-            <el-input :readonly="true" v-model="dataForm.star" placeholder="星级"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="地址" prop="address">
-            <el-input :readonly="true" v-model="dataForm.address" placeholder="地址"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="联系人" prop="linkName">
-            <el-input :readonly="true" v-model="dataForm.linkName" placeholder="联系人"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="联系电话" prop="linkTel">
-            <el-input :readonly="true" v-model="dataForm.linkTel" placeholder="联系电话"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="酒店电话" prop="tel">
-            <el-input :readonly="true" v-model="dataForm.tel" placeholder="酒店电话"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="申请时间" prop="sqTime">
-            <el-input :readonly="true" v-model="dataForm.sqTime" placeholder="申请时间"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content bg-purple-light"></div>
-        </el-col>
-      </el-row>
-      <el-form-item label="身份证照" prop="sfzImg1">
-        <img :src="dataForm.sfzImg1" style="width: 150px;height: 150px;" alt="">
-        <img
-          v-if="dataForm.sfzImg2"
-          :src="dataForm.sfzImg2"
-          style="width: 150px;height: 150px;"
-          alt=""
-        >
-      </el-form-item>
-      <el-form-item label="营业执照" prop="yyImg">
-        <img
-          v-for="item in dataForm.yyImg.split(',')"
-          :src="item"
-          style="width: 150px;height: 150px;"
-          alt=""
-        >
-      </el-form-item>
-    </el-form>
-    <span slot="footer" class="dialog-footer">
+  <div>
+    <el-dialog
+      :title="!dataForm.id ? '新增' : '修改'"
+      :close-on-click-modal="false"
+      :visible.sync="visible"
+    >
+      <el-form :model="dataForm" ref="dataForm" label-width="auto">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="名字" prop="name">
+              <el-input :readonly="true" v-model="dataForm.name" placeholder="名字"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="星级" prop="star">
+              <el-input :readonly="true" v-model="dataForm.star" placeholder="星级"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="地址" prop="address">
+              <el-input :readonly="true" v-model="dataForm.address" placeholder="地址"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系人" prop="linkName">
+              <el-input :readonly="true" v-model="dataForm.linkName" placeholder="联系人"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="linkTel">
+              <el-input :readonly="true" v-model="dataForm.linkTel" placeholder="联系电话"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="酒店电话" prop="tel">
+              <el-input :readonly="true" v-model="dataForm.tel" placeholder="酒店电话"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="申请时间" prop="sqTime">
+              <el-input :readonly="true" v-model="dataForm.sqTime" placeholder="申请时间"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <div class="grid-content bg-purple-light"></div>
+          </el-col>
+        </el-row>
+        <el-form-item label="身份证照" prop="sfzImg1">
+          <img
+            :src="dataForm.sfzImg1"
+            style="width: 150px;height: 150px;"
+            alt=""
+            @click="index = 0;showImage = dataForm.sfzImg1"
+          >
+          <img
+            v-if="dataForm.sfzImg2"
+            :src="dataForm.sfzImg2"
+            style="width: 150px;height: 150px;"
+            alt=""
+            @click="index = 0;showImage = dataForm.sfzImg2"
+          >
+        </el-form-item>
+        <el-form-item label="营业执照" prop="yyImg">
+          <img
+            v-for="item in dataForm.yyImg.split(',')"
+            :src="item"
+            style="width: 150px;height: 150px;"
+            alt=""
+            @click="index = 0;showImage = item"
+          >
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">关闭</el-button>
       <el-button @click="auditRefuseHanler(dataForm.id)" type="primary">通过</el-button>
       <el-button @click="auditPassHandler(dataForm.id)" type="danger">拒绝</el-button>
     </span>
-  </el-dialog>
+    </el-dialog>
+
+    <gallery
+      :images="[showImage]"
+      :index="index"
+      @close="index = null"
+    />
+  </div>
 </template>
 
 <script>
+import VueGallery from 'vue-gallery';
+
 export default {
+  components: {
+    'gallery': VueGallery
+  },
   data() {
     return {
       visible: false,
@@ -232,7 +252,9 @@ export default {
         ddOpen: [
           { required: true, message: "到店支付不能为空", trigger: "blur" }
         ]
-      }
+      },
+      showImage: '',
+      index: null
     };
   },
   methods: {
