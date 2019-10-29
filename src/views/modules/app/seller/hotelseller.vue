@@ -53,6 +53,7 @@
       </el-form-item>
       <el-form-item label="图片" prop="img">
         <el-upload
+          :file-list="getImgs(dataForm.img)"
           list-type="picture-card"
           :action="uploadAction"
           :on-success="handleImageSuccess"
@@ -225,6 +226,12 @@ export default {
     this.init();
   },
   methods: {
+    getImgs(img) {
+      return (img || '').split(',').filter(url => !!url).map(url => ({
+        name: url,
+        url
+      }));
+    },
     init(id) {
       this.dataListLoading = true;
       this.$http({
@@ -233,58 +240,21 @@ export default {
         params: this.$http.adornParams()
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataForm.id = data.hotelSeller.id;
-          this.dataForm.userId = data.hotelSeller.userId;
-          this.dataForm.owner = data.hotelSeller.owner;
-          this.dataForm.name = data.hotelSeller.name;
-          this.dataForm.star = data.hotelSeller.star;
-          this.dataForm.address = data.hotelSeller.address;
-          this.dataForm.linkName = data.hotelSeller.linkName;
-          this.dataForm.linkTel = data.hotelSeller.linkTel;
-          this.dataForm.tel = data.hotelSeller.tel;
-          this.dataForm.handle = data.hotelSeller.handle;
-          this.dataForm.openTime = data.hotelSeller.openTime;
-          this.dataForm.wake = data.hotelSeller.wake === 1 ? true : false;
-          this.dataForm.wifi = data.hotelSeller.wifi === 1 ? true : false;
-          this.dataForm.park = data.hotelSeller.park === 1 ? true : false;
-          this.dataForm.breakfast =
-            data.hotelSeller.breakfast === 1 ? true : false;
-          this.dataForm.unionpay =
-            data.hotelSeller.unionpay === 1 ? true : false;
-          this.dataForm.gym = data.hotelSeller.gym === 1 ? true : false;
-          this.dataForm.boardroom =
-            data.hotelSeller.boardroom === 1 ? true : false;
-          this.dataForm.water = data.hotelSeller.water === 1 ? true : false;
-          this.dataForm.policy = data.hotelSeller.policy;
-          this.dataForm.introduction = data.hotelSeller.introduction;
-          this.dataForm.img = data.hotelSeller.img;
-          this.dataForm.rule = data.hotelSeller.rule;
-          this.dataForm.prompt = data.hotelSeller.prompt;
-          this.dataForm.bqLogo = data.hotelSeller.bqLogo;
-          this.dataForm.support = data.hotelSeller.support;
-          this.dataForm.ewmLogo = data.hotelSeller.ewmLogo;
-          this.dataForm.time = data.hotelSeller.time;
-          this.dataForm.coordinates = data.hotelSeller.coordinates;
-          this.dataForm.scort = data.hotelSeller.scort;
-          this.dataForm.sfzImg1 = data.hotelSeller.sfzImg1;
-          this.dataForm.sfzImg2 = data.hotelSeller.sfzImg2;
-          this.dataForm.yyImg = data.hotelSeller.yyImg;
-          this.dataForm.other = data.hotelSeller.other;
-          this.dataForm.zdMoney = data.hotelSeller.zdMoney;
-          this.dataForm.state = data.hotelSeller.state;
-          this.dataForm.sqTime = data.hotelSeller.sqTime;
-          this.dataForm.isUse = data.hotelSeller.isUse;
-          this.dataForm.llNum = data.hotelSeller.llNum;
-          this.dataForm.bdId = data.hotelSeller.bdId;
-          this.dataForm.yeOpen = data.hotelSeller.yeOpen === 1 ? true : false;
-          this.dataForm.wxOpen = data.hotelSeller.wxOpen === 1 ? true : false;
-          this.dataForm.ddOpen = data.hotelSeller.ddOpen === 1 ? true : false;
-          this.dataForm.reserveRemind = data.hotelSeller.reserveRemind;
-          if (data.hotelSeller.img) {
-            data.hotelSeller.img.split(",").forEach(element => {
-              this.fileList.push({ url: element });
-            });
-          }
+          const hotelSeller = data.hotelSeller || {};
+          this.dataForm = {
+            ...hotelSeller,
+            wake: hotelSeller.wake === 1,
+            wifi: hotelSeller.wifi === 1,
+            park: hotelSeller.park === 1,
+            breakfast: hotelSeller.breakfast === 1,
+            unionpay: hotelSeller.unionpay === 1,
+            gym: hotelSeller.gym === 1,
+            boardroom: hotelSeller.boardroom === 1,
+            water: hotelSeller.water === 1,
+            yeOpen: hotelSeller.yeOpen === 1,
+            wxOpen: hotelSeller.wxOpen === 1,
+            ddOpen: hotelSeller.ddOpen === 1
+          };
         }
         this.dataListLoading = false;
       });
@@ -299,17 +269,8 @@ export default {
             ),
             method: "post",
             data: this.$http.adornData({
+              ...this.dataForm,
               id: this.dataForm.id || undefined,
-              userId: this.dataForm.userId,
-              owner: this.dataForm.owner,
-              name: this.dataForm.name,
-              star: this.dataForm.star,
-              address: this.dataForm.address,
-              linkName: this.dataForm.linkName,
-              linkTel: this.dataForm.linkTel,
-              tel: this.dataForm.tel,
-              handle: this.dataForm.handle,
-              openTime: this.dataForm.openTime,
               wake: this.dataForm.wake ? "1" : "0",
               wifi: this.dataForm.wifi ? "1" : "0",
               park: this.dataForm.park ? "1" : "0",
@@ -318,31 +279,9 @@ export default {
               gym: this.dataForm.gym ? "1" : "0",
               boardroom: this.dataForm.boardroom ? "1" : "0",
               water: this.dataForm.water ? "1" : "0",
-              policy: this.dataForm.policy,
-              introduction: this.dataForm.introduction,
-              img: this.dataForm.img,
-              rule: this.dataForm.rule,
-              prompt: this.dataForm.prompt,
-              bqLogo: this.dataForm.bqLogo,
-              support: this.dataForm.support,
-              ewmLogo: this.dataForm.ewmLogo,
-              time: this.dataForm.time,
-              coordinates: this.dataForm.coordinates,
-              scort: this.dataForm.scort,
-              sfzImg1: this.dataForm.sfzImg1,
-              sfzImg2: this.dataForm.sfzImg2,
-              yyImg: this.dataForm.yyImg,
-              other: this.dataForm.other,
-              zdMoney: this.dataForm.zdMoney,
-              state: this.dataForm.state,
-              sqTime: this.dataForm.sqTime,
-              isUse: this.dataForm.isUse,
-              llNum: this.dataForm.llNum,
-              bdId: this.dataForm.bdId,
               yeOpen: this.dataForm.yeOpen ? "1" : "0",
               wxOpen: this.dataForm.wxOpen ? "1" : "0",
               ddOpen: this.dataForm.ddOpen ? "1" : "0",
-              reserveRemind: this.dataForm.reserveRemind
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -376,8 +315,7 @@ export default {
     },
 
     handleImageSuccess(res, file, fileList) {
-      const list = fileList.map(item => item.response.url);
-      this.fileList = list;
+      const list = fileList.map(item => item.url || item.response.url);
       this.dataForm.img = list.join(",");
     },
     handleImageRemove(file, fileList) {
