@@ -9,10 +9,25 @@
       <el-date-picker
           v-model="value1"
           type="daterange"
+          :clearable="false"
+          value-format="yyyy-MM-dd"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+         <el-select v-model="dataForm.roomType" placeholder="请选择">
+           <el-option
+            v-for="item in roomTyps"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+         <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
     </el-form>
 
@@ -21,19 +36,19 @@
       :span-method="objectSpanMethod"
       border=""
     >
-      <el-table-column align="center" prop="roomName">
-        <template slot="header" width="100" slot-scope="scope">
-          <div>房型/日期</div>
+      <el-table-column align="center" width="200" prop="roomName">
+        <template slot="header"  slot-scope="scope">
+          <div>房型</div>
         </template>
       </el-table-column>
 
-      <el-table-column prop="priceName" width="100" label="价格名称" align="center" />
+      <el-table-column prop="priceName" width="200" label="价格名称" align="center" />
 
-      <el-table-column align="center" width="40">
+      <!-- <el-table-column align="center" width="40">
         <template slot="header" slot-scope="scope">
           <i class="el-icon-arrow-left"></i>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         v-for="item in date"
@@ -41,7 +56,6 @@
         :key="item"
         :prop="item"
         align="center"
-        width="80"
       >
         <template slot-scope="scope">
           <span>{{ scope.row[scope.column.property] }}</span>
@@ -52,11 +66,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="right" width="40">
+      <!-- <el-table-column align="right" width="40">
         <template slot="header" slot-scope="scope" align="center">
           <i class="el-icon-arrow-right"></i>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <el-dialog
@@ -80,8 +94,20 @@ import moment from "moment";
     data() {
       return {
         dataListLoading:false,
-        value1: '',
-        dataForm: {},
+       value1: [moment().format("YYYY-MM-DD"),moment().add(7, 'days').format('YYYY-MM-DD')],
+       roomTyps:[
+         {
+          label:'全日房',
+          value:1
+        },
+        {
+          label:'钟点房',
+          value:0
+        }
+      ],
+        dataForm: {
+          roomType:1
+        },
         date: [],
         dataList: [],
         showUpdateModal: false,
@@ -127,8 +153,9 @@ import moment from "moment";
             page: this.pageIndex,
             limit: this.pageSize,
             key: this.dataForm.key,
-            startDate: moment().format("YYYY-MM-DD"),
-            endDate: moment().add(15, 'days').format('YYYY-MM-DD') //默认维护15天房价
+            startDate: this.value1[0],
+            endDate: this.value1[1],
+            roomType:this.dataForm.roomType
           })
         }).then(({ data }) => {
           if (data && data.code === 0) {

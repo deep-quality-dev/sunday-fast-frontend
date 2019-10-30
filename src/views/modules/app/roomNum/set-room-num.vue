@@ -18,11 +18,13 @@
           <el-col :span="8">
             <div class="grid-content bg-purple">
               <el-checkbox
-                :label="item.name"
                 :key="item.id"
                 v-model="item.selected"
                 @change="handleRoomCheckChange(item, $event)"
-              ></el-checkbox>
+              >{{item.name}} 
+              <el-tag style="margin-left:8px;" size="mini" v-if="item.classify === 0" type="danger">钟点房</el-tag>
+              <el-tag style="margin-left:8px;" size="mini" v-else type="success">全日房</el-tag>
+              </el-checkbox>
             </div>
           </el-col>
           <el-col :span="16">

@@ -28,8 +28,8 @@
             <el-form-item label="优惠礼遇" prop="discounts">
                 <el-switch
                     v-model="dataForm.discounts"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
+                    active-color="#17B3A3"
+                    inactive-color="#909399"
                     active-text="开启"
                     inactive-text="关闭"
                 ></el-switch>

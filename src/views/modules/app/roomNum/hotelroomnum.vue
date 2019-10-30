@@ -5,14 +5,26 @@
         <el-date-picker
           v-model="value1"
           type="daterange"
+          :clearable="false"
+          value-format="yyyy-MM-dd"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
+         <el-select v-model="dataForm.roomType" placeholder="请选择">
+           <el-option
+            v-for="item in roomTyps"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+         <el-button @click="getDataList()">查询</el-button>
         <el-button type="primary" @click="setRoomNumHandler()">批量设置房态</el-button>
-        
       </el-form-item>
     </el-form>
     <el-table 
@@ -33,14 +45,14 @@
       >
       <template slot-scope="scope">
           <div v-if="scope.row.type ===0">
-            <el-button size="mini" v-if="scope.row[scope.column.property] === 0" type="primary">有房</el-button>
-            <el-button size="mini" v-else type="danger">满房</el-button>
+            <el-button size="mini" v-if="scope.row[scope.column.property] === 1" @click="handlerRoomState(scope.row,scope.column.property,0)"  type="primary">有房</el-button>
+            <el-button size="mini" v-else type="danger" @click="handlerRoomState(scope.row,scope.column.property,1)">满房</el-button>
           </div>
           <div v-else>
-            <el-button size="mini" v-if="scope.row[scope.column.property] > 0" type="primary">有房</el-button>
-            <el-button size="mini"  v-else type="danger">满房</el-button>
+            <el-button size="mini" v-if="scope.row[scope.column.property].hasRoom != 0" @click="handlerRoomMoneyState(scope.row,scope.column.property,0)" type="primary">有房</el-button>
+            <el-button size="mini"  v-else type="danger" @click="handlerRoomMoneyState(scope.row,scope.column.property,1)">满房</el-button>
             <div style="margin-top:10px">
-                <span>{{ scope.row[scope.column.property] }}</span>
+                <span>{{ scope.row[scope.column.property].num }}</span>
               <i
                 class="el-icon-edit"
                 @click="onEdit(scope)"
@@ -75,8 +87,20 @@ export default {
     return {
       expandRowKeys:[],
       setRoomNumVisible:false,
-      value1: [],
-      dataForm: {},
+      value1: [moment().format("YYYY-MM-DD"),moment().add(7, 'days').format('YYYY-MM-DD')],
+      roomTyps:[
+         {
+          label:'全日房',
+          value:1
+        },
+        {
+          label:'钟点房',
+          value:0
+        }
+      ],
+      dataForm: {
+        roomType:1
+      },
       date: [],
       dataList: [],
       showUpdateModal: false,
@@ -110,7 +134,7 @@ export default {
       onEdit(scope) {
         this.showUpdateModal = true;
         this.updateCurrent = scope;
-        this.updateCurrentPrice = scope.row[scope.column.property];
+        this.updateCurrentPrice = scope.row[scope.column.property].num;
       },
        onUpdateSubmit() {
         this.$http({
@@ -138,8 +162,9 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key,
-          startDate: moment().format("YYYY-MM-DD"),
-          endDate: moment().add(7, 'days').format('YYYY-MM-DD')
+          startDate: this.value1[0],
+          endDate: this.value1[1],
+          roomType:this.dataForm.roomType
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -171,6 +196,37 @@ export default {
           };
         }
       }
+    },
+    handlerRoomState(row,date,status){
+      console.log(row)
+      this.$http({
+          url: this.$http.adornUrl(`/hotel/hotelroom/roomSwitch`),
+          method: "post",
+          data: this.$http.adornParams({
+           id:row.id.slice(5),
+           status:status, //price_11111
+           date: date
+          })
+        }).then(({ data }) => {
+         if (data && data.code === 0){
+           this.getDataList();
+         }
+        });
+    },
+    handlerRoomMoneyState(row,date,status){
+      this.$http({
+          url: this.$http.adornUrl(`/hotel/hotelroom/moneySwitch/`),
+          method: "post",
+          data: this.$http.adornParams({
+           id:row.id.slice(6),
+           status:status, //price_11111
+           date: date
+          })
+        }).then(({ data }) => {
+         if (data && data.code === 0){
+           this.getDataList();
+         }
+        });
     },
     handlerData(dataList) {
       let newData = [];
