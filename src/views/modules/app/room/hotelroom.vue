@@ -53,9 +53,9 @@
       </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="scope.row.state === -1" @click="show(scope.row.id)">启用</el-button>
+          <el-button type="text" size="small" v-if="scope.row.state === 0" @click="show(scope.row.id)">启用</el-button>
           <el-button type="text" size="small" v-else-if="scope.row.state === 1" @click="hide(scope.row.id)">禁用</el-button>
-          <el-button type="text" size="small" @click="mgrRoomMoenyHandler(scope.row.id)">价格管理</el-button>
+          <el-button type="text" size="small" @click="mgrRoomMoenyHandler(scope.row)">价格管理</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -172,10 +172,10 @@ export default {
       });
     },
     //价格管理
-    mgrRoomMoenyHandler(id) {
+    mgrRoomMoenyHandler(room) {
       this.mgrRoomMoenyVisible = true;
       this.$nextTick(() => {
-        this.$refs.roomMoney.init(id);
+        this.$refs.roomMoney.init(room);
       });
     },
     // 删除

@@ -7,11 +7,19 @@
     :before-close="handleClose"
   >
     <el-table :data="dataList" style="width: 100%">
-      <el-table-column prop="name" label="价格名称" width="180" align="center"></el-table-column>
-      <el-table-column prop="price" label="价格" width="180" align="center"></el-table-column>
-      <el-table-column prop="integral" label="积分" width="180" align="center"></el-table-column>
-      <el-table-column prop="num" label="数量" width="180" align="center"></el-table-column>
-      <el-table-column prop="isVip" label="使用会员折扣" align="center">
+      <el-table-column prop="name" label="价格名称" align="center"></el-table-column>
+      <el-table-column prop="price" label="价格" align="center"></el-table-column>
+      <el-table-column label="适用时段" align="center" v-if="room.classify == 0">
+        <template slot-scope="scope" v-if="scope.row.startTime&&scope.row.endTime">
+          <span
+            v-if="scope.row.startTime&&scope.row.endTime"
+          >{{scope.row.startTime + '-' + scope.row.endTime}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="integral" label="积分" align="center" v-if="room.classify == 1"></el-table-column>
+      <el-table-column prop="num" label="数量" align="center"></el-table-column>
+      <el-table-column prop="isVip" label="使用会员折扣" align="center" v-if="room.classify == 1">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isVip === 0" size="small" type="danger">否</el-tag>
           <el-tag v-else size="small">是</el-tag>
@@ -39,13 +47,16 @@
       <el-form-item label="价格" prop="price">
         <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="请输入价格"></el-input>
       </el-form-item>
-      <el-form-item label="积分" prop="integral">
+      <el-form-item v-if="room.classify == 0" label="适用时间" prop="timeRange">
+        <el-time-picker size="mini" value-format="HH:mm" v-model="dataForm.timeRange" is-range></el-time-picker>
+      </el-form-item>
+      <el-form-item v-if="room.classify == 1" label="积分" prop="integral">
         <el-input style="width:90px" size="small" v-model="dataForm.integral" placeholder="请输入积分"></el-input>
       </el-form-item>
       <el-form-item label="数量" prop="num">
         <el-input style="width:90px" size="small" v-model="dataForm.num" placeholder="价格"></el-input>
       </el-form-item>
-      <el-form-item label="会员折扣">
+      <el-form-item v-if="room.classify == 1" label="会员折扣">
         <el-radio-group v-model="dataForm.isVip">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
@@ -62,6 +73,8 @@
 export default {
   data() {
     return {
+      timeRange: ["18:00", "20:00"],
+      room: {},
       visible: false,
       uploadAction: "",
       dialogImageUrl: "",
@@ -71,6 +84,7 @@ export default {
         id: 0,
         name: "",
         price: "",
+        timeRange: ["18:00", "20:00"],
         num: 0,
         integral: 0,
         isVip: 0
@@ -78,16 +92,20 @@ export default {
       dataList: [],
       dataRule: {
         name: [{ required: true, message: "价格字不能为空", trigger: "blur" }],
+        timeRange: [
+          { required: true, message: "适用时段不能为空", trigger: "blur" }
+        ],
         price: [{ required: true, message: "价格不能为空", trigger: "blur" }]
       }
     };
   },
   activated() {},
   methods: {
-    init(id) {
-      this.roomId = id;
+    init(room) {
+      this.room = room;
+      this.roomId = room.id;
       this.visible = true;
-      this.getDataList(id);
+      this.getDataList(room.id);
     },
     // 获取数据列表
     getDataList(id) {
@@ -121,6 +139,8 @@ export default {
               num: this.dataForm.num,
               idVip: this.dataForm.isVip,
               integral: this.dataForm.integral,
+              startTime: this.dataForm.timeRange[0],
+              endTime: this.dataForm.timeRange[1],
               roomId: this.roomId
             })
           }).then(({ data }) => {
@@ -148,6 +168,13 @@ export default {
       this.dataForm.isVip = row.isVip;
       this.dataForm.integral = row.integral;
       this.dataForm.num = row.num;
+      if (row.startTime && row.endTime) {
+        this.dataForm.timeRange = [];
+        this.dataForm.timeRange.push(row.startTime);
+        this.dataForm.timeRange.push(row.endTime);
+      } else {
+        this.dataForm.timeRange = ["18:00", "20:00"];
+      }
     },
     deleteHandle(id) {
       var ids = id
@@ -187,10 +214,12 @@ export default {
     onCancelEdit() {
       this.dataForm.id = 0;
       this.$refs["dataForm"].resetFields();
+      this.dataForm.timeRange = ["18:00", "20:00"];
     },
     handleClose() {
       this.dataForm.id = 0;
       this.$refs["dataForm"].resetFields();
+      this.room = {};
       this.visible = false;
     }
   }
