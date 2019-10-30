@@ -33,6 +33,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="房型名字"></el-table-column>
+      <el-table-column prop="price" header-align="center" align="center" label="门市价"></el-table-column>
       <el-table-column prop="floor" header-align="center" align="center" label="楼层"></el-table-column>
       <el-table-column prop="people" header-align="center" align="center" label="可住人数"></el-table-column>
       <el-table-column prop="totalNum" header-align="center" align="center" label="数量"></el-table-column>
@@ -46,14 +47,14 @@
       </el-table-column>
       <el-table-column prop="classify" header-align="center" align="center" label="房间类别">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small">钟点房</el-tag>
+          <el-tag v-if="scope.row.classify === 0" size="small">钟点房</el-tag>
           <el-tag v-else size="small">普通房</el-tag>
         </template>
       </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="200" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-if="scope.row.state === 0" @click="show(scope.row.id)">启用</el-button>
-          <el-button type="text" size="small" v-if="scope.row.state === 1" @click="hide(scope.row.id)">禁用</el-button>
+          <el-button type="text" size="small" v-if="scope.row.state === -1" @click="show(scope.row.id)">启用</el-button>
+          <el-button type="text" size="small" v-else-if="scope.row.state === 1" @click="hide(scope.row.id)">禁用</el-button>
           <el-button type="text" size="small" @click="mgrRoomMoenyHandler(scope.row.id)">价格管理</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>

@@ -73,7 +73,9 @@
         <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
       </el-form-item>-->
       <el-form-item label="酒店设施">
-        <el-checkbox v-model="dataForm.wake" :label="1" name="type">叫醒</el-checkbox>
+        <el-checkbox v-model="dataForm.metro" :label="1">地铁周边</el-checkbox>
+        <el-checkbox v-model="dataForm.repast" :label="1">餐饮</el-checkbox>
+        <el-checkbox v-model="dataForm.wake" :label="1">叫醒</el-checkbox>
         <el-checkbox v-model="dataForm.wifi" :label="1">WI-FI</el-checkbox>
         <el-checkbox v-model="dataForm.park" :label="1">停车场</el-checkbox>
         <el-checkbox v-model="dataForm.breakfast" :label="1">早餐</el-checkbox>
@@ -159,6 +161,8 @@ export default {
         openTime: "",
         wake: "",
         wifi: "",
+        metro: "",
+        repast: "",
         park: "",
         breakfast: "",
         unionpay: "",
@@ -227,10 +231,13 @@ export default {
   },
   methods: {
     getImgs(img) {
-      return (img || '').split(',').filter(url => !!url).map(url => ({
-        name: url,
-        url
-      }));
+      return (img || "")
+        .split(",")
+        .filter(url => !!url)
+        .map(url => ({
+          name: url,
+          url
+        }));
     },
     init(id) {
       this.dataListLoading = true;
@@ -243,6 +250,8 @@ export default {
           const hotelSeller = data.hotelSeller || {};
           this.dataForm = {
             ...hotelSeller,
+            metro: hotelSeller.metro === 1,
+            repast: hotelSeller.repast === 1,
             wake: hotelSeller.wake === 1,
             wifi: hotelSeller.wifi === 1,
             park: hotelSeller.park === 1,
@@ -273,6 +282,10 @@ export default {
               id: this.dataForm.id || undefined,
               wake: this.dataForm.wake ? "1" : "0",
               wifi: this.dataForm.wifi ? "1" : "0",
+
+              metro: this.dataForm.metro ? "1" : "0",
+              repast: this.dataForm.repast ? "1" : "0",
+
               park: this.dataForm.park ? "1" : "0",
               breakfast: this.dataForm.breakfast ? "1" : "0",
               unionpay: this.dataForm.unionpay ? "1" : "0",
@@ -281,7 +294,7 @@ export default {
               water: this.dataForm.water ? "1" : "0",
               yeOpen: this.dataForm.yeOpen ? "1" : "0",
               wxOpen: this.dataForm.wxOpen ? "1" : "0",
-              ddOpen: this.dataForm.ddOpen ? "1" : "0",
+              ddOpen: this.dataForm.ddOpen ? "1" : "0"
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

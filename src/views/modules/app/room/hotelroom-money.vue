@@ -37,10 +37,10 @@
         <el-input style="width:90px" size="small" v-model="dataForm.name" placeholder="价格名称"></el-input>
       </el-form-item>
       <el-form-item label="价格" prop="price">
-        <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="价格"></el-input>
+        <el-input style="width:90px" size="small" v-model="dataForm.price" placeholder="请输入价格"></el-input>
       </el-form-item>
       <el-form-item label="积分" prop="integral">
-        <el-input style="width:90px" size="small" v-model="dataForm.integral" placeholder="价格"></el-input>
+        <el-input style="width:90px" size="small" v-model="dataForm.integral" placeholder="请输入积分"></el-input>
       </el-form-item>
       <el-form-item label="数量" prop="num">
         <el-input style="width:90px" size="small" v-model="dataForm.num" placeholder="价格"></el-input>
