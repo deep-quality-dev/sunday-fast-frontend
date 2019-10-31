@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="酒店名称" clearable></el-input>
+        <el-input v-model="dataForm.sellerName" placeholder="酒店名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -10,7 +10,8 @@
           v-if="isAuth('hotel:hotelwithdrawal:save')"
           type="primary"
           @click="addOrUpdateHandle()"
-        >新增</el-button> -->
+        >新增</el-button>-->
+
         <el-button
           v-if="isAuth('hotel:hotelwithdrawal:save')"
           type="primary"
@@ -31,19 +32,43 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
     >
-      <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
-      <el-table-column prop="sellerId" header-align="center" align="center" label="酒店"></el-table-column>
+      <el-table-column prop="name" header-align="center" align="center" width="250" label="酒店"></el-table-column>
       <el-table-column prop="withdrawCost" header-align="center" align="center" label="提现金额"></el-table-column>
-      <el-table-column prop="realityCost" header-align="center" align="center" label="实际金额"></el-table-column>
-      <el-table-column prop="username" header-align="center" align="center" label="账号"></el-table-column>
-      <el-table-column prop="type" header-align="center" align="center" label="账户类型"></el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label="申请时间"></el-table-column>
-      <el-table-column prop="auditTime" header-align="center" align="center" label="审核时间"></el-table-column>
-      <el-table-column prop="state" header-align="center" align="center" label="提现状态"></el-table-column>
-      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+      <el-table-column prop="realityCost" header-align="center" align="center" label="到账金额"></el-table-column>
+      <el-table-column prop="username" header-align="center" align="center" width="280" label="账号"></el-table-column>
+      <el-table-column prop="type" header-align="center" align="center" label="账户类型">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">审核</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-tag size="small">{{accountType[scope.row.type]}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="time" header-align="center" align="center" width="200" label="申请时间"></el-table-column>
+      <el-table-column
+        prop="auditTime"
+        header-align="center"
+        align="center"
+        width="200"
+        label="审核时间"
+      ></el-table-column>
+      <el-table-column prop="state" header-align="center" align="center" label="提现状态">
+        <template slot-scope="scope">
+          <el-tag size="small">{{txState[scope.row.state]}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        header-align="center"
+        align="center"
+        width="150"
+        label="操作"
+        v-if="userId === 1"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            v-if="isAuth('hotel:hotelwithdrawal:withdrawalapplyaudit')"
+            size="small"
+            @click="handlerAudit(scope.row.id)"
+          >审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,11 +100,11 @@ export default {
       },
       txState: {
         "1": "待审核",
-        "2": "通过",
+        "2": "已通过",
         "3": "拒绝"
       },
       dataForm: {
-        key: ""
+        sellerName: ""
       },
       dataList: [],
       pageIndex: 1,
@@ -98,6 +123,13 @@ export default {
   activated() {
     this.getDataList();
   },
+  computed: {
+    userId: {
+      get() {
+        return this.$store.state.user.id;
+      }
+    }
+  },
   methods: {
     withdrawalSettingHandler() {
       this.withdrawalSettingVisible = true;
@@ -114,7 +146,7 @@ export default {
         params: this.$http.adornParams({
           page: this.pageIndex,
           limit: this.pageSize,
-          key: this.dataForm.key
+          sellerName: this.dataForm.sellerName
         })
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -125,6 +157,34 @@ export default {
           this.totalPage = 0;
         }
         this.dataListLoading = false;
+      });
+    },
+    //审核
+    handlerAudit(id) {
+      this.$confirm(`确定审核通过?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$http({
+          url: this.$http.adornUrl(
+            `/hotel/hotelwithdrawal/withdrawalApplyAudit/${id}`
+          ),
+          method: "post"
+        }).then(({ data }) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: "操作成功",
+              type: "success",
+              duration: 1500,
+              onClose: () => {
+                this.getDataList();
+              }
+            });
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       });
     },
     // 每页数

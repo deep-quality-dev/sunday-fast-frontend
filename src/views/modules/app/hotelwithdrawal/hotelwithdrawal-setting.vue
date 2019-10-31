@@ -13,7 +13,11 @@
       label-width="120px"
     >
       <el-form-item label="提现方式" prop="txMode">
-        <el-input v-model="dataForm.txMode" placeholder="提现方式"></el-input>
+        <el-radio-group v-model="dataForm.txMode">
+          <el-radio :label="1">支付宝</el-radio>
+          <el-radio :disabled="true" :label="2">微信</el-radio>
+          <el-radio :disabled="true" :label="3">银行卡</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="最低提现金额" prop="zdMoney">
         <el-input v-model="dataForm.zdMoney" placeholder="最低提现金额"></el-input>
