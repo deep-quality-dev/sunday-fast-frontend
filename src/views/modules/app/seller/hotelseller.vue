@@ -72,9 +72,26 @@
       <!-- <el-form-item label="温馨提示" prop="prompt">
         <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
       </el-form-item>-->
+      <el-form-item label="房型标签" prop="discounts">
+        <el-tag
+          :key="tag"
+          v-for="tag in dataForm.tagList"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+        >{{tag}}</el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+        >
+          <el-button slot="append" icon="el-icon-plus" @click="handleInputConfirm()"></el-button>
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput">添加</el-button>
+      </el-form-item>
       <el-form-item label="酒店设施">
-        <el-checkbox v-model="dataForm.metro" :label="1">地铁周边</el-checkbox>
-        <el-checkbox v-model="dataForm.repast" :label="1">餐饮</el-checkbox>
         <el-checkbox v-model="dataForm.wake" :label="1">叫醒</el-checkbox>
         <el-checkbox v-model="dataForm.wifi" :label="1">WI-FI</el-checkbox>
         <el-checkbox v-model="dataForm.park" :label="1">停车场</el-checkbox>
@@ -141,6 +158,8 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      inputVisible: false,
+      inputValue: "",
       dataListLoading: false,
       content: "111",
       editorOption: {},
@@ -151,6 +170,7 @@ export default {
       dataForm: {
         id: 0,
         owner: "",
+        tagList: [],
         name: "",
         star: "",
         address: "",
@@ -250,6 +270,7 @@ export default {
           const hotelSeller = data.hotelSeller || {};
           this.dataForm = {
             ...hotelSeller,
+            tagList: hotelSeller.tagList || [],
             metro: hotelSeller.metro === 1,
             repast: hotelSeller.repast === 1,
             wake: hotelSeller.wake === 1,
@@ -285,7 +306,7 @@ export default {
 
               metro: this.dataForm.metro ? "1" : "0",
               repast: this.dataForm.repast ? "1" : "0",
-
+              tagList: this.dataForm.tagList,
               park: this.dataForm.park ? "1" : "0",
               breakfast: this.dataForm.breakfast ? "1" : "0",
               unionpay: this.dataForm.unionpay ? "1" : "0",
@@ -322,7 +343,25 @@ export default {
     onEditorChange() {
       //内容改变事件
     },
+    handleClose(tag) {
+      this.dataForm.tagList.splice(this.dataForm.tagList.indexOf(tag), 1);
+    },
 
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dataForm.tagList.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = "";
+    },
     handleAvatarSuccess(res, file) {
       this.dataForm.ewmLogo = res.url;
     },
@@ -375,5 +414,20 @@ export default {
   > .el-alert {
     margin-bottom: 10px;
   }
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 190px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>

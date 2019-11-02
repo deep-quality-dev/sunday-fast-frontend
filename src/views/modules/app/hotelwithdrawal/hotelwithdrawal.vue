@@ -32,7 +32,14 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
     >
-      <el-table-column prop="name" header-align="center" align="center" width="250" label="酒店"></el-table-column>
+      <el-table-column
+        prop="name"
+        header-align="center"
+        align="center"
+        width="250"
+        label="酒店"
+        v-if="userId === 1"
+      ></el-table-column>
       <el-table-column prop="withdrawCost" header-align="center" align="center" label="提现金额"></el-table-column>
       <el-table-column prop="realityCost" header-align="center" align="center" label="到账金额"></el-table-column>
       <el-table-column prop="username" header-align="center" align="center" width="280" label="账号"></el-table-column>

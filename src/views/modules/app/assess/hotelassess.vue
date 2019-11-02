@@ -10,7 +10,8 @@
           v-if="isAuth('hotel:hotelassess:save')"
           type="primary"
           @click="addOrUpdateHandle()"
-        >新增</el-button> -->
+        >新增</el-button>-->
+
         <el-button
           v-if="isAuth('hotel:hotelassess:delete')"
           type="danger"
@@ -28,13 +29,30 @@
     >
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="score" header-align="center" align="center" label="分数"></el-table-column>
-      <el-table-column prop="time" header-align="center" align="center" label="创建时间"></el-table-column>
-      <el-table-column prop="reply" header-align="center" align="center" label="商家回复"></el-table-column>
-      <el-table-column prop="status" header-align="center" align="center" label="评价状态"></el-table-column>
-      <el-table-column prop="replyTime" header-align="center" align="center" label="回复时间"></el-table-column>
+      <el-table-column prop="time" header-align="center" align="center" label="评论时间">
+        <template slot-scope="scope">
+          <span>{{formatDate(scope.row.time)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="reply" header-align="center" align="center" label="商家回复">
+        <template slot-scope="scope">
+          <el-tag type="success">{{commentStatusMap[scope.row.status]}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" header-align="center" align="center" label="评价状态">
+        <template slot-scope="scope">
+          <el-tag type="success">{{commentStatusMap[scope.row.status]}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="replyTime" header-align="center" align="center" label="回复时间">
+        <template slot-scope="scope">
+          <span v-if="scope.row.replyTime" type="success">{{formatDate(scope.row.replyTime)}}</span>
+          <span v-else>--</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">回复</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -54,10 +72,15 @@
 </template>
 
 <script>
+import moment from "moment";
 import AddOrUpdate from "./hotelassess-add-or-update";
 export default {
   data() {
     return {
+      commentStatusMap: {
+        1: "未回复",
+        2: "已回复"
+      },
       dataForm: {
         key: ""
       },
@@ -77,6 +100,9 @@ export default {
     this.getDataList();
   },
   methods: {
+    formatDate(timestamp) {
+      return moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
+    },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;

@@ -1,111 +1,123 @@
 <template>
-    <el-dialog
-        width="80%"
-        :title="!dataForm.id ? '新增' : '修改'"
-        :close-on-click-modal="false"
-        :visible.sync="visible"
-        class="hotel-room"
+  <el-dialog
+    width="80%"
+    :title="!dataForm.id ? '新增' : '修改'"
+    :close-on-click-modal="false"
+    :visible.sync="visible"
+    class="hotel-room"
+  >
+    <el-form
+      :model="dataForm"
+      :rules="dataRule"
+      ref="dataForm"
+      @keyup.enter.native="dataFormSubmit()"
+      label-width="auto"
     >
-        <el-form
-            :model="dataForm"
-            :rules="dataRule"
-            ref="dataForm"
-            @keyup.enter.native="dataFormSubmit()"
-            label-width="auto"
+      <el-form-item label="房型名字" prop="name">
+        <el-input v-model="dataForm.name" placeholder="房型名字"></el-input>
+      </el-form-item>
+      <el-form-item label="房间类别" prop="classify">
+        <el-radio-group v-model="dataForm.classify">
+          <el-radio :label="1">普通房</el-radio>
+          <el-radio :label="0">钟点房</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="门市" prop="price">
+        <el-input v-model="dataForm.price" placeholder="房型名字"></el-input>
+      </el-form-item>
+      <el-form-item label="房型标签" prop="discounts">
+        <el-tag
+          :key="tag"
+          v-for="tag in dataForm.tagList"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+        >{{tag}}</el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
         >
-            <el-form-item label="房型名字" prop="name">
-                <el-input v-model="dataForm.name" placeholder="房型名字"></el-input>
-            </el-form-item>
-            <el-form-item label="房间类别" prop="classify">
-                <el-radio-group v-model="dataForm.classify">
-                    <el-radio :label="1">普通房</el-radio>
-                    <el-radio :label="0">钟点房</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="门市" prop="price">
-                <el-input v-model="dataForm.price" placeholder="房型名字"></el-input>
-            </el-form-item>
-            <el-form-item label="优惠礼遇" prop="discounts">
-                <el-switch
-                    v-model="dataForm.discounts"
-                    active-color="#17B3A3"
-                    inactive-color="#909399"
-                    active-text="开启"
-                    inactive-text="关闭"
-                ></el-switch>
-            </el-form-item>
-            <el-form-item label="房型大图" prop="logo">
-                <el-upload
-                    class="avatar-uploader"
-                    :action="uploadAction"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload"
-                >
-                    <img v-if="dataForm.logo" :src="dataForm.logo" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="房间设施">
-                <el-checkbox label="热水" v-model="dataForm.water" name="water"></el-checkbox>
-                <el-checkbox label="空调" v-model="dataForm.air" name="air"></el-checkbox>
-                <el-checkbox label="电视" v-model="dataForm.tv" name="tv"></el-checkbox>
-                <el-checkbox label="WIFI" v-model="dataForm.wifi" name="wifi"></el-checkbox>
-                <el-checkbox label="窗户" v-model="dataForm.windows" name="windows"></el-checkbox>
-            </el-form-item>
-            <el-form-item label="楼层" prop="floor">
-                <el-input v-model="dataForm.floor" placeholder="楼层"></el-input>
-            </el-form-item>
-            <el-form-item label="可住人数" prop="people">
-                <el-input v-model="dataForm.people" placeholder="可住人数"></el-input>
-            </el-form-item>
-            <el-form-item label="床型尺寸" prop="size">
-                <el-input v-model="dataForm.size" placeholder="床型尺寸"></el-input>
-            </el-form-item>
-            <el-form-item label="数量" prop="totalNum">
-                <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
-            </el-form-item>
-            <el-form-item label="取消规则" prop="totalNum">
-                <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
-            </el-form-item>
-            <el-form-item label="图片" prop="img">
-                <div class="updaloe-row">
-                    <el-upload
-                        class="avatar-uploader"
-                        :action="uploadAction"
-                        multiple
-                        ref="upload"
-                        :auto-upload="false"
-                        :show-file-list="true"
-                        list-type="picture-card"
-                        :file-list="fileList"
-                        :on-success="handleImageSuccess"
-                        :before-upload="beforeAvatarUpload"
-                        :on-change="handleOnCHange"
-                        :on-remove="handleRemove"
-                    >
-                        <i class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                    <el-button
-                        style="margin-left: 10px;"
-                        size="small"
-                        type="success"
-                        @click="submitUpload"
-                    >上传到服务器</el-button>
-                </div>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
-            <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
-        </span>
-    </el-dialog>
+          <el-button slot="append" icon="el-icon-plus" @click="handleInputConfirm()"></el-button>
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput">添加</el-button>
+      </el-form-item>
+      <el-form-item label="房型大图" prop="logo">
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="dataForm.logo" :src="dataForm.logo" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="房间设施">
+        <el-checkbox label="热水" v-model="dataForm.water" name="water"></el-checkbox>
+        <el-checkbox label="空调" v-model="dataForm.air" name="air"></el-checkbox>
+        <el-checkbox label="电视" v-model="dataForm.tv" name="tv"></el-checkbox>
+        <el-checkbox label="WIFI" v-model="dataForm.wifi" name="wifi"></el-checkbox>
+        <el-checkbox label="窗户" v-model="dataForm.windows" name="windows"></el-checkbox>
+      </el-form-item>
+      <el-form-item label="楼层" prop="floor">
+        <el-input v-model="dataForm.floor" placeholder="楼层"></el-input>
+      </el-form-item>
+      <el-form-item label="可住人数" prop="people">
+        <el-input v-model="dataForm.people" placeholder="可住人数"></el-input>
+      </el-form-item>
+      <el-form-item label="床型尺寸" prop="size">
+        <el-input v-model="dataForm.size" placeholder="床型尺寸"></el-input>
+      </el-form-item>
+      <el-form-item label="数量" prop="totalNum">
+        <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
+      </el-form-item>
+      <el-form-item label="取消规则" prop="totalNum">
+        <el-input v-model="dataForm.totalNum" placeholder="数量"></el-input>
+      </el-form-item>
+      <el-form-item label="图片" prop="img">
+        <div class="updaloe-row">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadAction"
+            multiple
+            ref="upload"
+            :auto-upload="false"
+            :show-file-list="true"
+            list-type="picture-card"
+            :file-list="fileList"
+            :on-success="handleImageSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-change="handleOnCHange"
+            :on-remove="handleRemove"
+          >
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <el-button
+            style="margin-left: 10px;"
+            size="small"
+            type="success"
+            @click="submitUpload"
+          >上传到服务器</el-button>
+        </div>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      inputVisible: false,
+      inputValue: "",
       visible: false,
       uploadAction: "",
       dialogImageUrl: "",
@@ -123,6 +135,7 @@ export default {
         bed: "",
         breakfast: "",
         facilities: "",
+        tagList: [],
         windows: "",
         logo: "",
         size: "",
@@ -188,6 +201,7 @@ export default {
       this.visible = true;
       this.$nextTick(() => {
         this.$refs["dataForm"].resetFields();
+        this.dataForm.tagList = [];
         if (this.dataForm.id) {
           this.$http({
             url: this.$http.adornUrl(
@@ -215,6 +229,7 @@ export default {
               this.dataForm.uniacid = data.hotelroom.uniacid;
               this.dataForm.size = data.hotelroom.size;
               this.dataForm.sort = data.hotelroom.sort;
+              this.dataForm.tagList = data.hotelroom.tagList || [];
               this.dataForm.state = data.hotelroom.state;
               this.dataForm.classify = data.hotelroom.classify;
               this.dataForm.rzTime = data.hotelroom.rzTime;
@@ -248,6 +263,7 @@ export default {
               discounts: this.dataForm.discounts ? 1 : 0,
               facilities: this.dataForm.facilities,
               windows: this.dataForm.windows ? 1 : 0,
+              tagList: this.dataForm.tagList,
               logo: this.dataForm.logo,
               totalNum: this.dataForm.totalNum,
               uniacid: this.dataForm.uniacid,
@@ -298,6 +314,25 @@ export default {
         url = [...url, ...imgs];
       }
       this.dataForm.img = url.join(",");
+    },
+    handleClose(tag) {
+      this.dataForm.tagList.splice(this.dataForm.tagList.indexOf(tag), 1);
+    },
+
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dataForm.tagList.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = "";
     },
     handleOnCHange(file, fileList) {},
     handleRemove(file, fileList) {
@@ -371,5 +406,20 @@ export default {
 .updaloe-row {
   display: flex;
   align-items: center;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 190px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>
