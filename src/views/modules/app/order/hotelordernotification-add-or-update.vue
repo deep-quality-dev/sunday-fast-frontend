@@ -119,6 +119,7 @@ export default {
         }).then(({ data }) => {
           if (data && data.code === 0) {
             if (data.hotelOrderNotification) {
+              this.dataForm.id  = data.hotelOrderNotification.id
               this.dataForm.email = data.hotelOrderNotification.email;
               this.dataForm.mobile = data.hotelOrderNotification.mobile;
               this.dataForm.smsSwitch = data.hotelOrderNotification.smsSwitch;
