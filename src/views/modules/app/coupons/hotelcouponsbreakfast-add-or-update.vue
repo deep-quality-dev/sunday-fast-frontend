@@ -15,10 +15,20 @@
         <el-input v-model="dataForm.name" placeholder="优惠券名称"></el-input>
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-         <el-date-picker v-model="dataForm.startTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+        <el-date-picker
+          v-model="dataForm.startTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-         <el-date-picker v-model="dataForm.endTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+        <el-date-picker
+          v-model="dataForm.endTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="优惠条件" prop="conditions">
         <el-input v-model="dataForm.conditions" placeholder="优惠条件"></el-input>
@@ -38,6 +48,18 @@
       <el-form-item label="每人可领取张数" prop="klqzs">
         <el-input v-model="dataForm.klqzs" placeholder="每人可领取张数"></el-input>
       </el-form-item>
+      <el-form-item label="使用说明">
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.ruleDec"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -51,6 +73,15 @@ export default {
   data() {
     return {
       visible: false,
+      editorOption: {
+        placeholder: "请输入使用说明",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // toggled buttons
+            ["blockquote", "code-block"]
+          ]
+        }
+      },
       dataForm: {
         id: 0,
         name: "",
@@ -58,6 +89,7 @@ export default {
         endTime: "",
         conditions: "",
         number: "",
+        ruleDec: "",
         cost: "",
         type: "",
         introduce: "",
@@ -111,11 +143,13 @@ export default {
               this.dataForm.endTime = data.hotelCouponsBreakfast.endTime;
               this.dataForm.conditions = data.hotelCouponsBreakfast.conditions;
               this.dataForm.number = data.hotelCouponsBreakfast.number;
+              this.dataForm.ruleDec = data.hotelCouponsBreakfast.ruleDec;
               this.dataForm.cost = data.hotelCouponsBreakfast.cost;
               this.dataForm.type = data.hotelCouponsBreakfast.type;
               this.dataForm.introduce = data.hotelCouponsBreakfast.introduce;
               this.dataForm.lqNum = data.hotelCouponsBreakfast.lqNum;
               this.dataForm.klqzs = data.hotelCouponsBreakfast.klqzs;
+              this.dataForm.ruleDec = data.hotelCouponsBreakfast.ruleDec;
             }
           });
         }
@@ -139,11 +173,12 @@ export default {
               endTime: this.dataForm.endTime,
               conditions: this.dataForm.conditions,
               number: this.dataForm.number,
+              ruleDec: this.dataForm.ruleDec,
               cost: this.dataForm.cost,
               type: this.dataForm.type,
               introduce: this.dataForm.introduce,
               lqNum: this.dataForm.lqNum,
-              klqzs: this.dataForm.klqzs
+              klqzs: this.dataForm.klqzs,
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -162,6 +197,13 @@ export default {
           });
         }
       });
+    },
+    onEditorBlur() {},
+    onEditorFocus() {
+      //获得焦点事件
+    },
+    onEditorChange() {
+      //内容改变事件
     }
   }
 };

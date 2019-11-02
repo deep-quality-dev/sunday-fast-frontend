@@ -32,20 +32,32 @@
           placeholder="选择日期"
         ></el-date-picker>
       </el-form-item>
+      <el-form-item label="发布数量" prop="number">
+        <el-input v-model="dataForm.number" placeholder="发布数量"></el-input>
+      </el-form-item>
       <el-form-item label="适用房型" prop="conditions">
         <el-checkbox-group v-model="dataForm.roomIds">
           <el-checkbox v-for="item in roomData" :key="item.id" :label="item.id">{{item.name}}</el-checkbox>
         </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="发布数量" prop="number">
-        <el-input v-model="dataForm.number" placeholder="发布数量"></el-input>
       </el-form-item>
       <!-- <el-form-item label="金额" prop="cost">
         <el-input v-model="dataForm.cost" placeholder="金额"></el-input>
       </el-form-item>
       <el-form-item label="领取数量" prop="lqNum">
         <el-input v-model="dataForm.lqNum" placeholder="领取数量"></el-input>
-      </el-form-item> -->
+      </el-form-item>-->
+      <el-form-item label="使用说明">
+        <quill-editor
+          style="height:200px"
+          class="editor"
+          v-model="dataForm.ruleDec"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+        ></quill-editor>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -60,6 +72,15 @@ export default {
     return {
       visible: false,
       roomData: [],
+      editorOption: {
+        placeholder: "请输入使用说明",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // toggled buttons
+            ["blockquote", "code-block"]
+          ]
+        }
+      },
       dataForm: {
         id: 0,
         name: "",
@@ -67,6 +88,7 @@ export default {
         roomIds: [],
         endTime: "",
         conditions: "",
+        ruleDec: "",
         number: "",
         cost: "",
         type: "",
@@ -119,11 +141,11 @@ export default {
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              console.log(data);
               this.dataForm.name = data.hotelCoupons.name;
               this.dataForm.startTime = data.hotelCoupons.startTime;
               this.dataForm.endTime = data.hotelCoupons.endTime;
               this.dataForm.conditions = data.hotelCoupons.conditions;
+              this.dataForm.ruleDec = data.hotelCoupons.ruleDec;
               this.dataForm.number = data.hotelCoupons.number;
               this.dataForm.cost = data.hotelCoupons.cost;
               (this.dataForm.roomIds = data.hotelCoupons.roomIds || []),
@@ -159,7 +181,8 @@ export default {
               roomIds: this.dataForm.roomIds,
               lqNum: this.dataForm.lqNum,
               klqzs: this.dataForm.klqzs,
-              time: this.dataForm.time
+              time: this.dataForm.time,
+              ruleDec: this.dataForm.ruleDec
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -192,6 +215,13 @@ export default {
           this.$message.error(data.msg);
         }
       });
+    },
+    onEditorBlur() {},
+    onEditorFocus() {
+      //获得焦点事件
+    },
+    onEditorChange() {
+      //内容改变事件
     }
   }
 };
