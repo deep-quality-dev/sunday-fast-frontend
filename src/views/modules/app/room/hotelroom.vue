@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" header-align="center" align="center" label="房型名字"></el-table-column>
-      <el-table-column prop="price" header-align="center" align="center" label="门市价"></el-table-column>
+      <el-table-column prop="oprice" header-align="center" align="center" label="门市价"></el-table-column>
       <el-table-column prop="floor" header-align="center" align="center" label="楼层"></el-table-column>
       <el-table-column prop="people" header-align="center" align="center" label="可住人数"></el-table-column>
       <el-table-column prop="totalNum" header-align="center" align="center" label="数量"></el-table-column>

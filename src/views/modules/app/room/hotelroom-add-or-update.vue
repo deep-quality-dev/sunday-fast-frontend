@@ -22,8 +22,8 @@
           <el-radio :label="0">钟点房</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="门市" prop="price">
-        <el-input v-model="dataForm.price" placeholder="房型名字"></el-input>
+      <el-form-item label="门市价" prop="price">
+        <el-input v-model="dataForm.oprice" placeholder="房型名字"></el-input>
       </el-form-item>
       <el-form-item label="房型标签" prop="discounts">
         <el-tag
@@ -129,6 +129,7 @@ export default {
         name: "",
         discounts: "",
         price: "",
+        oprice: "",
         img: "",
         floor: "",
         people: "",
@@ -155,7 +156,7 @@ export default {
             trigger: "blur"
           }
         ],
-        price: [
+        oprice: [
           {
             required: true,
             message: "门市价不能为空",
@@ -213,6 +214,7 @@ export default {
             if (data && data.code === 0) {
               this.dataForm.name = data.hotelroom.name;
               this.dataForm.price = data.hotelroom.price;
+              this.dataForm.oprice = data.hotelroom.oprice;
               this.dataForm.img = data.hotelroom.img;
               this.dataForm.floor = data.hotelroom.floor;
               this.dataForm.people = data.hotelroom.people;
@@ -255,6 +257,7 @@ export default {
               sellerId: this.dataForm.sellerId,
               name: this.dataForm.name,
               price: this.dataForm.price,
+              oprice: this.dataForm.oprice,
               img: this.dataForm.img,
               floor: this.dataForm.floor,
               people: this.dataForm.people,
