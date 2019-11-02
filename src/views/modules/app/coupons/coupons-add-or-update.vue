@@ -32,18 +32,20 @@
           placeholder="选择日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="优惠条件" prop="conditions">
-        <el-input v-model="dataForm.conditions" placeholder="优惠条件"></el-input>
+      <el-form-item label="适用房型" prop="conditions">
+        <el-checkbox-group v-model="dataForm.roomIds">
+          <el-checkbox v-for="item in roomData" :key="item.id" :label="item.id">{{item.name}}</el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="发布数量" prop="number">
         <el-input v-model="dataForm.number" placeholder="发布数量"></el-input>
       </el-form-item>
-      <el-form-item label="金额" prop="cost">
+      <!-- <el-form-item label="金额" prop="cost">
         <el-input v-model="dataForm.cost" placeholder="金额"></el-input>
       </el-form-item>
       <el-form-item label="领取数量" prop="lqNum">
         <el-input v-model="dataForm.lqNum" placeholder="领取数量"></el-input>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -57,10 +59,12 @@ export default {
   data() {
     return {
       visible: false,
+      roomData: [],
       dataForm: {
         id: 0,
         name: "",
         startTime: "",
+        roomIds: [],
         endTime: "",
         conditions: "",
         number: "",
@@ -101,6 +105,7 @@ export default {
   },
   methods: {
     init(id) {
+      this.getRooms();
       this.dataForm.id = id || 0;
       this.visible = true;
       this.$nextTick(() => {
@@ -121,7 +126,8 @@ export default {
               this.dataForm.conditions = data.hotelCoupons.conditions;
               this.dataForm.number = data.hotelCoupons.number;
               this.dataForm.cost = data.hotelCoupons.cost;
-              this.dataForm.type = data.hotelCoupons.type;
+              (this.dataForm.roomIds = data.hotelCoupons.roomIds || []),
+                (this.dataForm.type = data.hotelCoupons.type);
               this.dataForm.introduce = data.hotelCoupons.introduce;
               this.dataForm.lqNum = data.hotelCoupons.lqNum;
               this.dataForm.klqzs = data.hotelCoupons.klqzs;
@@ -150,6 +156,7 @@ export default {
               cost: this.dataForm.cost,
               type: this.dataForm.type,
               introduce: this.dataForm.introduce,
+              roomIds: this.dataForm.roomIds,
               lqNum: this.dataForm.lqNum,
               klqzs: this.dataForm.klqzs,
               time: this.dataForm.time
@@ -169,6 +176,20 @@ export default {
               this.$message.error(data.msg);
             }
           });
+        }
+      });
+    },
+    getRooms() {
+      this.dataListLoading = true;
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelroom/getAllRooms`),
+        method: "get"
+      }).then(({ data }) => {
+        this.dataListLoading = false;
+        if (data && data.code === 0) {
+          this.roomData = data.data;
+        } else {
+          this.$message.error(data.msg);
         }
       });
     }

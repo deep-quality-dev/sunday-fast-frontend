@@ -12,11 +12,6 @@
           @click="addOrUpdateHandle()"
         >新增</el-button>
         <el-button
-          v-if="isAuth('hotel:hotelcoupons:save')"
-          type="primary"
-          @click="addOrUpdateHandle()"
-        >选择房型</el-button>
-        <el-button
           v-if="isAuth('hotel:hotelcoupons:delete')"
           type="danger"
           @click="deleteHandle()"
@@ -35,10 +30,10 @@
       <el-table-column prop="name" header-align="center" align="center" label="名称"></el-table-column>
       <el-table-column prop="startTime" header-align="center" align="center" label="开始时间"></el-table-column>
       <el-table-column prop="endTime" header-align="center" align="center" label="结束时间"></el-table-column>
-      <el-table-column prop="conditions" header-align="center" align="center" label="优惠条件"></el-table-column>
+      <!-- <el-table-column prop="conditions" header-align="center" align="center" label="优惠条件"></el-table-column> -->
       <el-table-column prop="number" header-align="center" align="center" label="发布数量"></el-table-column>
-      <el-table-column prop="cost" header-align="center" align="center" label="金额"></el-table-column>
-      <el-table-column prop="lqNum" header-align="center" align="center" label="领取数量"></el-table-column>
+      <!-- <el-table-column prop="cost" header-align="center" align="center" label="金额"></el-table-column> -->
+      <!-- <el-table-column prop="lqNum" header-align="center" align="center" label="领取数量"></el-table-column> -->
       <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
