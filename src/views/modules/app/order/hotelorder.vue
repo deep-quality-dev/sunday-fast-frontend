@@ -91,6 +91,8 @@
           <el-tag v-if="scope.row.status === 4" size="small">已完成</el-tag>
           <el-tag v-if="scope.row.status === 5" size="small">已入住</el-tag>
           <el-tag v-if="scope.row.status === 6" size="small">退款中</el-tag>
+          <el-tag v-if="scope.row.status === 9" size="small">待入住</el-tag>
+          <el-tag v-if="scope.row.status === 11" size="small">待确认</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -113,8 +115,14 @@
       <el-table-column prop="orderNo" header-align="center" align="center" width="180" label="订单号"></el-table-column>
       <el-table-column fixed="right" header-align="center" align="center" width="120" label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" v-if="scope.row.status === 11" @click="orderAffirmHandler(scope.row.id)">确认</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">查看</el-button>
-          <el-button type="text" v-if="scope.row.status === 2" size="small" @click="orderCheckInHandler(scope.row.id)">入住</el-button>
+          <el-button
+            type="text"
+            v-if="scope.row.status === 2"
+            size="small"
+            @click="orderCheckInHandler(scope.row.id)"
+          >入住</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -154,7 +162,8 @@ export default {
         { value: "3", label: "已取消" },
         { value: "4", label: "已完成" },
         { value: "5", label: "已入住" },
-        { value: "6", label: "退款中" }
+        { value: "6", label: "退款中" },
+        { value: "11", label: "待确认" }
       ],
       dataList: [],
       pageIndex: 1,
@@ -186,6 +195,18 @@ export default {
       this.orderSettingVisible = true;
       this.$nextTick(() => {
         this.$refs.orderSetting.init();
+      });
+    },
+    //订单确认
+    orderAffirmHandler(orderId) {
+      this.$http({
+        url: this.$http.adornUrl(`/hotel/hotelorder/orderAffirm/${orderId}`),
+        method: "POST"
+      }).then(({ data }) => {
+        console.log(date);
+        if (data && data.code === 0) {
+          this.getDataList();
+        }
       });
     },
     //订单入住

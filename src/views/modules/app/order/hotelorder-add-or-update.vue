@@ -228,6 +228,8 @@
                 <div class="order-remark__body">
                   <p class="pre">会员折扣：{{dataForm.yyzkCost || '0.00'}}</p>
                   <p class="pre">优惠券：{{dataForm.yhqCost || '0.00'}}</p>
+                  <p class="pre">早餐券：{{dataForm.breakCouponName || '--'}}</p>
+                  <p class="pre">免房券：{{dataForm.freeRoomCouponName || '--'}}</p>
                   <p class="pre">备注：{{dataForm.remark || '--'}}</p>
                   <!-- <p class="pre">订单编号：xxxxxxxx</p>
                   <p class="pre">订单编号：xxxxxxxx</p>-->
@@ -289,6 +291,8 @@ export default {
         coordinates: "",
         arrivalTime: "",
         departureTime: "",
+        freeRoomCouponName:"",
+        breakCouponName:"",
         ddTime: "",
         price: "",
         num: "",
@@ -441,6 +445,8 @@ export default {
               this.dataForm.couponsId = data.hotelOrder.couponsId;
               this.dataForm.orderNo = data.hotelOrder.orderNo;
               this.dataForm.sellerName = data.hotelOrder.sellerName;
+              this.dataForm.breakCouponName  = data.hotelOrder.breakCouponName;
+              this.dataForm.freeRoomCouponName = data.hotelOrder.freeRoomCouponName;
               this.dataForm.sellerAddress = data.hotelOrder.sellerAddress;
               this.dataForm.coordinates = data.hotelOrder.coordinates;
               this.dataForm.arrivalTime = data.hotelOrder.arrivalTime;

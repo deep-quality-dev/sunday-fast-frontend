@@ -72,7 +72,7 @@
       <!-- <el-form-item label="温馨提示" prop="prompt">
         <el-input v-model="dataForm.prompt" placeholder="温馨提示"></el-input>
       </el-form-item>-->
-      <el-form-item label="房型标签" prop="discounts">
+      <el-form-item label="酒店标签" prop="discounts">
         <el-tag
           :key="tag"
           v-for="tag in dataForm.tagList"

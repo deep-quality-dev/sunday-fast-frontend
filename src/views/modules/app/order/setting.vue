@@ -37,13 +37,13 @@
         <el-form-item label="适用时间">
           <div>
             <el-checkbox-group v-model="days">
-              <el-checkbox label="1">周一</el-checkbox>
-              <el-checkbox label="2">周二</el-checkbox>
-              <el-checkbox label="3">周三</el-checkbox>
-              <el-checkbox label="4">周四</el-checkbox>
-              <el-checkbox label="5">周五</el-checkbox>
-              <el-checkbox label="6">周六</el-checkbox>
-              <el-checkbox label="7">周日</el-checkbox>
+              <el-checkbox label="2">周一</el-checkbox>
+              <el-checkbox label="3">周二</el-checkbox>
+              <el-checkbox label="4">周三</el-checkbox>
+              <el-checkbox label="5">周四</el-checkbox>
+              <el-checkbox label="6">周五</el-checkbox>
+              <el-checkbox label="7">周六</el-checkbox>
+              <el-checkbox label="1">周日</el-checkbox>
             </el-checkbox-group>
             <el-time-picker size="mini" value-format="HH:mm" v-model="timeRange" is-range></el-time-picker>
           </div>
